@@ -10,9 +10,15 @@ const apiRoutes = require('./backend/routes/apiRoutes');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-// Connect MongoDB Database & Seed Default Career Paths / Opportunities
+// Connect MongoDB Database & Seed Default Data
 connectDB().then(() => {
   seedDefaultData();
+});
+
+// Middleware to ensure DB connection on serverless function invocations
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
 });
 
 // Middlewares
@@ -45,10 +51,14 @@ app.get('*', (req, res, next) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`====================================================`);
-  console.log(` ◈ KRICS MERN STACK SERVER ACTIVE ON PORT ${PORT} `);
-  console.log(` Web Portal:  http://localhost:${PORT}/`);
-  console.log(` MongoDB API: http://localhost:${PORT}/api/dashboard`);
-  console.log(`====================================================`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`====================================================`);
+    console.log(` ◈ KRICS MERN STACK SERVER ACTIVE ON PORT ${PORT} `);
+    console.log(` Web Portal:  http://localhost:${PORT}/`);
+    console.log(` MongoDB API: http://localhost:${PORT}/api/dashboard`);
+    console.log(`====================================================`);
+  });
+}
+
+module.exports = app;
