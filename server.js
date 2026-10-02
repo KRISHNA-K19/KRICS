@@ -30,6 +30,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', apiRoutes);
 
 // Static Asset Serving
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname), {
   setHeaders: (res, filePath) => {
     if (filePath.endsWith('.html')) {

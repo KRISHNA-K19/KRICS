@@ -338,6 +338,9 @@
   <!-- ========================================== -->
   <div class="hero-video-wrapper no-print">
     <video autoplay loop muted playsinline onerror="handleVideoError()">
+      <source src="public/animated%20bg.mp4" type="video/mp4"/>
+      <source src="animated%20bg.mp4" type="video/mp4"/>
+      <source src="public/animated bg.mp4" type="video/mp4"/>
       <source src="hf_20260805_192612_e00017a8-56b0-4957-935b-9ffd87663994.mp4" type="video/mp4"/>
     </video>
   </div>
@@ -820,7 +823,7 @@
 
     <!-- MEDIUM CIRCULAR AVATAR BUTTON -->
     <div id="ai-mentor-circle-btn" class="relative w-20 h-20 sm:w-22 sm:h-22 rounded-full glass-panel-card border-2 border-secondary shadow-[0_0_30px_rgba(56,189,248,0.7)] mentor-avatar-animated mentor-scan-wrapper hover:scale-110 hover:border-primary transition-all duration-300 bg-surface-container flex items-center justify-center p-1 group-hover:shadow-[0_0_45px_rgba(210,187,255,0.9)] shrink-0">
-      <img src="ai-mentor-avatar.png" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'" class="w-full h-full object-cover object-top rounded-full scale-110 group-hover:scale-125 transition-transform duration-500"/>
+      <img src="public/ai-mentor-avatar.png" onerror="this.onerror=null; this.src='ai-mentor-avatar.png'; this.onerror=function(){this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'}" class="w-full h-full object-cover object-top rounded-full scale-110 group-hover:scale-125 transition-transform duration-500"/>
       <div class="absolute top-0 right-0 w-4 h-4 rounded-full bg-green-400 border-2 border-surface-container-lowest shadow-[0_0_10px_#4ade80] animate-pulse" title="AI Mentor Active"></div>
     </div>
   </div>
@@ -850,7 +853,7 @@
     <div class="my-3 rounded-2xl mentor-holo-stage border border-primary/30 p-4 relative overflow-hidden flex flex-col sm:flex-row items-center gap-4 group cursor-pointer" onclick="sendQuickAiQuestion('What should I do next?')">
       <!-- LARGE CHARACTER IMAGE PORTRAIT -->
       <div class="relative w-32 h-44 sm:w-36 sm:h-48 rounded-2xl overflow-hidden border-2 border-secondary shadow-[0_0_25px_rgba(56,189,248,0.7)] mentor-avatar-animated mentor-scan-wrapper bg-surface-container shrink-0 hover:scale-105 transition-transform duration-300">
-        <img src="ai-mentor-avatar.png" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'" class="w-full h-full object-cover object-top scale-110"/>
+        <img src="public/ai-mentor-avatar.png" onerror="this.onerror=null; this.src='ai-mentor-avatar.png'; this.onerror=function(){this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'}" class="w-full h-full object-cover object-top scale-110"/>
         <div class="absolute bottom-2 inset-x-2 bg-black/60 backdrop-blur-sm rounded-lg text-center text-[9px] font-mono font-bold text-primary border border-primary/40 uppercase">TAP TO SPEAK 💬</div>
       </div>
 
@@ -885,7 +888,7 @@
 
     <div id="ai-chat-messages" class="flex-1 overflow-y-auto py-3 space-y-3 font-telemetry text-xs">
       <div class="p-3 rounded-2xl bg-surface-container/80 text-on-surface text-[11px] leading-relaxed flex items-start gap-2 border border-white/10">
-        <img src="ai-mentor-avatar.png" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'" class="w-6 h-6 rounded-full object-cover mt-0.5 border border-secondary"/>
+        <img src="public/ai-mentor-avatar.png" onerror="this.onerror=null; this.src='ai-mentor-avatar.png'; this.onerror=function(){this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'}" class="w-6 h-6 rounded-full object-cover mt-0.5 border border-secondary"/>
         <div>Hello! I am your KRICS AI Mentor. I have full context on your profile, 3D career graph, skills, and target career goal. Ask me anything or select a quick action!</div>
       </div>
     </div>
@@ -1290,7 +1293,7 @@
           aiCoachEl.innerHTML = `
             <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-secondary/40 space-y-3 flex flex-col sm:flex-row items-center gap-4">
               <div class="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-secondary shadow-[0_0_20px_rgba(201,174,255,0.8)] mentor-avatar-animated mentor-scan-wrapper bg-surface-container shrink-0">
-                <img src="ai-mentor-avatar.png" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'" class="w-full h-full object-cover object-top scale-110"/>
+                <img src="public/ai-mentor-avatar.png" onerror="this.onerror=null; this.src='ai-mentor-avatar.png'; this.onerror=function(){this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'}" class="w-full h-full object-cover object-top scale-110"/>
               </div>
               <div class="space-y-1.5 flex-1 text-center sm:text-left">
                 <div class="flex items-center justify-center sm:justify-start gap-2">

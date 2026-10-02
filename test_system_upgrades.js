@@ -64,7 +64,7 @@ async function main() {
 function fetchJson(path, method, body, token) {
   return new Promise((resolve, reject) => {
     const req = http.request({
-      hostname: 'localhost',
+      hostname: '127.0.0.1',
       port: 8000,
       path,
       method,
