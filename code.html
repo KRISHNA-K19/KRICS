@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>KRICS — Knowledge, Roadmap & Intelligent Career System</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            surface: "#111220",
+            "surface-dim": "#111220",
+            "surface-bright": "#373847",
+            "surface-container-lowest": "#0b0d1a",
+            "surface-container-low": "#191b28",
+            "surface-container": "#1d1f2c",
+            "surface-container-high": "#272937",
+            "surface-container-highest": "#323442",
+            primary: "#8ed5ff",
+            "primary-container": "#38bdf8",
+            "on-primary-container": "#004965",
+            secondary: "#d2bbff",
+            "secondary-container": "#6001d1",
+            "on-secondary-container": "#c9aeff",
+            tertiary: "#54ddfc",
+            "tertiary-container": "#29c1df",
+            "on-surface": "#e1e1f4",
+            "on-surface-variant": "#bdc8d1",
+            outline: "#87929a",
+            "outline-variant": "#3e484f",
+          },
+          fontFamily: {
+            headline: ["Space Grotesk", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            telemetry: ["JetBrains Mono", "monospace"],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom CSS for Video Overlay, Glassmorphism & Animations -->
+  <style>
+    /* Reset & Base */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #0b0d1a;
+      color: #e1e1f4;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    ::-webkit-scrollbar { display: none; }
+
+    /* Fullscreen Video Background */
+    .hero-video-wrapper {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .hero-video-wrapper video {
+      width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: opacity 1.5s ease;
+    }
+
+    /* Video Darkening & Atmospheric Layers */
+    .video-overlay-layer1 { position: fixed; inset: 0; background: rgba(7, 9, 20, 0.58); z-index: 1; pointer-events: none; }
+    .video-overlay-layer2 { position: fixed; inset: 0; background: radial-gradient(ellipse at 50% 35%, rgba(56, 189, 248, 0.16), rgba(96, 1, 209, 0.14) 55%, rgba(11, 13, 26, 0.82) 100%); z-index: 2; pointer-events: none; }
+    .video-overlay-layer3 { position: fixed; inset: 0; background: radial-gradient(circle at center, transparent 35%, rgba(5, 7, 18, 0.88) 100%); z-index: 3; pointer-events: none; }
+    .viewport-glow-frame { position: fixed; inset: 0; border: 1px solid rgba(56, 189, 248, 0.14); box-shadow: inset 0 0 60px rgba(56, 189, 248, 0.08), inset 0 0 120px rgba(124, 58, 237, 0.05); z-index: 4; pointer-events: none; }
+
+    /* Canvas Particle System */
+    #hero-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 5; pointer-events: none; }
+
+    /* Holographic Title Typography */
+    .krics-holographic-title {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #ffffff;
+      text-shadow: 0 0 25px rgba(56, 189, 248, 0.65), 0 0 50px rgba(124, 58, 237, 0.45), 0 0 85px rgba(56, 189, 248, 0.25);
+      background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 35%, #8ed5ff 70%, #d2bbff 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; position: relative; letter-spacing: 0.04em;
+    }
+
+    /* Glass Title Atmosphere Plate */
+    .glass-title-plate {
+      background: rgba(255, 255, 255, 0.035); backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), inset 0 0 30px rgba(56, 189, 248, 0.08), 0 0 45px rgba(124, 58, 237, 0.18);
+    }
+
+    /* Light Sweep Animation */
+    @keyframes lightSweep { 0% { transform: translateX(-150%) rotate(25deg); } 35%, 100% { transform: translateX(250%) rotate(25deg); } }
+    .light-sweep-effect { position: relative; overflow: hidden; }
+    .light-sweep-effect::after {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 60%; height: 200%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), rgba(56, 189, 248, 0.45), transparent);
+      transform: translateX(-150%) rotate(25deg); animation: lightSweep 4.5s infinite ease-in-out; pointer-events: none;
+    }
+
+    /* Glass Panels & Cards */
+    .glass-panel-card {
+      background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.11); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5); transition: all 0.3s ease;
+    }
+    .glass-panel-card:hover { border-color: rgba(56, 189, 248, 0.35); transform: translateY(-2px); }
+
+    .glass-auth-panel {
+      background: rgba(17, 18, 32, 0.75); backdrop-filter: blur(36px); -webkit-backdrop-filter: blur(36px);
+      border: 1px solid rgba(255, 255, 255, 0.14); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(56, 189, 248, 0.2);
+    }
+
+    .glass-input {
+      background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.14); color: #ffffff; transition: all 0.3s ease;
+    }
+    .glass-input:focus { outline: none; border-color: #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.35); background: rgba(255, 255, 255, 0.07); }
+
+    /* Initialization Stages */
+    .init-stage-0 #hero-center-content { opacity: 0; transform: scale(0.92) translateY(20px); filter: blur(16px); }
+    .init-stage-1 #central-light-point { opacity: 1; transform: scale(2.5); transition: all 1.2s ease; }
+    .init-stage-2 #hero-nav { opacity: 1; transform: translateY(0); transition: all 1s ease; }
+    .init-stage-2 #hero-center-content { opacity: 1; transform: scale(1); filter: blur(0); transition: all 1.2s ease; }
+
+    @keyframes radarPulse { 0% { transform: scale(0.8); opacity: 0.8; } 50% { transform: scale(1.15); opacity: 0.3; } 100% { transform: scale(0.8); opacity: 0.8; } }
+    .animate-radar { animation: radarPulse 3s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body antialiased min-h-screen relative selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden init-stage-0">
+
+  <!-- BACKGROUND VIDEO & LAYERS -->
+  <div class="hero-video-wrapper">
+    <video autoplay loop muted playsinline id="bg-video" onerror="handleVideoError()">
+      <source src="./hf_20260805_192612_e00017a8-56b0-4957-935b-9ffd87663994.mp4" type="video/mp4"/>
+    </video>
+  </div>
+  <div class="video-overlay-layer1"></div>
+  <div class="video-overlay-layer2"></div>
+  <div class="video-overlay-layer3"></div>
+  <div class="viewport-glow-frame"></div>
+
+  <!-- INTERACTIVE CANVAS PARTICLE NETWORK -->
+  <canvas id="hero-canvas"></canvas>
+
+  <!-- NAVIGATION BAR -->
+  <header class="fixed top-4 inset-x-0 z-50 px-4 transition-all duration-700" id="hero-nav">
+    <div class="max-w-5xl mx-auto">
+      <div class="h-16 bg-white/[0.04] backdrop-blur-2xl rounded-full px-6 flex items-center justify-between border border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.65)]">
+        <a href="#" onclick="showLandingView()" class="flex items-center gap-2 group">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary-container to-secondary flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.5)]">
+            <span class="text-on-primary-container text-xs font-bold font-headline">◈</span>
+          </div>
+          <span class="font-headline text-lg text-white font-bold tracking-widest">KRICS</span>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+          <a href="#" onclick="showLandingView()" class="text-primary font-semibold hover:text-white transition-colors">Platform</a>
+          <a href="#" onclick="openDashboard()" class="text-on-surface-variant hover:text-white transition-colors">Dashboard</a>
+          <a href="#" onclick="openMyKrics()" class="text-on-surface-variant hover:text-white transition-colors">Career Graph</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <button onclick="openAuthModal('login')" class="hidden sm:inline-flex text-xs font-medium text-on-surface-variant hover:text-white transition-colors px-3 py-1.5">Sign In</button>
+          <button onclick="openAuthModal('signup')" class="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-gradient-to-r from-primary-container to-secondary text-on-primary-container shadow-md hover:scale-105 transition-all">
+            Get Started
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- MODULE 01: LANDING PAGE VIEW               -->
+  <!-- ========================================== -->
+  <div id="view-landing" class="relative z-10 w-full transition-opacity duration-500">
+    <section id="hero" class="relative w-full min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16 overflow-hidden">
+      <div id="central-light-point" class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-r from-primary via-tertiary to-secondary rounded-full blur-[90px] opacity-0 z-0"></div>
+
+      <div id="hero-center-content" class="relative z-30 text-center max-w-4xl mx-auto flex flex-col items-center justify-center space-y-6 px-4">
+        <div class="inline-flex items-center gap-2 bg-white/[0.04] backdrop-blur-xl px-4 py-1.5 rounded-full border border-white/10 shadow-lg">
+          <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span></span>
+          <span class="font-telemetry text-xs text-primary tracking-widest uppercase font-semibold">AUTONOMOUS CAREER GRAPH ENGINE V4.2</span>
+        </div>
+
+        <div class="glass-title-plate relative w-full rounded-3xl py-8 px-6 sm:px-12 flex flex-col items-center justify-center overflow-hidden">
+          <h1 class="krics-holographic-title title-letters text-6xl sm:text-7xl md:text-8xl lg:text-[130px] leading-none tracking-wider font-extrabold select-none">KRICS</h1>
+          <div class="mt-4 font-body text-xs sm:text-sm md:text-base font-semibold tracking-[0.18em] text-on-surface-variant uppercase max-w-2xl">KNOWLEDGE, ROADMAP & INTELLIGENT CAREER SYSTEM</div>
+          <div class="mt-6 font-headline text-lg sm:text-xl md:text-2xl font-medium tracking-tight text-white flex flex-col sm:flex-row items-center gap-1 sm:gap-3">
+            <span>CONNECT YOUR SKILLS.</span>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-tertiary to-secondary font-bold">BUILD YOUR FUTURE.</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 w-full max-w-md">
+          <button onclick="openAuthModal('signup')" class="light-sweep-effect group relative w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full font-headline text-sm font-bold text-white bg-gradient-to-r from-primary-container/80 via-primary/90 to-secondary/80 border border-primary/50 shadow-[0_0_35px_rgba(56,189,248,0.45)] hover:scale-105 transition-all">
+            <span>BUILD MY KRICS</span>
+            <span class="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </button>
+          <button onclick="openDashboard()" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-7 py-4 rounded-full font-headline text-sm font-medium text-on-surface-variant bg-white/[0.04] backdrop-blur-xl border border-white/12 hover:text-white transition-all">
+            <span class="material-symbols-outlined text-base text-tertiary">dashboard</span>
+            <span>ENTER DASHBOARD</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODULE 02: AUTHENTICATION MODAL           -->
+  <!-- ========================================== -->
+  <div id="auth-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-surface-container-lowest/80 backdrop-blur-xl transition-all duration-500 overflow-y-auto">
+    <div class="glass-auth-panel relative w-full max-w-xl rounded-3xl p-6 sm:p-10 my-8 space-y-6">
+      <button onclick="closeAuthModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors"><span class="material-symbols-outlined text-lg">close</span></button>
+      <div class="text-center space-y-2">
+        <div class="font-headline text-3xl font-extrabold tracking-wider text-white">KRICS</div>
+        <div class="font-telemetry text-[11px] font-semibold text-primary tracking-[0.2em] uppercase">KNOWLEDGE, ROADMAP & INTELLIGENT CAREER SYSTEM</div>
+      </div>
+
+      <div id="auth-screen-login" class="space-y-5">
+        <div class="text-center font-headline text-lg font-bold text-white">Welcome back</div>
+        <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+          <input type="email" required placeholder="krishna@krics.io" class="w-full glass-input rounded-xl px-4 py-3 text-sm"/>
+          <input type="password" required placeholder="••••••••••••" class="w-full glass-input rounded-xl px-4 py-3 text-sm"/>
+          <button type="submit" class="light-sweep-effect w-full py-3.5 rounded-xl font-headline text-sm font-bold text-white bg-gradient-to-r from-primary-container via-primary to-secondary shadow-lg">ENTER KRICS →</button>
+        </form>
+      </div>
+
+      <div id="auth-screen-signup" class="hidden space-y-5">
+        <div class="text-center font-headline text-lg font-bold text-white">Initialize Identity</div>
+        <form onsubmit="handleSignupSubmit(event)" class="space-y-4">
+          <input type="text" required placeholder="Krishna Kumar" class="w-full glass-input rounded-xl px-4 py-3 text-sm"/>
+          <input type="email" required placeholder="krishna@krics.io" class="w-full glass-input rounded-xl px-4 py-3 text-sm"/>
+          <input type="password" required placeholder="••••••••••••" class="w-full glass-input rounded-xl px-4 py-3 text-sm"/>
+          <button type="submit" class="light-sweep-effect w-full py-3.5 rounded-xl font-headline text-sm font-bold text-white bg-gradient-to-r from-primary-container via-primary to-secondary shadow-lg">CREATE ACCOUNT & START →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODULE 04-17: APPLICATION ROUTE SHELL      -->
+  <!-- ========================================== -->
+  <div id="view-dashboard" class="relative z-30 hidden w-full min-h-screen flex flex-col lg:flex-row transition-opacity duration-500">
+    
+    <!-- SIDEBAR NAVIGATION CONSOLE -->
+    <aside class="hidden lg:flex flex-col justify-between w-64 h-screen sticky top-0 bg-surface-container-low/80 backdrop-blur-2xl border-r border-white/10 p-6 z-40 select-none">
+      <div class="space-y-8">
+        <a href="#" onclick="showLandingView()" class="flex items-center gap-2 group">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary-container to-secondary flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.5)]">
+            <span class="text-on-primary-container text-xs font-bold font-headline">◈</span>
+          </div>
+          <span class="font-headline text-lg text-white font-bold tracking-widest">KRICS</span>
+        </a>
+
+        <div class="space-y-5 font-telemetry text-xs">
+          <div class="space-y-1">
+            <div class="text-[10px] text-on-surface-variant uppercase tracking-widest font-semibold px-3">MAIN</div>
+            <a href="#" onclick="switchRoute('overview')" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-primary/15 text-primary font-semibold border border-primary/30"><span class="material-symbols-outlined text-sm">grid_view</span> Overview</a>
+            <a href="#" onclick="openMyKrics()" class="flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5"><span class="material-symbols-outlined text-sm">hub</span> My KRICS</a>
+          </div>
+
+          <div class="space-y-1">
+            <div class="text-[10px] text-on-surface-variant uppercase tracking-widest font-semibold px-3">CAREER</div>
+            <a href="#" onclick="switchRoute('skills')" class="flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5"><span class="material-symbols-outlined text-sm">psychology</span> Skills</a>
+            <a href="#" onclick="switchRoute('skillgap')" class="flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5"><span class="material-symbols-outlined text-sm">flaky</span> Skill Gap</a>
+            <a href="#" onclick="switchRoute('projects')" class="flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5"><span class="material-symbols-outlined text-sm">terminal</span> Projects</a>
+            <a href="#" onclick="switchRoute('experience')" class="flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5"><span class="material-symbols-outlined text-sm">corporate_fare</span> Experience</a>
+            <a href="#" onclick="switchRoute('learning')" class="flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5"><span class="material-symbols-outlined text-sm">auto_stories</span> Learning</a>
+          </div>
+
+          <div class="space-y-1">
+            <div class="text-[10px] text-on-surface-variant uppercase tracking-widest font-semibold px-3">OPPORTUNITIES</div>
+            <a href="#" onclick="switchRoute('careerpaths')" class="flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5"><span class="material-symbols-outlined text-sm">route</span> Career Paths</a>
+            <a href="#" onclick="switchRoute('opportunities')" class="flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5"><span class="material-symbols-outlined text-sm">satellite_alt</span> Opportunities</a>
+            <a href="#" onclick="switchRoute('resume')" class="flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5"><span class="material-symbols-outlined text-sm">badge</span> Resume</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-white/10 flex items-center justify-between font-telemetry">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-primary font-bold text-xs">KK</div>
+          <div>
+            <div class="text-xs font-bold text-white" id="dash-user-name">Krishna</div>
+            <div class="text-[10px] text-on-surface-variant" id="dash-user-goal">Data Scientist</div>
+          </div>
+        </div>
+        <button onclick="showLandingView()" class="text-on-surface-variant hover:text-red-400 p-1"><span class="material-symbols-outlined text-sm">logout</span></button>
+      </div>
+    </aside>
+
+    <!-- MAIN ROUTE DISPLAY AREA -->
+    <main class="flex-1 flex flex-col min-h-screen">
+      <header class="h-16 bg-surface-container-low/60 backdrop-blur-xl border-b border-white/10 px-6 flex items-center justify-between sticky top-0 z-30">
+        <div>
+          <h1 class="font-headline text-base font-bold text-white" id="dash-greeting">Good evening, Krishna.</h1>
+          <p class="font-body text-xs text-on-surface-variant">Here's how your career journey is progressing.</p>
+        </div>
+      </header>
+
+      <div class="p-6 max-w-7xl mx-auto w-full pb-24 space-y-8" id="route-container-workspace">
+        
+        <!-- ROUTE 01: OVERVIEW DASHBOARD -->
+        <div id="route-view-overview" class="route-view space-y-8">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-7 glass-panel-card rounded-3xl p-6 sm:p-8 space-y-6">
+              <span class="font-telemetry text-xs text-primary font-bold uppercase tracking-widest">YOUR CAREER DIRECTION</span>
+              <h2 class="font-headline text-3xl font-extrabold text-white">DATA SCIENTIST</h2>
+              <div class="bg-surface-container-lowest/80 rounded-2xl p-4 border border-white/10 flex items-center justify-between">
+                <div>
+                  <div class="font-telemetry text-[10px] text-on-surface-variant uppercase">INITIAL PROFILE ALIGNMENT</div>
+                  <div class="font-telemetry text-3xl font-bold text-white font-mono">78.4%</div>
+                </div>
+                <div class="w-16 h-16 rounded-full border-4 border-surface-container-high border-t-primary flex items-center justify-center font-telemetry text-xs font-bold text-primary">78%</div>
+              </div>
+            </div>
+
+            <div class="lg:col-span-5 glass-panel-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-4">
+              <h3 class="font-headline text-lg font-bold text-white">YOUR KRICS</h3>
+              <p class="font-body text-xs text-on-surface-variant">Your career journey, connected.</p>
+              <button onclick="openMyKrics()" class="w-full py-3 rounded-xl font-headline text-xs font-bold text-white bg-white/5 border border-white/15 hover:bg-primary/20 transition-all">OPEN MY KRICS →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROUTE 02: SKILLS MODULE (Req Module 06) -->
+        <div id="route-view-skills" class="route-view hidden space-y-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <h2 class="font-headline text-2xl font-bold text-white">Skills Intelligence</h2>
+              <p class="font-body text-xs text-on-surface-variant">18 verified technical synapses mapped.</p>
+            </div>
+            <button onclick="alert('Add skill modal active')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-on-primary-container text-xs font-bold font-headline">+ ADD SKILL</button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="glass-panel-card rounded-2xl p-4 space-y-3 font-telemetry">
+              <div class="flex justify-between items-center"><span class="text-sm font-bold text-white">Python</span><span class="text-tertiary text-xs">ADVANCED (90%)</span></div>
+              <div class="text-[10px] text-on-surface-variant">Used in: MediLink, Student Analytics</div>
+            </div>
+            <div class="glass-panel-card rounded-2xl p-4 space-y-3 font-telemetry">
+              <div class="flex justify-between items-center"><span class="text-sm font-bold text-white">React</span><span class="text-primary text-xs">ADVANCED (88%)</span></div>
+              <div class="text-[10px] text-on-surface-variant">Used in: MediLink, Portfolio</div>
+            </div>
+            <div class="glass-panel-card rounded-2xl p-4 space-y-3 font-telemetry">
+              <div class="flex justify-between items-center"><span class="text-sm font-bold text-white">SQL</span><span class="text-secondary text-xs">INTERMEDIATE (72%)</span></div>
+              <div class="text-[10px] text-on-surface-variant">Used in: MediLink Database</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROUTE 03: SKILL GAP MODULE (Req Module 07) -->
+        <div id="route-view-skillgap" class="route-view hidden space-y-6">
+          <div>
+            <h2 class="font-headline text-2xl font-bold text-white">Skill Gap Analysis</h2>
+            <p class="font-body text-xs text-on-surface-variant">Target Career Horizon: <strong class="text-white">Data Scientist</strong></p>
+          </div>
+
+          <div class="space-y-3 font-telemetry text-xs">
+            <div class="glass-panel-card rounded-2xl p-4 flex items-center justify-between">
+              <div><div class="text-white font-bold">Inferential Statistics</div><div class="text-on-surface-variant text-[10px]">Required: Advanced • Current: Intermediate</div></div>
+              <span class="bg-yellow-500/20 text-yellow-400 px-2.5 py-1 rounded font-bold">MEDIUM GAP</span>
+            </div>
+            <div class="glass-panel-card rounded-2xl p-4 flex items-center justify-between">
+              <div><div class="text-white font-bold">Machine Learning Evaluation</div><div class="text-on-surface-variant text-[10px]">Required: Advanced • Current: Intermediate</div></div>
+              <span class="bg-primary/20 text-primary px-2.5 py-1 rounded font-bold">SMALL GAP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROUTE 04: PROJECTS MODULE (Req Module 08) -->
+        <div id="route-view-projects" class="route-view hidden space-y-6">
+          <div class="flex justify-between items-center">
+            <div><h2 class="font-headline text-2xl font-bold text-white">Engineering Projects</h2><p class="font-body text-xs text-on-surface-variant">08 technical artifacts deployed.</p></div>
+            <button onclick="alert('Create project prompt active')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-on-primary-container text-xs font-bold font-headline">+ CREATE PROJECT</button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="glass-panel-card rounded-2xl p-5 space-y-3 font-telemetry">
+              <div class="flex justify-between items-center"><h3 class="font-headline font-bold text-white">MediLink Platform</h3><span class="text-tertiary text-[10px]">COMPLETED</span></div>
+              <p class="font-body text-xs text-on-surface-variant">Healthcare telemetry microservice.</p>
+              <div class="text-[10px] text-primary">Techs: React · Node.js · PostgreSQL</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROUTE 05: RESUME ARCHITECT (Req Module 13) -->
+        <div id="route-view-resume" class="route-view hidden space-y-6">
+          <div class="flex justify-between items-center">
+            <div><h2 class="font-headline text-2xl font-bold text-white">Automated Resume Architect</h2><p class="font-body text-xs text-on-surface-variant">Zero manual re-entry required.</p></div>
+            <button onclick="alert('Generating PDF Resume...')" class="px-4 py-2 rounded-xl bg-primary-container text-on-primary-container text-xs font-bold font-headline">DOWNLOAD RESUME PDF →</button>
+          </div>
+
+          <div class="glass-panel-card rounded-3xl p-8 space-y-4 font-telemetry text-xs">
+            <div class="border-b border-white/10 pb-4">
+              <h3 class="font-headline text-xl font-bold text-white">Krishna Kumar</h3>
+              <div class="text-tertiary">Data Scientist & AI Engineer • krishna@krics.io</div>
+            </div>
+            <div>
+              <div class="font-bold text-primary">TECHNICAL SKILLS</div>
+              <div class="text-white">Python, React, SQL, Machine Learning, PyTorch, Docker</div>
+            </div>
+            <div>
+              <div class="font-bold text-primary">PROJECTS</div>
+              <div class="text-white font-bold">MediLink Platform</div>
+              <div class="text-on-surface-variant">Healthcare telemetry and appointment routing microservice built with React and Node.js.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODULE 05: MY KRICS FULL CAREER NETWORK    -->
+  <!-- ========================================== -->
+  <div id="view-mykrics" class="fixed inset-0 z-50 hidden bg-surface-container-lowest flex flex-col justify-between p-4 sm:p-6 transition-all duration-500 overflow-hidden">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 z-20 font-telemetry bg-surface-container-low/80 backdrop-blur-2xl p-4 rounded-2xl border border-white/15 shadow-xl">
+      <div class="flex items-center gap-3">
+        <a href="#" onclick="closeMyKrics()" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary-container to-secondary flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.5)]">
+            <span class="text-on-primary-container text-xs font-bold font-headline">◈</span>
+          </div>
+          <span class="font-headline text-lg text-white font-bold tracking-widest">MY KRICS</span>
+        </a>
+        <span class="text-xs text-on-surface-variant">• INTERACTIVE CAREER TOPOLOGY</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="closeMyKrics()" class="px-3 py-1.5 rounded-xl bg-white/10 text-white hover:bg-white/20 text-xs">CLOSE GRAPH</button>
+      </div>
+    </div>
+
+    <div class="relative w-full h-[75vh] flex items-center justify-center my-4 overflow-hidden rounded-3xl border border-white/10 bg-surface-container-lowest/90">
+      <div class="relative z-10 text-center space-y-8">
+        <div class="px-8 py-3 rounded-2xl bg-gradient-to-r from-primary-container via-primary to-secondary text-on-primary-container font-headline font-bold text-xl shadow-[0_0_40px_rgba(56,189,248,0.6)]">
+          YOU (Krishna)
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 font-headline text-sm">
+          <div class="p-4 rounded-xl bg-surface-container border border-primary text-primary">SKILLS: Python, React, SQL</div>
+          <div class="p-4 rounded-xl bg-surface-container border border-tertiary text-tertiary">PROJECTS: MediLink</div>
+          <div class="p-4 rounded-xl bg-surface-container border border-secondary text-secondary">EXPERIENCE: IIT Madras</div>
+          <div class="p-4 rounded-xl bg-surface-container border border-primary-container text-white">GOAL: Data Scientist</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT: MASTER ROUTER LOGIC -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const body = document.body;
+      setTimeout(() => { body.classList.remove('init-stage-0'); body.classList.add('init-stage-1'); }, 1000);
+      setTimeout(() => { body.classList.remove('init-stage-1'); body.classList.add('init-stage-2'); }, 2600);
+    });
+
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      particles = [];
+      for (let i = 0; i < 40; i++) particles.push({ x: Math.random()*width, y: Math.random()*height, vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3, radius: Math.random()*2+0.8 });
+    }
+    function animateParticles() {
+      ctx.clearRect(0,0,width,height);
+      for (let p of particles) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x<0) p.x=width; if (p.x>width) p.x=0; if (p.y<0) p.y=height; if (p.y>height) p.y=0;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2); ctx.fillStyle = '#38bdf8'; ctx.globalAlpha = 0.3; ctx.fill();
+      }
+      requestAnimationFrame(animateParticles);
+    }
+    window.addEventListener('resize', resizeCanvas); resizeCanvas(); animateParticles();
+
+    function showLandingView() {
+      document.getElementById('view-dashboard').classList.add('hidden');
+      document.getElementById('view-mykrics').classList.add('hidden');
+      document.getElementById('view-landing').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function openDashboard() {
+      document.getElementById('view-landing').classList.add('hidden');
+      document.getElementById('auth-modal').classList.add('hidden');
+      document.getElementById('view-dashboard').classList.remove('hidden');
+      switchRoute('overview');
+    }
+    function openMyKrics() { document.getElementById('view-mykrics').classList.remove('hidden'); }
+    function closeMyKrics() { document.getElementById('view-mykrics').classList.add('hidden'); }
+
+    function switchRoute(routeName) {
+      document.querySelectorAll('.route-view').forEach(el => el.classList.add('hidden'));
+      const target = document.getElementById(`route-view-${routeName}`);
+      if (target) target.classList.remove('hidden');
+      else document.getElementById('route-view-overview').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openAuthModal(screen) { document.getElementById('auth-modal').classList.remove('hidden'); }
+    function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+    function handleLoginSubmit(e) { e.preventDefault(); openDashboard(); }
+    function handleSignupSubmit(e) { e.preventDefault(); openDashboard(); }
+    function handleVideoError() { const v = document.querySelector('.hero-video-wrapper'); if (v) v.style.display = 'none'; }
+  </script>
+</body>
+</html>

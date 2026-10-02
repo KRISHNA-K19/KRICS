@@ -1,0 +1,2603 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>KRICS — Knowledge, Roadmap & Intelligent Career System</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
+  <!-- Three.js and OrbitControls for 3D WebGL Career Knowledge Graph -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            surface: "#111220",
+            "surface-dim": "#111220",
+            "surface-bright": "#373847",
+            "surface-container-lowest": "#0b0d1a",
+            "surface-container-low": "#191b28",
+            "surface-container": "#1d1f2c",
+            "surface-container-high": "#272937",
+            "surface-container-highest": "#323442",
+            primary: "#8ed5ff",
+            "primary-container": "#38bdf8",
+            "on-primary-container": "#004965",
+            secondary: "#d2bbff",
+            "secondary-container": "#6001d1",
+            "on-secondary-container": "#c9aeff",
+            tertiary: "#54ddfc",
+            "tertiary-container": "#29c1df",
+            "on-surface": "#e1e1f4",
+            "on-surface-variant": "#bdc8d1",
+            outline: "#87929a",
+            "outline-variant": "#3e484f",
+          },
+          fontFamily: {
+            headline: ["Space Grotesk", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            telemetry: ["JetBrains Mono", "monospace"],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom CSS for Cinematic Video Overlay, Glassmorphism, Holographic Text & Animations -->
+  <style>
+    /* Reset & Base */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #0b0d1a;
+      color: #e1e1f4;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    ::-webkit-scrollbar { display: none; }
+
+    /* Video Background Container */
+    .hero-video-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .hero-video-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+      transition: opacity 1.5s ease;
+    }
+
+    /* Video Darkening & Atmospheric Layers */
+    .video-overlay-layer1 {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 9, 20, 0.58);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .video-overlay-layer2 {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 40%, rgba(56, 189, 248, 0.12) 0%, rgba(96, 1, 209, 0.18) 50%, rgba(11, 13, 26, 0.85) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .video-overlay-layer3 {
+      position: fixed;
+      inset: 0;
+      box-shadow: inset 0 0 120px rgba(7, 9, 20, 0.95);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* Particle Canvas */
+    #hero-particle-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    /* Glassmorphic Panel Styling */
+    .glass-panel-card {
+      background: rgba(29, 31, 44, 0.55);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+    .glass-input {
+      background: rgba(11, 13, 26, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e1e1f4;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .glass-input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Holographic Title Styling & Interactive Dynamic Effects */
+    .holographic-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 0%, #a5f3fc 35%, #c9aeff 70%, #ffffff 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 35px rgba(56, 189, 248, 0.45);
+      letter-spacing: -0.02em;
+      transition: text-shadow 0.4s ease, filter 0.4s ease, letter-spacing 0.4s ease;
+      will-change: transform, text-shadow, filter;
+    }
+
+    .holographic-title.title-hover-active {
+      filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.75)) drop-shadow(0 0 50px rgba(168, 85, 247, 0.55));
+      letter-spacing: 0.01em;
+    }
+
+    /* Interactive Light Sweep animation across title letters */
+    @keyframes titleSweepAnim {
+      0% { transform: translateX(-160%) skewX(-25deg); opacity: 0; }
+      20% { opacity: 0.95; }
+      80% { opacity: 0.95; }
+      100% { transform: translateX(260%) skewX(-25deg); opacity: 0; }
+    }
+
+    .title-sweep-glow {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      border-radius: 1rem;
+    }
+
+    .holographic-title.title-sweep-active .title-sweep-glow::after {
+      content: '';
+      position: absolute;
+      top: -30%;
+      left: -20%;
+      width: 40%;
+      height: 160%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), rgba(56, 189, 248, 0.85), transparent);
+      animation: titleSweepAnim 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      pointer-events: none;
+    }
+
+    /* Holographic Reflection Layer */
+    .title-holo-reflection {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.35) 0%, rgba(168, 85, 247, 0.25) 45%, transparent 75%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      filter: blur(10px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .holographic-title.title-hover-active .title-holo-reflection {
+      opacity: 1;
+    }
+
+    /* Light Sweep Animation for CTA Buttons */
+    @keyframes lightSweep {
+      0% { transform: translateX(-100%) rotate(25deg); }
+      100% { transform: translateX(300%) rotate(25deg); }
+    }
+    .animate-light-sweep::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 50%;
+      height: 200%;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: lightSweep 4s infinite ease-in-out;
+    }
+
+    /* Orbit node animation */
+    @keyframes floatDrift {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(2deg); }
+    }
+    .node-float { animation: floatDrift 6s ease-in-out infinite; }
+
+    /* Animated AI Mentor Custom Styles */
+    @keyframes mentorBreath {
+      0%, 100% { transform: translateY(0px) scale(1); filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6)); }
+      50% { transform: translateY(-4px) scale(1.04); filter: drop-shadow(0 0 22px rgba(210, 187, 255, 0.9)); }
+    }
+    .mentor-avatar-animated {
+      animation: mentorBreath 4s ease-in-out infinite;
+    }
+
+    @keyframes mentorScanline {
+      0% { top: -100%; }
+      100% { top: 200%; }
+    }
+    .mentor-scan-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+    .mentor-scan-wrapper::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent, rgba(56, 189, 248, 0.45), transparent);
+      height: 40%;
+      animation: mentorScanline 3.2s infinite linear;
+      pointer-events: none;
+    }
+
+    @keyframes mentorRotateRing {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .mentor-ring-glow {
+      animation: mentorRotateRing 14s linear infinite;
+    }
+
+    @keyframes mentorPulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+      50% { box-shadow: 0 0 30px rgba(210, 187, 255, 0.8); }
+    }
+    .mentor-pulse-box {
+      animation: mentorPulseGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes mentorBoom {
+      0% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 15px rgba(56, 189, 248, 0.6)); }
+      40% { transform: scale(1.4); filter: brightness(1.9) drop-shadow(0 0 50px rgba(56, 189, 248, 1)); }
+      100% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 25px rgba(210, 187, 255, 0.9)); }
+    }
+    .animate-mentor-boom {
+      animation: mentorBoom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Large Holographic AI Mentor Interactive CSS */
+    @keyframes mentorBreathHero {
+      0%, 100% { transform: translateY(0px) scale(1); filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.7)); }
+      50% { transform: translateY(-8px) scale(1.03); filter: drop-shadow(0 0 35px rgba(210, 187, 255, 0.95)); }
+    }
+    .mentor-hero-animated {
+      animation: mentorBreathHero 5s ease-in-out infinite;
+    }
+
+    @keyframes mentorHoloGrid {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 40px; }
+    }
+    .mentor-holo-stage {
+      background: radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.25) 0%, rgba(96, 1, 209, 0.3) 50%, rgba(11, 13, 26, 0.95) 100%),
+                  linear-gradient(rgba(56, 189, 248, 0.1) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(56, 189, 248, 0.1) 1px, transparent 1px);
+      background-size: 100% 100%, 20px 20px, 20px 20px;
+    }
+
+    @keyframes mentorSpeechWave {
+      0%, 100% { height: 6px; }
+      50% { height: 22px; }
+    }
+    .mentor-soundwave span {
+      display: inline-block;
+      width: 3px;
+      background: #38bdf8;
+      border-radius: 2px;
+      animation: mentorSpeechWave 1.2s infinite ease-in-out;
+    }
+    .mentor-soundwave span:nth-child(2) { animation-delay: 0.2s; }
+    .mentor-soundwave span:nth-child(3) { animation-delay: 0.4s; }
+    .mentor-soundwave span:nth-child(4) { animation-delay: 0.6s; }
+
+    @media print {
+      body { background: white !important; color: black !important; }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+
+<body class="bg-[#0b0d1a] text-[#e1e1f4] min-h-screen relative font-body selection:bg-primary-container selection:text-on-primary-container">
+
+  <!-- ========================================== -->
+  <!-- 1. FULL-SCREEN BACKGROUND VIDEO CONTAINER -->
+  <!-- ========================================== -->
+  <div class="hero-video-wrapper no-print">
+    <video autoplay loop muted playsinline onerror="handleVideoError()">
+      <source src="hf_20260805_192612_e00017a8-56b0-4957-935b-9ffd87663994.mp4" type="video/mp4"/>
+    </video>
+  </div>
+
+  <div class="video-overlay-layer1 no-print"></div>
+  <div class="video-overlay-layer2 no-print"></div>
+  <div class="video-overlay-layer3 no-print"></div>
+
+  <canvas id="hero-particle-canvas" class="no-print"></canvas>
+
+  <!-- ========================================== -->
+  <!-- 2. LANDING & UNAUTHENTICATED VIEW -->
+  <!-- ========================================== -->
+  <div id="view-landing" class="relative z-10 min-h-screen flex flex-col justify-between transition-all duration-700">
+    <nav class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-6xl px-6 py-3.5 rounded-full bg-surface-container-low/40 backdrop-blur-2xl border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex items-center justify-between font-headline text-xs font-semibold">
+      <a href="#" onclick="showLandingView()" class="flex items-center gap-2.5 group">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary-container to-secondary flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.5)] group-hover:scale-110 transition-transform">
+          <span class="text-on-primary-container text-xs font-bold">◈</span>
+        </div>
+        <span class="font-headline text-sm font-extrabold tracking-widest text-white group-hover:text-primary transition-colors">KRICS</span>
+      </a>
+
+      <div class="hidden md:flex items-center gap-8 text-on-surface-variant font-telemetry tracking-wide">
+        <a href="#architecture" class="hover:text-white transition-colors">ARCHITECTURE</a>
+        <a href="#intelligence" class="hover:text-white transition-colors">INTELLIGENCE</a>
+        <a href="#network" class="hover:text-white transition-colors">3D GRAPH</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="showAuthModal('login')" class="px-4 py-2 rounded-full border border-white/20 text-white hover:bg-white/10 transition-all font-telemetry text-[11px]">SIGN IN</button>
+        <button onclick="showAuthModal('signup')" class="px-5 py-2 rounded-full bg-gradient-to-r from-primary-container to-secondary text-on-primary-container font-bold hover:shadow-[0_0_20px_rgba(56,189,248,0.6)] transition-all font-telemetry text-[11px]">BUILD MY KRICS</button>
+      </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16 relative text-center w-full mx-auto">
+      <div class="max-w-4xl w-full mx-auto space-y-6 z-10 flex flex-col items-center justify-center text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-container/60 backdrop-blur-xl border border-primary/30 text-primary font-telemetry text-xs tracking-widest">
+          <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+          AUTONOMOUS CAREER INTELLIGENCE PLATFORM
+        </div>
+
+        <div class="relative flex justify-center items-center w-full mx-auto py-2 text-center">
+          <h1 id="krics-hero-title" class="holographic-title text-6xl sm:text-8xl lg:text-9xl tracking-tight leading-none font-extrabold uppercase cursor-pointer select-none relative z-10 text-center mx-auto inline-block">
+            <span class="relative z-10 inline-block">KRICS</span>
+            <span class="title-sweep-glow"></span>
+            <span class="title-holo-reflection"></span>
+          </h1>
+        </div>
+
+        <p class="font-headline text-lg sm:text-2xl text-on-surface font-semibold tracking-wider uppercase text-center max-w-3xl mx-auto">
+          Knowledge, Roadmap & Intelligent Career System
+        </p>
+
+        <p class="font-body text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto leading-relaxed text-center">
+          Connect your skills, projects, experience, and learning into a single evolving 3D neural career universe.
+        </p>
+
+        <div class="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4 font-headline">
+          <button onclick="showAuthModal('signup')" class="relative overflow-hidden w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-primary-container via-primary to-secondary text-on-primary-container font-bold text-sm tracking-wider hover:scale-105 transition-all shadow-[0_0_30px_rgba(56,189,248,0.5)] animate-light-sweep">
+            BUILD YOUR KRICS INSTANCE →
+          </button>
+          <button onclick="showAuthModal('login')" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-surface-container/60 backdrop-blur-xl border border-white/20 text-white font-bold text-sm tracking-wider hover:bg-white/10 transition-all">
+            ENTER ACCESS PORTAL
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 3. AUTHENTICATION & ONBOARDING MODAL -->
+  <!-- ========================================== -->
+  <div id="modal-auth" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="glass-panel-card w-full max-w-md rounded-3xl p-8 space-y-6 relative border border-white/20 shadow-2xl">
+      <button onclick="closeAuthModal()" class="absolute top-6 right-6 text-on-surface-variant hover:text-white"><span class="material-symbols-outlined">close</span></button>
+
+      <div class="text-center space-y-2">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary-container to-secondary flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(56,189,248,0.5)]">
+          <span class="text-on-primary-container text-sm font-bold font-headline">◈</span>
+        </div>
+        <h2 class="font-headline text-2xl font-bold text-white uppercase tracking-wider" id="auth-title">ACCESS KRICS</h2>
+        <p class="font-body text-xs text-on-surface-variant" id="auth-subtitle">Initialize your identity in the neural graph.</p>
+      </div>
+
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4 font-telemetry text-xs">
+        <div id="auth-field-fullname" class="hidden space-y-1">
+          <label class="text-on-surface-variant uppercase">Full Name</label>
+          <input type="text" id="auth-input-fullname" placeholder="Krishna Kumar" class="w-full glass-input rounded-xl px-4 py-3"/>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-on-surface-variant uppercase">Email Credentials</label>
+          <input type="email" id="auth-input-email" required placeholder="user@krics.ai" class="w-full glass-input rounded-xl px-4 py-3"/>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-on-surface-variant uppercase">Access Password</label>
+          <input type="password" id="auth-input-password" required placeholder="••••••••••••" class="w-full glass-input rounded-xl px-4 py-3"/>
+        </div>
+
+        <div id="auth-error-message" class="hidden p-3 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300 text-xs"></div>
+
+        <button type="submit" id="auth-submit-btn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary-container to-secondary font-headline font-bold text-on-primary-container text-xs tracking-widest uppercase hover:scale-[1.02] transition-all shadow-lg">
+          INITIALIZE INSTANCE →
+        </button>
+      </form>
+
+      <div class="text-center font-telemetry text-xs text-on-surface-variant">
+        <span id="auth-toggle-prompt">Already initialized?</span>
+        <button onclick="toggleAuthMode()" class="text-primary font-bold hover:underline ml-1" id="auth-toggle-btn">Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 4. MAIN AUTHENTICATED MERN APPLICATION DASHBOARD -->
+  <!-- ========================================== -->
+  <div id="view-dashboard" class="relative z-10 hidden min-h-screen flex">
+    
+    <!-- SIDE NAVIGATION RAIL -->
+    <aside class="w-64 bg-surface-container-lowest/80 backdrop-blur-2xl border-r border-white/10 p-6 flex flex-col justify-between hidden md:flex sticky top-0 h-screen z-40">
+      <div class="space-y-8">
+        <a href="#" onclick="switchRoute('overview')" class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-primary-container to-secondary flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.5)]">
+            <span class="text-on-primary-container text-sm font-bold font-headline">◈</span>
+          </div>
+          <span class="font-headline text-lg font-extrabold tracking-widest text-white">KRICS</span>
+        </a>
+
+        <div class="space-y-6 font-telemetry text-xs">
+          <div class="space-y-1">
+            <div class="text-[10px] text-on-surface-variant uppercase tracking-widest font-semibold px-3">CORE NEURAL SYSTEM</div>
+            <a href="#" onclick="switchRoute('overview')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-white bg-white/10 font-bold" data-route="overview"><span class="material-symbols-outlined text-sm">dashboard</span> Overview</a>
+            <a href="#" onclick="openMyKrics()" class="flex items-center gap-3 px-3 py-2 rounded-xl text-primary hover:bg-primary/10 transition-all font-bold"><span class="material-symbols-outlined text-sm">hub</span> 3D Career Graph</a>
+            <a href="#" onclick="switchRoute('skills')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="skills"><span class="material-symbols-outlined text-sm">psychology</span> Skills Matrix</a>
+            <a href="#" onclick="switchRoute('skillgap')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="skillgap"><span class="material-symbols-outlined text-sm">troubleshoot</span> Skill Gap</a>
+            <a href="#" onclick="switchRoute('projects')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="projects"><span class="material-symbols-outlined text-sm">folder_code</span> Projects</a>
+            <a href="#" onclick="switchRoute('roadmap')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="roadmap"><span class="material-symbols-outlined text-sm">timeline</span> Roadmap</a>
+            <a href="#" onclick="switchRoute('experience')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="experience"><span class="material-symbols-outlined text-sm">corporate_fare</span> Experience</a>
+            <a href="#" onclick="switchRoute('learning')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="learning"><span class="material-symbols-outlined text-sm">auto_stories</span> Learning</a>
+          </div>
+
+          <div class="space-y-1">
+            <div class="text-[10px] text-on-surface-variant uppercase tracking-widest font-semibold px-3">INTELLIGENCE & OPPORTUNITIES</div>
+            <a href="#" onclick="switchRoute('careerpaths')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="careerpaths"><span class="material-symbols-outlined text-sm">route</span> Career Paths</a>
+            <a href="#" onclick="switchRoute('opportunities')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="opportunities"><span class="material-symbols-outlined text-sm">satellite_alt</span> Opportunities</a>
+            <a href="#" onclick="switchRoute('resume')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="resume"><span class="material-symbols-outlined text-sm">badge</span> Resume</a>
+            <a href="#" onclick="switchRoute('analytics')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="analytics"><span class="material-symbols-outlined text-sm">analytics</span> Analytics</a>
+            <a href="#" onclick="switchRoute('profile')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="profile"><span class="material-symbols-outlined text-sm">account_circle</span> Manage Profile</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-white/10 flex items-center justify-between font-telemetry">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="switchRoute('profile')">
+          <div class="w-9 h-9 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-primary font-bold text-xs overflow-hidden" id="dash-avatar">
+            <span>KK</span>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-white" id="dash-user-name">Krishna</div>
+            <div class="text-[10px] text-on-surface-variant" id="dash-user-goal">Data Scientist</div>
+          </div>
+        </div>
+        <button onclick="handleLogout()" title="Logout" class="text-on-surface-variant hover:text-red-400 p-1"><span class="material-symbols-outlined text-sm">logout</span></button>
+      </div>
+    </aside>
+
+    <!-- MAIN ROUTE DISPLAY AREA -->
+    <main class="flex-1 flex flex-col min-h-screen">
+      <header class="h-16 bg-surface-container-low/60 backdrop-blur-xl border-b border-white/10 px-6 flex items-center justify-between sticky top-0 z-30">
+        <div>
+          <h1 class="font-headline text-base font-bold text-white" id="dash-greeting">Good day, Krishna.</h1>
+          <p class="font-body text-xs text-on-surface-variant">Connected Career Intelligence Engine Active.</p>
+        </div>
+        <div class="flex items-center gap-3 font-telemetry text-xs">
+          <button onclick="openShareModal()" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold flex items-center gap-1.5 transition-all">
+            <span class="material-symbols-outlined text-sm text-primary">share</span> SHARE PROFILE
+          </button>
+          <div class="px-3 py-1 rounded-full bg-surface-container border border-primary/30 text-primary" id="dash-alignment-badge">Alignment: 78.4%</div>
+        </div>
+      </header>
+
+      <div class="p-6 max-w-7xl mx-auto w-full pb-24 space-y-8" id="route-container-workspace">
+        
+        <!-- ROUTE 01: OVERVIEW DASHBOARD -->
+        <div id="route-view-overview" class="route-view space-y-8">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-7 glass-panel-card rounded-3xl p-6 sm:p-8 space-y-6">
+              <span class="font-telemetry text-xs text-primary font-bold uppercase tracking-widest">TRANSPARENT CAREER ALIGNMENT</span>
+              <h2 class="font-headline text-3xl font-extrabold text-white" id="overview-career-goal">DATA SCIENTIST</h2>
+              <div class="bg-surface-container-lowest/80 rounded-2xl p-4 border border-white/10 flex items-center justify-between">
+                <div>
+                  <div class="font-telemetry text-[10px] text-on-surface-variant uppercase">WEIGHTED ALIGNMENT SCORE</div>
+                  <div class="font-telemetry text-3xl font-bold text-white font-mono" id="overview-alignment-num">78.4%</div>
+                </div>
+                <div class="w-16 h-16 rounded-full border-4 border-surface-container-high border-t-primary flex items-center justify-center font-telemetry text-xs font-bold text-primary" id="overview-alignment-circle">78%</div>
+              </div>
+              <div id="overview-explainable-breakdown" class="font-telemetry text-xs space-y-1 text-on-surface-variant"></div>
+            </div>
+
+            <div class="lg:col-span-5 glass-panel-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-4">
+              <h3 class="font-headline text-lg font-bold text-white">INTERACTIVE 3D MY KRICS</h3>
+              <p class="font-body text-xs text-on-surface-variant">Step into your 3D personal career universe.</p>
+              <button onclick="openMyKrics()" class="w-full py-3 rounded-xl font-headline text-xs font-bold text-white bg-gradient-to-r from-primary-container to-secondary shadow-lg hover:scale-105 transition-all">LAUNCH 3D CAREER GRAPH →</button>
+            </div>
+          </div>
+
+          <!-- GAMIFIED QUESTS & LEVEL PROGRESSION CARD -->
+          <div class="glass-panel-card rounded-3xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-headline text-lg font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-primary">military_tech</span> Career Quests & Level Mastery</h3>
+              <span class="font-telemetry text-[10px] px-2.5 py-0.5 rounded bg-primary/20 text-primary font-bold" id="quest-level-badge">LEVEL 1</span>
+            </div>
+            <div id="overview-quests-card" class="font-telemetry text-xs space-y-3">
+              <div class="text-on-surface-variant">Loading active quests...</div>
+            </div>
+          </div>
+
+          <!-- AI CAREER COACH & INTERVIEW PREP CARD -->
+          <div class="glass-panel-card rounded-3xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-headline text-lg font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-secondary">psychology</span> AI Career Coach & Interview Prep</h3>
+              <span class="font-telemetry text-[10px] px-2.5 py-0.5 rounded bg-secondary/20 text-secondary font-bold">AI POWERED</span>
+            </div>
+            <div id="overview-ai-coach-card" class="font-telemetry text-xs space-y-2">
+              <div class="text-on-surface-variant">Loading AI Career Coach insights...</div>
+            </div>
+          </div>
+
+          <!-- NEXT BEST ACTION ENGINE CARD -->
+          <div class="glass-panel-card rounded-3xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-headline text-lg font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-primary">auto_fix_high</span> Next Best Action Engine</h3>
+              <span class="font-telemetry text-[10px] px-2.5 py-0.5 rounded bg-primary/20 text-primary font-bold">RECOMMENDED</span>
+            </div>
+            <div id="overview-next-action-card" class="font-telemetry text-xs space-y-2">
+              <div class="text-on-surface-variant">Evaluating next best action...</div>
+            </div>
+          </div>
+
+          <!-- CAREER DNA & MOMENTUM -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="glass-panel-card rounded-3xl p-6 space-y-4 font-telemetry">
+              <h3 class="font-headline text-base font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-secondary">dna</span> Career DNA Matrix</h3>
+              <div id="overview-career-dna" class="space-y-2 text-xs"><div class="text-on-surface-variant">Calculating Career DNA...</div></div>
+            </div>
+
+            <div class="glass-panel-card rounded-3xl p-6 space-y-4 font-telemetry">
+              <h3 class="font-headline text-base font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-tertiary">speed</span> Career Velocity & Momentum</h3>
+              <div id="overview-career-momentum" class="space-y-2 text-xs"><div class="text-on-surface-variant">Calculating momentum score...</div></div>
+            </div>
+          </div>
+
+          <!-- WHAT-IF CAREER SIMULATION TOOL -->
+          <div class="glass-panel-card rounded-3xl p-6 space-y-4 font-telemetry">
+            <h3 class="font-headline text-lg font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-primary">candlestick_chart</span> "What If?" Career Impact Simulator</h3>
+            <p class="text-xs text-on-surface-variant">Simulate how acquiring a new skill or building a project impacts your career alignment score.</p>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <input type="text" id="sim-skill-input" placeholder="e.g. Statistics / Deep Learning" class="glass-input flex-1 rounded-xl px-4 py-2 text-xs"/>
+              <button onclick="runSimulation()" class="px-6 py-2 rounded-xl font-headline font-bold text-white bg-gradient-to-r from-primary-container to-secondary text-xs">RUN SIMULATION →</button>
+            </div>
+            <div id="sim-result-panel" class="hidden p-4 rounded-2xl bg-surface-container border border-primary/30 space-y-2 text-xs">
+              <div class="flex justify-between font-bold text-white"><span id="sim-title">Simulated Profile</span><span class="text-primary font-mono text-sm" id="sim-score">84.5% (+6.1%)</span></div>
+              <p class="text-on-surface-variant text-[11px]" id="sim-rationale">Adding this skill fulfills critical career requirements.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROUTE 02: SKILLS MODULE -->
+        <div id="route-view-skills" class="route-view hidden space-y-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <h2 class="font-headline text-2xl font-bold text-white">Skills Intelligence</h2>
+              <p class="font-body text-xs text-on-surface-variant" id="skills-subhead">Verified technical synapses mapped.</p>
+            </div>
+            <button onclick="openAddSkillModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-on-primary-container text-xs font-bold font-headline">+ ADD SKILL</button>
+          </div>
+          <div id="skills-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="glass-panel-card rounded-2xl p-4 text-xs font-telemetry text-on-surface-variant">Loading skills from database...</div>
+          </div>
+        </div>
+
+        <!-- ROUTE 03: SKILL GAP MODULE -->
+        <div id="route-view-skillgap" class="route-view hidden space-y-6">
+          <div>
+            <h2 class="font-headline text-2xl font-bold text-white">Skill Gap Analysis</h2>
+            <p class="font-body text-xs text-on-surface-variant">Target Horizon: <strong class="text-white" id="skillgap-target-role">Data Scientist</strong></p>
+          </div>
+          <div id="skillgap-list" class="space-y-3 font-telemetry text-xs"><div class="glass-panel-card rounded-2xl p-4 text-on-surface-variant">Evaluating skill gap engine...</div></div>
+        </div>
+
+        <!-- ROUTE 04: PROJECTS MODULE WITH GITHUB AUTO-IMPORT -->
+        <div id="route-view-projects" class="route-view hidden space-y-6">
+          <div class="flex justify-between items-center">
+            <div><h2 class="font-headline text-2xl font-bold text-white">Engineering Projects</h2><p class="font-body text-xs text-on-surface-variant" id="projects-subhead">Technical artifacts deployed.</p></div>
+            <div class="flex gap-2">
+              <button onclick="openGithubModal()" class="px-4 py-2 rounded-xl bg-white/10 text-white text-xs font-bold font-headline hover:bg-white/20">⚡ SYNC GITHUB</button>
+              <button onclick="openAddProjectModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-on-primary-container text-xs font-bold font-headline">+ CREATE PROJECT</button>
+            </div>
+          </div>
+          <div id="projects-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div class="glass-panel-card rounded-2xl p-5 text-xs font-telemetry text-on-surface-variant">Loading projects...</div></div>
+        </div>
+
+        <!-- ROUTE: TARGET GOAL AUTOMATIC ROADMAP VIEW -->
+        <div id="route-view-roadmap" class="route-view hidden space-y-8 font-telemetry">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h2 class="font-headline text-2xl font-bold text-white">Target Goal Automatic Roadmap</h2>
+              <p class="font-body text-xs text-on-surface-variant">Autonomous skill-gap & milestone alignment engine for <strong class="text-white" id="roadmap-target-role">Data Scientist</strong>.</p>
+            </div>
+            <div class="px-4 py-2 rounded-full bg-primary/20 border border-primary/40 text-primary font-bold text-xs" id="roadmap-alignment-badge">
+              Alignment: 78.4%
+            </div>
+          </div>
+
+          <!-- SECTION 1 & 2: SKILLS YOU ALREADY HAVE & SKILLS TO DEVELOP -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="glass-panel-card rounded-3xl p-6 space-y-4">
+              <h3 class="font-headline text-base font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-green-400">check_circle</span> SKILLS YOU ALREADY HAVE</h3>
+              <div id="roadmap-skills-have" class="space-y-2 text-xs"><div class="text-on-surface-variant">Analyzing verified skills...</div></div>
+            </div>
+
+            <div class="glass-panel-card rounded-3xl p-6 space-y-4">
+              <h3 class="font-headline text-base font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-amber-400">warning</span> SKILLS TO DEVELOP</h3>
+              <div id="roadmap-skills-develop" class="space-y-2 text-xs"><div class="text-on-surface-variant">Analyzing required skill gaps...</div></div>
+            </div>
+          </div>
+
+          <!-- SECTION 3: RECOMMENDED PROJECT AREAS -->
+          <div class="glass-panel-card rounded-3xl p-6 space-y-4">
+            <h3 class="font-headline text-lg font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-primary">folder_code</span> RECOMMENDED PROJECT AREAS</h3>
+            <div id="roadmap-projects-rec" class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs"><div class="text-on-surface-variant">Generating recommended project areas...</div></div>
+          </div>
+
+          <!-- SECTION 4: SUGGESTED LEARNING SEQUENCE -->
+          <div class="glass-panel-card rounded-3xl p-6 space-y-4">
+            <h3 class="font-headline text-lg font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-secondary">auto_stories</span> SUGGESTED LEARNING SEQUENCE</h3>
+            <div id="roadmap-learning-seq" class="space-y-3 text-xs"><div class="text-on-surface-variant">Calculating optimal learning sequence...</div></div>
+          </div>
+
+          <!-- SECTION 5: MONTHLY MILESTONE TIMELINE -->
+          <div class="glass-panel-card rounded-3xl p-6 space-y-4">
+            <h3 class="font-headline text-lg font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-tertiary">timeline</span> MONTH-BY-MONTH MILESTONE TIMELINE</h3>
+            <div id="roadmap-timeline" class="space-y-4"><div class="text-on-surface-variant">Generating timeline...</div></div>
+          </div>
+        </div>
+
+        <!-- ROUTE 05: EXPERIENCE MODULE -->
+        <div id="route-view-experience" class="route-view hidden space-y-6">
+          <div class="flex justify-between items-center">
+            <div><h2 class="font-headline text-2xl font-bold text-white">Experience & Internships</h2><p class="font-body text-xs text-on-surface-variant">Verified work history evidence.</p></div>
+            <button onclick="openAddExperienceModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-on-primary-container text-xs font-bold font-headline">+ ADD EXPERIENCE</button>
+          </div>
+          <div id="experience-list" class="space-y-4"><div class="glass-panel-card rounded-2xl p-4 text-xs font-telemetry text-on-surface-variant">Loading experience records...</div></div>
+        </div>
+
+        <!-- ROUTE 06: LEARNING MODULE -->
+        <div id="route-view-learning" class="route-view hidden space-y-6">
+          <div class="flex justify-between items-center">
+            <div><h2 class="font-headline text-2xl font-bold text-white">Learning Tracker</h2><p class="font-body text-xs text-on-surface-variant">Active courses and upskilling milestones.</p></div>
+            <button onclick="openAddLearningModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-on-primary-container text-xs font-bold font-headline">+ ADD LEARNING TRACK</button>
+          </div>
+          <div id="learning-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div class="glass-panel-card rounded-2xl p-4 text-xs font-telemetry text-on-surface-variant">Loading active courses...</div></div>
+        </div>
+
+        <!-- ROUTE 07: CAREER PATHS MODULE -->
+        <div id="route-view-careerpaths" class="route-view hidden space-y-6">
+          <div><h2 class="font-headline text-2xl font-bold text-white">Career Paths Exploration</h2><p class="font-body text-xs text-on-surface-variant">Select an industry path to calibrate your skill gap engine.</p></div>
+          <div id="careerpaths-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6"><div class="glass-panel-card rounded-2xl p-4 text-xs font-telemetry text-on-surface-variant">Loading career path blueprints...</div></div>
+        </div>
+
+        <!-- ROUTE 08: OPPORTUNITIES MODULE -->
+        <div id="route-view-opportunities" class="route-view hidden space-y-6">
+          <div><h2 class="font-headline text-2xl font-bold text-white">Market Opportunities Matcher</h2><p class="font-body text-xs text-on-surface-variant">Recommended roles with live 1-Click KRICS application.</p></div>
+          <div id="opportunities-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div class="glass-panel-card rounded-2xl p-4 text-xs font-telemetry text-on-surface-variant">Loading opportunities...</div></div>
+        </div>
+
+        <!-- ROUTE 09: RESUME MODULE -->
+        <div id="route-view-resume" class="route-view hidden space-y-6 font-telemetry">
+          <div class="flex justify-between items-center">
+            <div><h2 class="font-headline text-2xl font-bold text-white">Live Resume & Evidence Exporter</h2><p class="font-body text-xs text-on-surface-variant">Single-source verified profile summary.</p></div>
+            <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-primary/20 border border-primary/40 text-primary text-xs font-bold font-headline hover:bg-primary/30">PRINT / SAVE PDF</button>
+          </div>
+          <div id="resume-content" class="glass-panel-card rounded-3xl p-8 space-y-6 text-xs"><div class="text-on-surface-variant">Generating live resume payload...</div></div>
+        </div>
+
+        <!-- ROUTE 10: ANALYTICS MODULE -->
+        <div id="route-view-analytics" class="route-view hidden space-y-6">
+          <div><h2 class="font-headline text-2xl font-bold text-white">Analytics & Activity Telemetry</h2><p class="font-body text-xs text-on-surface-variant">Event stream of career network growth.</p></div>
+          <div id="analytics-content" class="space-y-4"><div class="glass-panel-card rounded-2xl p-4 text-xs font-telemetry text-on-surface-variant">Loading analytics stream...</div></div>
+        </div>
+
+        <!-- ROUTE 11: PROFILE & PICTURE MANAGEMENT MODULE -->
+        <div id="route-view-profile" class="route-view hidden space-y-6">
+          <div>
+            <h2 class="font-headline text-2xl font-bold text-white">Complete Profile & Avatar Management</h2>
+            <p class="font-body text-xs text-on-surface-variant">Update identity, profile picture, social portfolio, executive bio, and career goals.</p>
+          </div>
+
+          <div class="glass-panel-card rounded-3xl p-6 sm:p-8 space-y-6 font-telemetry text-xs">
+            <!-- PROFILE PICTURE SECTION -->
+            <div class="flex flex-col sm:flex-row items-center gap-6 border-b border-white/10 pb-6">
+              <div class="relative group">
+                <img id="prof-preview-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=KRICS1" class="w-24 h-24 rounded-full object-cover border-2 border-primary shadow-[0_0_20px_rgba(56,189,248,0.4)] bg-surface-container"/>
+                <label for="prof-file-input" class="absolute inset-0 rounded-full bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer font-bold text-white text-[10px] uppercase text-center px-1">
+                  Change Picture
+                </label>
+                <input type="file" id="prof-file-input" accept="image/*" onchange="handleProfileImageUpload(event)" class="hidden"/>
+              </div>
+
+              <div class="space-y-2 flex-1 text-center sm:text-left">
+                <h3 class="font-headline text-xl font-bold text-white" id="prof-header-name">Krishna Kumar</h3>
+                <p class="text-xs text-primary font-bold" id="prof-header-goal">Data Scientist</p>
+                <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-1">
+                  <label class="px-4 py-2 rounded-xl bg-primary/20 border border-primary/40 text-primary font-bold text-[11px] cursor-pointer hover:bg-primary/30 transition-all flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-sm">photo_camera</span> UPLOAD PHOTO
+                    <input type="file" accept="image/*" onchange="handleProfileImageUpload(event)" class="hidden"/>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- AVATAR PRESET SELECTOR -->
+            <div class="space-y-2">
+              <label class="text-on-surface-variant uppercase text-[10px] font-bold tracking-widest">CYBERNETIC AVATAR PRESETS</label>
+              <div class="flex gap-3">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=KRICS1" onclick="selectAvatarPreset(this.src)" class="w-12 h-12 rounded-full border border-white/20 hover:border-primary cursor-pointer hover:scale-110 transition-all bg-surface-container p-1" title="Preset 1"/>
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=KRICS2" onclick="selectAvatarPreset(this.src)" class="w-12 h-12 rounded-full border border-white/20 hover:border-primary cursor-pointer hover:scale-110 transition-all bg-surface-container p-1" title="Preset 2"/>
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=KRICS3" onclick="selectAvatarPreset(this.src)" class="w-12 h-12 rounded-full border border-white/20 hover:border-primary cursor-pointer hover:scale-110 transition-all bg-surface-container p-1" title="Preset 3"/>
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=KRICS4" onclick="selectAvatarPreset(this.src)" class="w-12 h-12 rounded-full border border-white/20 hover:border-primary cursor-pointer hover:scale-110 transition-all bg-surface-container p-1" title="Preset 4"/>
+              </div>
+            </div>
+
+            <!-- FULL PROFILE INPUT FORM -->
+            <form onsubmit="handleProfileSave(event)" class="space-y-4 pt-2">
+              <input type="hidden" id="prof-photo-url"/>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div><label class="text-on-surface-variant uppercase">Full Name</label><input type="text" id="prof-fullname" required class="w-full glass-input rounded-xl px-4 py-2.5 mt-1 text-sm"/></div>
+                <div><label class="text-on-surface-variant uppercase">Preferred Handle</label><input type="text" id="prof-pref" class="w-full glass-input rounded-xl px-4 py-2.5 mt-1 text-sm"/></div>
+                <div><label class="text-on-surface-variant uppercase">Phone Number</label><input type="text" id="prof-phone" placeholder="+1 (555) 000-0000" class="w-full glass-input rounded-xl px-4 py-2.5 mt-1 text-sm"/></div>
+                <div><label class="text-on-surface-variant uppercase">Location</label><input type="text" id="prof-location" placeholder="San Francisco, CA" class="w-full glass-input rounded-xl px-4 py-2.5 mt-1 text-sm"/></div>
+                <div><label class="text-on-surface-variant uppercase">Target Career Goal</label><input type="text" id="prof-goal" required class="w-full glass-input rounded-xl px-4 py-2.5 mt-1 text-sm"/></div>
+                <div><label class="text-on-surface-variant uppercase">GitHub Profile URL</label><input type="text" id="prof-github" placeholder="https://github.com/username" class="w-full glass-input rounded-xl px-4 py-2.5 mt-1 text-sm"/></div>
+                <div><label class="text-on-surface-variant uppercase">LinkedIn Profile URL</label><input type="text" id="prof-linkedin" placeholder="https://linkedin.com/in/username" class="w-full glass-input rounded-xl px-4 py-2.5 mt-1 text-sm"/></div>
+                <div><label class="text-on-surface-variant uppercase">Personal Portfolio URL</label><input type="text" id="prof-portfolio" placeholder="https://portfolio.dev" class="w-full glass-input rounded-xl px-4 py-2.5 mt-1 text-sm"/></div>
+              </div>
+
+              <div>
+                <label class="text-on-surface-variant uppercase">Professional Bio / Executive Summary</label>
+                <textarea id="prof-bio" rows="3" placeholder="Write a short summary of your technical background, skills, and career goals..." class="w-full glass-input rounded-xl px-4 py-2.5 mt-1 text-sm"></textarea>
+              </div>
+
+              <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-2">
+                <div id="prof-save-toast" class="hidden text-green-400 font-bold text-xs flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">check_circle</span> Profile & Picture Updated Successfully!
+                </div>
+                <button type="submit" class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-headline font-bold text-on-primary-container bg-gradient-to-r from-primary-container to-secondary text-xs tracking-wider shadow-lg hover:scale-105 transition-all uppercase">
+                  SAVE COMPLETE PROFILE →
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- FLOATING MEDIUM-SIZED CIRCULAR AI MENTOR MASCOT WIDGET -->
+  <div id="ai-mentor-trigger" class="fixed bottom-6 right-6 z-40 no-print flex items-end gap-3 group cursor-pointer" onclick="handleMentorTouch(event)">
+    <!-- INTERACTIVE FLOATING SPEECH BUBBLE -->
+    <div class="hidden md:flex flex-col items-end mb-3 transition-all duration-300 opacity-90 group-hover:opacity-100 group-hover:-translate-y-1 animate-bounce">
+      <div class="glass-panel-card px-4 py-2 rounded-2xl rounded-br-none border border-primary/40 text-xs font-telemetry text-white shadow-[0_0_20px_rgba(56,189,248,0.5)] flex items-center gap-2.5 group-hover:shadow-[0_0_35px_rgba(56,189,248,0.95)] group-hover:border-primary group-hover:bg-primary/20 transition-all duration-300">
+        <span class="w-2.5 h-2.5 rounded-full bg-green-400 animate-ping"></span>
+        <span class="font-bold tracking-wide text-cyan-200 group-hover:text-white transition-colors">Touch me to activate HUKUM Mode</span>
+      </div>
+    </div>
+
+    <!-- MEDIUM CIRCULAR AVATAR BUTTON -->
+    <div id="ai-mentor-circle-btn" class="relative w-20 h-20 sm:w-22 sm:h-22 rounded-full glass-panel-card border-2 border-secondary shadow-[0_0_30px_rgba(56,189,248,0.7)] mentor-avatar-animated mentor-scan-wrapper hover:scale-110 hover:border-primary transition-all duration-300 bg-surface-container flex items-center justify-center p-1 group-hover:shadow-[0_0_45px_rgba(210,187,255,0.9)] shrink-0">
+      <img src="ai-mentor-avatar.png" class="w-full h-full object-cover object-top rounded-full scale-110 group-hover:scale-125 transition-transform duration-500"/>
+      <div class="absolute top-0 right-0 w-4 h-4 rounded-full bg-green-400 border-2 border-surface-container-lowest shadow-[0_0_10px_#4ade80] animate-pulse" title="AI Mentor Active"></div>
+    </div>
+  </div>
+
+  <!-- EXPANDED 3D CYBER HOLOGRAPHIC AI MENTOR CONSOLE -->
+  <div id="ai-mentor-drawer" class="fixed bottom-6 right-6 z-50 w-[460px] max-w-[95vw] glass-panel-card rounded-3xl p-5 hidden flex flex-col h-[680px] shadow-[0_0_60px_rgba(0,0,0,0.9)] border-2 border-white/20">
+    <div class="flex items-center justify-between pb-3 border-b border-white/10 font-headline">
+      <div class="flex items-center gap-3 text-white font-bold text-sm">
+        <div class="w-3 h-3 rounded-full bg-green-400 animate-ping"></div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base">KRICS AI Career Mentor</span>
+            <span class="px-2 py-0.5 rounded-full bg-green-500/20 text-green-300 text-[9px] font-mono font-bold border border-green-500/40">ONLINE</span>
+          </div>
+          <div class="text-[10px] text-primary font-telemetry">Context-Aware Neural Coach Engine</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="toggleMentorVoice()" id="mentor-voice-btn" class="px-2.5 py-1 rounded-full bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 text-[10px] font-bold flex items-center gap-1 transition-all" title="Toggle AI Mentor Voice">
+          <span class="material-symbols-outlined text-xs" id="voice-btn-icon">volume_up</span> <span id="voice-btn-text">VOICE ON</span>
+        </button>
+        <button onclick="toggleAiMentor()" class="text-on-surface-variant hover:text-white p-1 rounded-full hover:bg-white/10"><span class="material-symbols-outlined text-base">close</span></button>
+      </div>
+    </div>
+
+    <!-- HOLOGRAPHIC 3D MENTOR HERO STAGE -->
+    <div class="my-3 rounded-2xl mentor-holo-stage border border-primary/30 p-4 relative overflow-hidden flex flex-col sm:flex-row items-center gap-4 group cursor-pointer" onclick="sendQuickAiQuestion('What should I do next?')">
+      <!-- LARGE CHARACTER IMAGE PORTRAIT -->
+      <div class="relative w-32 h-44 sm:w-36 sm:h-48 rounded-2xl overflow-hidden border-2 border-secondary shadow-[0_0_25px_rgba(56,189,248,0.7)] mentor-avatar-animated mentor-scan-wrapper bg-surface-container shrink-0 hover:scale-105 transition-transform duration-300">
+        <img src="ai-mentor-avatar.png" class="w-full h-full object-cover object-top scale-110"/>
+        <div class="absolute bottom-2 inset-x-2 bg-black/60 backdrop-blur-sm rounded-lg text-center text-[9px] font-mono font-bold text-primary border border-primary/40 uppercase">TAP TO SPEAK 💬</div>
+      </div>
+
+      <!-- STAGE SPEECH & SOUNDWAVE CONTENT -->
+      <div class="flex-1 space-y-2 text-center sm:text-left font-telemetry">
+        <div class="flex items-center justify-center sm:justify-start gap-2">
+          <span class="text-xs font-bold text-white font-headline">Mentor Voice Link</span>
+          <div class="mentor-soundwave flex items-center gap-1">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="p-3 rounded-xl bg-surface-container-lowest/90 border border-white/15 text-[11px] text-on-surface leading-relaxed shadow-inner font-body">
+          "Welcome back! I am actively monitoring your career graph & evidence score. Tap any button below or ask a question!"
+        </div>
+        <div class="flex items-center justify-center sm:justify-start gap-2 text-[10px] text-primary font-mono font-bold">
+          <span>⚡ ALIGNMENT: 78.4%</span>
+          <span>•</span>
+          <span>🎯 GOAL: DATA SCIENTIST</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTION CHIPS -->
+    <div class="pb-3 border-b border-white/10 flex flex-wrap gap-1.5 font-telemetry text-[10px]">
+      <button onclick="sendQuickAiQuestion('What should I do next?')" class="px-2.5 py-1 rounded-xl bg-primary/20 hover:bg-primary/30 text-primary border border-primary/40 font-bold transition-all flex items-center gap-1">⚡ Next Action</button>
+      <button onclick="sendQuickAiQuestion('Explain my skill gap')" class="px-2.5 py-1 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold transition-all flex items-center gap-1">🔍 Explain Gaps</button>
+      <button onclick="sendQuickAiQuestion('Why this career?')" class="px-2.5 py-1 rounded-xl bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 font-bold transition-all flex items-center gap-1">🎯 Why Career?</button>
+      <button onclick="sendQuickAiQuestion('Show my strongest evidence')" class="px-2.5 py-1 rounded-xl bg-green-500/20 hover:bg-green-500/30 text-green-300 border border-green-500/40 font-bold transition-all flex items-center gap-1">🛡️ Evidence</button>
+      <button onclick="sendQuickAiQuestion('Compare career paths')" class="px-2.5 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold transition-all flex items-center gap-1">📊 Compare</button>
+      <button onclick="sendQuickAiQuestion('Simulate a change')" class="px-2.5 py-1 rounded-xl bg-tertiary/20 hover:bg-tertiary/30 text-tertiary border border-tertiary/40 font-bold transition-all flex items-center gap-1">🔮 Simulate</button>
+    </div>
+
+    <div id="ai-chat-messages" class="flex-1 overflow-y-auto py-3 space-y-3 font-telemetry text-xs">
+      <div class="p-3 rounded-2xl bg-surface-container/80 text-on-surface text-[11px] leading-relaxed flex items-start gap-2 border border-white/10">
+        <img src="ai-mentor-avatar.png" class="w-6 h-6 rounded-full object-cover mt-0.5 border border-secondary"/>
+        <div>Hello! I am your KRICS AI Mentor. I have full context on your profile, 3D career graph, skills, and target career goal. Ask me anything or select a quick action!</div>
+      </div>
+    </div>
+    <form onsubmit="handleAiChatSubmit(event)" class="pt-3 border-t border-white/10 flex gap-2">
+      <input type="text" id="ai-chat-input" placeholder="Ask career question..." class="glass-input flex-1 rounded-xl px-3 py-2 text-xs"/>
+      <button type="submit" class="px-3 py-2 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-on-primary-container font-headline font-bold text-xs">SEND</button>
+    </form>
+  </div>
+
+  <!-- PUBLIC SHAREABLE PROFILE MODAL -->
+  <div id="modal-share" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20 shadow-2xl">
+      <button onclick="closeShareModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-white"><span class="material-symbols-outlined">close</span></button>
+      <h3 class="font-headline text-lg font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-primary">share</span> Share Your Public KRICS Identity</h3>
+      <p class="font-body text-xs text-on-surface-variant">Recruiters and peers can view your 3D career knowledge graph and verified skills.</p>
+      
+      <div class="text-center py-2">
+        <img id="share-qr-code" src="" alt="QR Code" class="w-40 h-40 mx-auto rounded-xl border border-white/20 bg-white p-2"/>
+      </div>
+
+      <div class="flex gap-2">
+        <input type="text" id="share-url-input" readonly class="glass-input flex-1 rounded-xl px-3 py-2 text-xs font-telemetry"/>
+        <button onclick="copyShareUrl()" class="px-4 py-2 rounded-xl bg-primary text-on-primary-fixed font-bold font-headline text-xs">COPY LINK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT SKILL MODAL -->
+  <div id="modal-edit-skill" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20 shadow-2xl">
+      <button onclick="document.getElementById('modal-edit-skill').classList.add('hidden')" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
+      <h3 class="font-headline text-lg font-bold text-white">Edit Skill Synapse</h3>
+      <form onsubmit="handleEditSkillSubmit(event)" class="space-y-3 font-telemetry text-xs">
+        <input type="hidden" id="edit-skill-id"/>
+        <div><label class="text-on-surface-variant">Skill Name</label><input type="text" id="edit-skill-name-input" required class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">Category</label><select id="edit-skill-cat-input" class="w-full glass-input rounded-xl px-4 py-2 mt-1 bg-surface-container"><option value="PROGRAMMING">PROGRAMMING</option><option value="MACHINE_LEARNING">MACHINE_LEARNING</option><option value="DATA_SCIENCE">DATA_SCIENCE</option><option value="CLOUD">CLOUD</option><option value="DATABASE">DATABASE</option></select></div>
+        <div><label class="text-on-surface-variant">Proficiency Level</label><select id="edit-skill-level-input" class="w-full glass-input rounded-xl px-4 py-2 mt-1 bg-surface-container"><option value="BEGINNER">BEGINNER</option><option value="INTERMEDIATE">INTERMEDIATE</option><option value="ADVANCED">ADVANCED</option><option value="EXPERT">EXPERT</option></select></div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary font-headline font-bold text-on-primary-container text-xs">UPDATE SKILL →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT PROJECT MODAL -->
+  <div id="modal-edit-project" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20 shadow-2xl">
+      <button onclick="document.getElementById('modal-edit-project').classList.add('hidden')" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
+      <h3 class="font-headline text-lg font-bold text-white">Edit Engineering Project</h3>
+      <form onsubmit="handleEditProjectSubmit(event)" class="space-y-3 font-telemetry text-xs">
+        <input type="hidden" id="edit-proj-id"/>
+        <div><label class="text-on-surface-variant">Project Title</label><input type="text" id="edit-proj-title-input" required class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">Description</label><textarea id="edit-proj-desc-input" required class="w-full glass-input rounded-xl px-4 py-2 mt-1 h-20"></textarea></div>
+        <div><label class="text-on-surface-variant">Technologies (comma separated)</label><input type="text" id="edit-proj-tech-input" class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">GitHub URL</label><input type="text" id="edit-proj-github-input" class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary font-headline font-bold text-on-primary-container text-xs">UPDATE PROJECT →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT EXPERIENCE MODAL -->
+  <div id="modal-edit-experience" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20 shadow-2xl">
+      <button onclick="document.getElementById('modal-edit-experience').classList.add('hidden')" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
+      <h3 class="font-headline text-lg font-bold text-white">Edit Work Experience</h3>
+      <form onsubmit="handleEditExperienceSubmit(event)" class="space-y-3 font-telemetry text-xs">
+        <input type="hidden" id="edit-exp-id"/>
+        <div><label class="text-on-surface-variant">Role Title</label><input type="text" id="edit-exp-role-input" required class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">Company Name</label><input type="text" id="edit-exp-company-input" required class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">Experience Type</label><select id="edit-exp-type-input" class="w-full glass-input rounded-xl px-4 py-2 mt-1 bg-surface-container"><option value="Internship">Internship</option><option value="Full-time">Full-time</option><option value="Part-time">Part-time</option><option value="Freelance">Freelance</option></select></div>
+        <div><label class="text-on-surface-variant">Duration</label><input type="text" id="edit-exp-dur-input" placeholder="e.g. Jun 2024 - Present" class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">Description</label><textarea id="edit-exp-desc-input" class="w-full glass-input rounded-xl px-4 py-2 mt-1 h-20"></textarea></div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary font-headline font-bold text-on-primary-container text-xs">UPDATE EXPERIENCE →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT LEARNING MODAL -->
+  <div id="modal-edit-learning" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20 shadow-2xl">
+      <button onclick="document.getElementById('modal-edit-learning').classList.add('hidden')" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
+      <h3 class="font-headline text-lg font-bold text-white">Update Learning Track Progress</h3>
+      <form onsubmit="handleEditLearningSubmit(event)" class="space-y-3 font-telemetry text-xs">
+        <input type="hidden" id="edit-learn-id"/>
+        <div><label class="text-on-surface-variant">Course Title</label><input type="text" id="edit-learn-title-input" required class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">Provider</label><input type="text" id="edit-learn-prov-input" class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">Completion Progress (%): <span id="edit-learn-prog-val" class="text-primary font-bold">50</span>%</label><input type="range" id="edit-learn-prog-input" min="0" max="100" oninput="document.getElementById('edit-learn-prog-val').innerText=this.value" class="w-full mt-2"/></div>
+        <div><label class="text-on-surface-variant">Status</label><select id="edit-learn-stat-input" class="w-full glass-input rounded-xl px-4 py-2 mt-1 bg-surface-container"><option value="In Progress">In Progress</option><option value="Completed">Completed</option></select></div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary font-headline font-bold text-on-primary-container text-xs">UPDATE PROGRESS →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MY KRICS 3D WEBGL CAREER GRAPH OVERLAY -->
+  <div id="view-mykrics" class="fixed inset-0 z-50 hidden bg-surface-container-lowest flex flex-col justify-between p-4 sm:p-6 transition-all duration-500 overflow-hidden">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 z-20 font-telemetry bg-surface-container-low/80 backdrop-blur-2xl p-4 rounded-2xl border border-white/15 shadow-xl">
+      <div class="flex items-center gap-3">
+        <a href="#" onclick="closeMyKrics()" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary-container to-secondary flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.5)]">
+            <span class="text-on-primary-container text-xs font-bold font-headline">◈</span>
+          </div>
+          <span class="font-headline text-lg text-white font-bold tracking-widest">MY KRICS</span>
+        </a>
+        <span class="text-xs px-2.5 py-1 rounded-md bg-primary/20 text-primary font-bold border border-primary/40" id="3d-stats-badge">NODES: 0 | EDGES: 0</span>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <input type="text" id="graph-search-input" onkeyup="search3DNodes(this.value)" placeholder="Search node..." class="glass-input rounded-xl px-3 py-1.5 text-xs w-36 sm:w-48"/>
+        <button onclick="reset3DCamera()" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold">RESET CAMERA</button>
+        <button onclick="toggleViewMode()" id="toggle-view-btn" class="px-3 py-1.5 rounded-xl bg-primary/20 text-primary border border-primary/40 text-xs font-bold">List View</button>
+        <button onclick="closeMyKrics()" class="px-4 py-1.5 rounded-xl bg-red-500/20 text-red-300 border border-red-500/40 text-xs font-bold">EXIT GRAPH ✕</button>
+      </div>
+    </div>
+
+    <div id="3d-graph-container" class="absolute inset-0 z-10"></div>
+
+    <div id="mykrics-list-view" class="absolute inset-x-6 top-24 bottom-6 z-20 hidden overflow-y-auto glass-panel-card rounded-3xl p-6 space-y-4">
+      <h3 class="font-headline text-xl font-bold text-white">Accessible Career Knowledge Topology</h3>
+      <div id="accessible-tree-content" class="font-telemetry text-xs space-y-2"></div>
+    </div>
+
+    <div id="graph-details-drawer" class="absolute bottom-6 left-6 z-20 w-80 glass-panel-card rounded-2xl p-4 hidden font-telemetry space-y-2 border border-primary/40 shadow-2xl">
+      <div class="flex justify-between items-center"><span class="text-xs text-primary font-bold uppercase" id="graph-node-category">SKILL</span><button onclick="document.getElementById('graph-details-drawer').classList.add('hidden')" class="text-on-surface-variant hover:text-white text-xs">✕</button></div>
+      <div class="font-headline font-bold text-white text-base" id="graph-node-title">Python</div>
+      <div class="text-xs text-on-surface-variant" id="graph-node-detail">Level: ADVANCED</div>
+      <button onclick="focusOnNode()" class="w-full py-1.5 rounded-xl bg-primary-container text-on-primary-container font-headline font-bold text-xs mt-2">FOCUS NODE IN 3D</button>
+      <button onclick="askAiAboutNode()" class="w-full py-1.5 rounded-xl bg-secondary/20 text-secondary border border-secondary/40 font-headline font-bold text-xs mt-1 hover:bg-secondary/30 flex items-center justify-center gap-1.5">
+        <span class="material-symbols-outlined text-sm">psychology</span> ASK AI MENTOR ABOUT NODE
+      </button>
+    </div>
+  </div>
+
+  <!-- GITHUB AUTO-IMPORT MODAL -->
+  <div id="modal-github" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20 shadow-2xl">
+      <button onclick="closeGithubModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-white"><span class="material-symbols-outlined">close</span></button>
+      <h3 class="font-headline text-lg font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-primary">code</span> Sync GitHub Repositories</h3>
+      <p class="font-body text-xs text-on-surface-variant">Auto-import engineering projects & extract technologies into your KRICS graph.</p>
+      <form onsubmit="handleGithubImport(event)" class="space-y-4 font-telemetry text-xs">
+        <div><label class="text-on-surface-variant uppercase">GitHub Username</label><input type="text" id="gh-username-input" required placeholder="octocat" class="w-full glass-input rounded-xl px-4 py-2.5 mt-1 text-sm"/></div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary font-headline font-bold text-on-primary-container text-xs">FETCH & IMPORT REPOSITORIES →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD SKILL MODAL -->
+  <div id="modal-add-skill" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20">
+      <button onclick="closeAddSkillModal()" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
+      <h3 class="font-headline text-lg font-bold text-white">Add Skill to KRICS Matrix</h3>
+      <form onsubmit="handleAddSkillSubmit(event)" class="space-y-3 font-telemetry text-xs">
+        <div><label class="text-on-surface-variant">Skill Name</label><input type="text" id="skill-name-input" required placeholder="e.g. PyTorch" class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">Category</label><select id="skill-cat-input" class="w-full glass-input rounded-xl px-4 py-2 mt-1 bg-surface-container"><option value="PROGRAMMING">PROGRAMMING</option><option value="MACHINE_LEARNING">MACHINE_LEARNING</option><option value="DATA_SCIENCE">DATA_SCIENCE</option><option value="CLOUD">CLOUD</option><option value="DATABASE">DATABASE</option></select></div>
+        <div><label class="text-on-surface-variant">Proficiency Level</label><select id="skill-level-input" class="w-full glass-input rounded-xl px-4 py-2 mt-1 bg-surface-container"><option value="BEGINNER">BEGINNER</option><option value="INTERMEDIATE">INTERMEDIATE</option><option value="ADVANCED">ADVANCED</option><option value="EXPERT">EXPERT</option></select></div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary font-headline font-bold text-on-primary-container text-xs">SAVE SKILL →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD PROJECT MODAL -->
+  <div id="modal-add-project" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20">
+      <button onclick="closeAddProjectModal()" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
+      <h3 class="font-headline text-lg font-bold text-white">Deploy Engineering Project</h3>
+      <form onsubmit="handleAddProjectSubmit(event)" class="space-y-3 font-telemetry text-xs">
+        <div><label class="text-on-surface-variant">Project Title</label><input type="text" id="proj-title-input" required placeholder="Neural Career Graph" class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">Description</label><textarea id="proj-desc-input" required placeholder="Built WebGL 3D career intelligence graph..." class="w-full glass-input rounded-xl px-4 py-2 mt-1 h-20"></textarea></div>
+        <div><label class="text-on-surface-variant">Technologies (comma separated)</label><input type="text" id="proj-tech-input" placeholder="Python, Three.js, React" class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">GitHub URL</label><input type="text" id="proj-github-input" placeholder="https://github.com/user/repo" class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary font-headline font-bold text-on-primary-container text-xs">DEPLOY PROJECT →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD EXPERIENCE MODAL -->
+  <div id="modal-add-experience" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20">
+      <button onclick="closeAddExperienceModal()" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
+      <h3 class="font-headline text-lg font-bold text-white">Add Experience Record</h3>
+      <form onsubmit="handleAddExperienceSubmit(event)" class="space-y-3 font-telemetry text-xs">
+        <div><label class="text-on-surface-variant">Role Title</label><input type="text" id="exp-role-input" required placeholder="AI Research Intern" class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">Company Name</label><input type="text" id="exp-company-input" required placeholder="Google DeepMind" class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">Type</label><select id="exp-type-input" class="w-full glass-input rounded-xl px-4 py-2 mt-1 bg-surface-container"><option value="Internship">Internship</option><option value="Full-time">Full-time</option><option value="Part-time">Part-time</option></select></div>
+        <div><label class="text-on-surface-variant">Duration</label><input type="text" id="exp-dur-input" placeholder="Jun 2025 - Sep 2025" class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">Description</label><textarea id="exp-desc-input" placeholder="Worked on LLM alignment algorithms..." class="w-full glass-input rounded-xl px-4 py-2 mt-1 h-20"></textarea></div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary font-headline font-bold text-on-primary-container text-xs">SAVE EXPERIENCE →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD LEARNING MODAL -->
+  <div id="modal-add-learning" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20">
+      <button onclick="closeAddLearningModal()" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
+      <h3 class="font-headline text-lg font-bold text-white">Add Learning Track</h3>
+      <form onsubmit="handleAddLearningSubmit(event)" class="space-y-3 font-telemetry text-xs">
+        <div><label class="text-on-surface-variant">Course / Track Title</label><input type="text" id="learn-title-input" required placeholder="Deep Learning Specialization" class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <div><label class="text-on-surface-variant">Provider / Platform</label><input type="text" id="learn-prov-input" placeholder="Coursera / DeepLearning.AI" class="w-full glass-input rounded-xl px-4 py-2 mt-1"/></div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary font-headline font-bold text-on-primary-container text-xs">SAVE LEARNING TRACK →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- CORE CLIENT APIS & APPLICATION LOGIC -->
+  <!-- ========================================== -->
+  <script>
+    const API_BASE = 'http://localhost:8000/api';
+    const state = {
+      token: localStorage.getItem('krics_token') || null,
+      user: null,
+      currentRoute: 'overview',
+      viewMode: '3d',
+      selectedNode: null,
+      networkData: null
+    };
+
+    async function apiFetch(endpoint, method = 'GET', body = null) {
+      const headers = { 'Content-Type': 'application/json' };
+      if (state.token) headers['Authorization'] = `Bearer ${state.token}`;
+
+      try {
+        const res = await fetch(`${API_BASE}${endpoint}`, {
+          method,
+          headers,
+          body: body ? JSON.stringify(body) : null
+        });
+        return await res.json();
+      } catch (err) {
+        return { success: false, message: 'Server connection error' };
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initParticleCanvas();
+      if (state.token) {
+        verifySession();
+      } else {
+        showLandingView();
+      }
+    });
+
+    async function verifySession() {
+      const res = await apiFetch('/auth/me');
+      if (res.success && res.user) {
+        state.user = res.user;
+        showDashboardView();
+      } else {
+        handleLogout();
+      }
+    }
+
+    function showLandingView() {
+      document.getElementById('view-landing').classList.remove('hidden');
+      document.getElementById('view-dashboard').classList.add('hidden');
+    }
+
+    function showDashboardView() {
+      document.getElementById('view-landing').classList.add('hidden');
+      document.getElementById('view-dashboard').classList.remove('hidden');
+      updateUserAvatarUI();
+      loadDashboardData();
+    }
+
+    function updateUserAvatarUI() {
+      if (!state.user) return;
+      document.getElementById('dash-user-name').innerText = state.user.fullName || 'User';
+      document.getElementById('dash-user-goal').innerText = state.user.careerGoal || 'Data Scientist';
+      document.getElementById('dash-greeting').innerText = `Good day, ${state.user.preferredName || state.user.fullName || 'Architect'}.`;
+
+      const avatarEl = document.getElementById('dash-avatar');
+      if (state.user.photoUrl) {
+        avatarEl.innerHTML = `<img src="${state.user.photoUrl}" class="w-full h-full rounded-full object-cover"/>`;
+      } else {
+        avatarEl.innerText = (state.user.fullName || 'KK').substring(0, 2).toUpperCase();
+      }
+    }
+
+    function switchRoute(route) {
+      state.currentRoute = route;
+      document.querySelectorAll('.route-view').forEach(el => el.classList.add('hidden'));
+      const target = document.getElementById(`route-view-${route}`);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.route-link').forEach(el => {
+        if (el.dataset.route === route) {
+          el.className = 'route-link flex items-center gap-3 px-3 py-2 rounded-xl text-white bg-white/10 font-bold';
+        } else {
+          el.className = 'route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5';
+        }
+      });
+
+      if (route === 'skills') fetchSkills();
+      if (route === 'skillgap') fetchSkillGap();
+      if (route === 'projects') fetchProjects();
+      if (route === 'roadmap') fetchRoadmap();
+      if (route === 'experience') fetchExperiences();
+      if (route === 'learning') fetchLearning();
+      if (route === 'careerpaths') fetchCareerPaths();
+      if (route === 'opportunities') fetchOpportunities();
+      if (route === 'resume') fetchResume();
+      if (route === 'analytics') fetchAnalytics();
+      if (route === 'profile') fetchProfile();
+    }
+
+    async function fetchProfile() {
+      const res = await apiFetch('/profile');
+      if (res.success && res.data) {
+        const u = res.data;
+        state.user = u;
+        updateUserAvatarUI();
+
+        document.getElementById('prof-header-name').innerText = u.fullName || 'User';
+        document.getElementById('prof-header-goal').innerText = u.careerGoal || 'Data Scientist';
+        document.getElementById('prof-preview-img').src = u.photoUrl || 'https://api.dicebear.com/7.x/bottts/svg?seed=KRICS1';
+        document.getElementById('prof-photo-url').value = u.photoUrl || '';
+        document.getElementById('prof-fullname').value = u.fullName || '';
+        document.getElementById('prof-pref').value = u.preferredName || '';
+        document.getElementById('prof-phone').value = u.phone || '';
+        document.getElementById('prof-location').value = u.location || '';
+        document.getElementById('prof-goal').value = u.careerGoal || '';
+        document.getElementById('prof-bio').value = u.bio || '';
+        document.getElementById('prof-github').value = u.github || u.githubUrl || '';
+        document.getElementById('prof-linkedin').value = u.linkedin || u.linkedinUrl || '';
+        document.getElementById('prof-portfolio').value = u.portfolio || '';
+      }
+    }
+
+    function handleProfileImageUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const dataUrl = evt.target.result;
+          document.getElementById('prof-photo-url').value = dataUrl;
+          document.getElementById('prof-preview-img').src = dataUrl;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function selectAvatarPreset(url) {
+      document.getElementById('prof-photo-url').value = url;
+      document.getElementById('prof-preview-img').src = url;
+    }
+
+    async function handleProfileSave(e) {
+      e.preventDefault();
+      const body = {
+        fullName: document.getElementById('prof-fullname').value,
+        preferredName: document.getElementById('prof-pref').value,
+        phone: document.getElementById('prof-phone').value,
+        location: document.getElementById('prof-location').value,
+        photoUrl: document.getElementById('prof-photo-url').value,
+        bio: document.getElementById('prof-bio').value,
+        careerGoal: document.getElementById('prof-goal').value,
+        github: document.getElementById('prof-github').value,
+        linkedin: document.getElementById('prof-linkedin').value,
+        portfolio: document.getElementById('prof-portfolio').value
+      };
+
+      const res = await apiFetch('/profile', 'PUT', body);
+      if (res.success && res.data) {
+        state.user = res.data;
+        updateUserAvatarUI();
+        const toast = document.getElementById('prof-save-toast');
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 4000);
+      } else {
+        alert(res.message || 'Failed to update profile');
+      }
+    }
+
+    async function loadDashboardData() {
+      const res = await apiFetch('/dashboard');
+      if (res.success) {
+        const d = res.data || res;
+        const userGoal = (d.user && d.user.careerGoal) ? d.user.careerGoal : 'DATA SCIENTIST';
+        const alignScore = (d.alignment && d.alignment.alignmentScore !== undefined) ? d.alignment.alignmentScore : (d.metrics ? d.metrics.alignmentScore : 78.4);
+
+        if (document.getElementById('overview-career-goal')) document.getElementById('overview-career-goal').innerText = userGoal;
+        if (document.getElementById('overview-alignment-num')) document.getElementById('overview-alignment-num').innerText = `${alignScore}%`;
+        if (document.getElementById('overview-alignment-circle')) document.getElementById('overview-alignment-circle').innerText = `${Math.round(alignScore)}%`;
+        if (document.getElementById('dash-alignment-badge')) document.getElementById('dash-alignment-badge').innerText = `Alignment: ${alignScore}%`;
+
+        // Explainable breakdown
+        const ex = (d.alignment && d.alignment.explainableBreakdown) ? d.alignment.explainableBreakdown : {};
+        const breakdownEl = document.getElementById('overview-explainable-breakdown');
+        if (breakdownEl) {
+          breakdownEl.innerHTML = `
+            <div class="text-green-400 font-bold">Strong Evidence: ${ex.strongEvidence && ex.strongEvidence.length > 0 ? ex.strongEvidence.join(', ') : 'Verified Skills Active'}</div>
+            <div class="text-amber-400">Developing: ${ex.developing && ex.developing.length > 0 ? ex.developing.join(', ') : 'Intermediate Synapses'}</div>
+            <div class="text-red-400">Missing Gaps: ${ex.limitedEvidence && ex.limitedEvidence.length > 0 ? ex.limitedEvidence.slice(0, 2).join(', ') : 'None'}</div>
+          `;
+        }
+
+        // 1. AI Career Coach & Interview Prep Card
+        const coach = d.aiCoachAdvice || {
+          focusArea: 'Close Primary Skill Gap',
+          coachingAdvice: `Your current profile is ${alignScore}% aligned with ${userGoal}. Focus on adding practical project artifacts and completing active learning modules.`
+        };
+        const aiCoachEl = document.getElementById('overview-ai-coach-card');
+        if (aiCoachEl) {
+          aiCoachEl.innerHTML = `
+            <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-secondary/40 space-y-3 flex flex-col sm:flex-row items-center gap-4">
+              <div class="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-secondary shadow-[0_0_20px_rgba(201,174,255,0.8)] mentor-avatar-animated mentor-scan-wrapper bg-surface-container shrink-0">
+                <img src="ai-mentor-avatar.png" class="w-full h-full object-cover object-top scale-110"/>
+              </div>
+              <div class="space-y-1.5 flex-1 text-center sm:text-left">
+                <div class="flex items-center justify-center sm:justify-start gap-2">
+                  <span class="font-bold text-white text-xs font-headline">KRICS AI Mentor & Coach</span>
+                  <span class="px-2.5 py-0.5 rounded-full bg-green-500/20 text-green-300 text-[10px] font-mono font-bold border border-green-500/30">ONLINE</span>
+                </div>
+                <div class="font-bold text-primary text-xs">🚀 ${coach.focusArea || 'Skill Gap Recommendation'}</div>
+                <p class="text-on-surface-variant text-[11px] leading-relaxed">${coach.coachingAdvice || ''}</p>
+                <div class="pt-1 flex flex-wrap justify-center sm:justify-start gap-2 font-telemetry">
+                  <button onclick="sendQuickAiQuestion('Explain my skill gap')" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-on-primary-container font-headline font-bold text-[10px] shadow hover:scale-105 transition-all">ASK MENTOR GUIDANCE →</button>
+                  <button onclick="sendQuickAiQuestion('Give me interview questions for my target goal')" class="px-3 py-1.5 rounded-xl bg-white/10 text-white font-headline font-bold text-[10px] hover:bg-white/20 border border-white/15">🎯 INTERVIEW PREP</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // 2. Next Best Action Engine Card
+        const na = (d.nextAction && d.nextAction.primaryNextAction) ? d.nextAction.primaryNextAction : (d.nextAction || {
+          title: 'Strengthen Target Role Skills',
+          why: 'Focus on building project evidence to increase career alignment score.',
+          priority: 'HIGH',
+          recommendedSteps: ['1. Select a high-priority skill gap', '2. Build a project artifact', '3. Link to KRICS graph']
+        });
+        const nextActionEl = document.getElementById('overview-next-action-card');
+        if (nextActionEl) {
+          nextActionEl.innerHTML = `
+            <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-primary/40 space-y-3 font-telemetry">
+              <div class="flex items-center justify-between">
+                <div class="font-bold text-primary text-xs flex items-center gap-2 font-headline">
+                  <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                  ⚡ ${na.title || 'Next Action Recommendation'}
+                </div>
+                <span class="px-2.5 py-0.5 rounded bg-primary/20 text-primary font-mono text-[9px] font-bold border border-primary/30 uppercase">${na.priority || 'HIGH'} PRIORITY</span>
+              </div>
+              <p class="text-on-surface-variant text-[11px] leading-relaxed">${na.why || na.description || ''}</p>
+              ${na.recommendedSteps && na.recommendedSteps.length > 0 ? `
+                <div class="pt-1 space-y-1">
+                  <div class="text-[10px] text-white font-bold font-mono uppercase">RECOMMENDED STEPS:</div>
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    ${na.recommendedSteps.map(step => `<div class="p-2 rounded-xl bg-surface-container border border-white/10 text-[10px] text-cyan-200">${step}</div>`).join('')}
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }
+
+        // 3. Career DNA Matrix Card
+        const dna = d.dna || {
+          primaryArchetype: 'ENGINEER_BUILDER',
+          dimensions: { Technical: 85, Analytical: 75, Development: 80, 'AI/ML': 70, Data: 78, Cloud: 60 }
+        };
+        const dnaEl = document.getElementById('overview-career-dna');
+        if (dnaEl) {
+          const dims = dna.dimensions || {};
+          dnaEl.innerHTML = `
+            <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-secondary/30 space-y-3 font-telemetry">
+              <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                <div>
+                  <div class="text-[10px] text-on-surface-variant uppercase">PRIMARY ARCHETYPE</div>
+                  <div class="font-headline font-bold text-white text-sm text-secondary">${(dna.primaryArchetype || 'ENGINEER_BUILDER').toUpperCase()}</div>
+                </div>
+                <span class="px-2.5 py-1 rounded-full bg-secondary/20 text-secondary text-[10px] font-mono font-bold border border-secondary/40">GENOMIC MATRIX ACTIVE</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px]">
+                ${Object.entries(dims).slice(0, 6).map(([dim, score]) => `
+                  <div class="p-2 rounded-xl bg-surface-container border border-white/10">
+                    <div class="text-[10px] text-on-surface-variant">${dim}</div>
+                    <div class="font-bold text-white font-mono text-xs">${score}%</div>
+                    <div class="w-full bg-surface-container-lowest rounded-full h-1 mt-1 overflow-hidden">
+                      <div class="bg-secondary h-full" style="width: ${score}%"></div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        // 4. Career Velocity & Momentum Card
+        const mom = d.momentum || {
+          momentumScore: 78,
+          momentumStatus: 'HIGH_VELOCITY',
+          activityBreakdown: { skillsImproved: 3, projectsCompleted: 2, learningCompleted: 1 },
+          totalActivitiesLogged: 6
+        };
+        const momEl = document.getElementById('overview-career-momentum');
+        if (momEl) {
+          const score = mom.momentumScore || 75;
+          const status = (mom.momentumStatus || 'HIGH_VELOCITY').replace(/_/g, ' ');
+          const logged = mom.totalActivitiesLogged || mom.activityCount || 5;
+          const breakd = mom.activityBreakdown || {};
+
+          momEl.innerHTML = `
+            <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-tertiary/30 space-y-3 font-telemetry">
+              <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                <div>
+                  <div class="text-[10px] text-on-surface-variant uppercase">VELOCITY RATING</div>
+                  <div class="font-headline font-bold text-tertiary text-sm">${status}</div>
+                </div>
+                <div class="font-mono font-extrabold text-2xl text-tertiary">${score}%</div>
+              </div>
+              <div class="space-y-1.5 text-[11px]">
+                <div class="flex justify-between text-on-surface-variant">
+                  <span>Logged Telemetry Events:</span>
+                  <span class="text-white font-mono font-bold">${logged} Actions</span>
+                </div>
+                <div class="w-full bg-surface-container rounded-full h-2 overflow-hidden border border-white/10">
+                  <div class="bg-gradient-to-r from-tertiary via-primary to-secondary h-full" style="width: ${score}%"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-on-surface-variant pt-1 font-mono">
+                  <span>Skills: +${breakd.skillsImproved || 1}</span>
+                  <span>Projects: +${breakd.projectsCompleted || 1}</span>
+                  <span>Learning: +${breakd.learningCompleted || 1}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+      fetchQuests();
+    }
+
+    async function fetchQuests() {
+      const res = await apiFetch('/quests');
+      if (res.success && res.data) {
+        const q = res.data;
+        document.getElementById('quest-level-badge').innerText = `LEVEL ${q.level}: ${q.levelTitle}`;
+        document.getElementById('overview-quests-card').innerHTML = q.quests.map(quest => `
+          <div class="p-3 rounded-2xl bg-surface-container-lowest border border-white/10 flex items-center justify-between">
+            <div>
+              <div class="font-bold text-white text-xs">${quest.title} <span class="text-primary font-mono">(+${quest.xp} XP)</span></div>
+              <p class="text-on-surface-variant text-[11px]">${quest.description}</p>
+            </div>
+            ${quest.completed ? '<span class="text-green-400 font-bold text-xs">COMPLETED ✓</span>' : '<button onclick="claimQuest()" class="px-3 py-1 rounded-lg bg-primary-container text-on-primary-container font-bold text-[10px]">CLAIM XP</button>'}
+          </div>
+        `).join('');
+      }
+    }
+
+    async function claimQuest() {
+      alert('XP Claimed! Your profile momentum is updated.');
+      loadDashboardData();
+    }
+
+    async function runSimulation() {
+      const val = document.getElementById('sim-skill-input').value;
+      if (!val) return;
+      const res = await apiFetch('/what-if', 'POST', { simulatedSkills: [val] });
+      if (res.success && res.data) {
+        document.getElementById('sim-result-panel').classList.remove('hidden');
+        document.getElementById('sim-title').innerText = `Simulated: ${val}`;
+        document.getElementById('sim-score').innerText = `${res.data.simulatedScore}% (${res.data.impactDelta})`;
+        document.getElementById('sim-rationale').innerText = res.data.rationale;
+      }
+    }
+
+    // Skills CRUD
+    async function fetchSkills() {
+      const res = await apiFetch('/skills');
+      if (res.success && res.data) {
+        document.getElementById('skills-subhead').innerText = `${res.total} Verified technical synapses mapped.`;
+        document.getElementById('skills-grid').innerHTML = res.data.map(s => {
+          const isDem = s.isDemonstrated || s.evidenceLevel === 'DEMONSTRATED';
+          const badgeText = s.evidenceBadge || (isDem ? 'Demonstrated Skill (Strong Evidence)' : 'Claimed Skill (Limited Evidence)');
+          const barText = s.evidenceBar || (isDem ? '████████░░ Strong' : '████░░░░░░ Limited');
+          const artifacts = (s.backingArtifacts || []).join(' • ');
+
+          return `
+            <div class="glass-panel-card rounded-2xl p-5 space-y-3 font-telemetry flex flex-col justify-between">
+              <div class="space-y-2">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <span class="font-bold text-white text-base font-headline">${s.name}</span>
+                    <div class="text-[11px] text-on-surface-variant">Category: ${s.category}</div>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-primary/20 text-primary font-bold">${s.level}</span>
+                </div>
+
+                <!-- EVIDENCE STRENGTH UI BADGE -->
+                <div>
+                  <span class="inline-block text-[10px] px-2.5 py-1 rounded-full font-bold ${isDem ? 'bg-green-500/20 text-green-300 border border-green-500/40' : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'}">
+                    ${isDem ? '✓ ' : '⚠ '} ${badgeText}
+                  </span>
+                </div>
+
+                <!-- EVIDENCE BAR -->
+                <div class="space-y-1 pt-1">
+                  <div class="flex justify-between text-[10px] font-mono">
+                    <span class="${isDem ? 'text-green-400 font-bold' : 'text-amber-400'}">${barText}</span>
+                    <span class="text-on-surface-variant">${s.linkedCount || 0} Backing Link(s)</span>
+                  </div>
+                  <div class="w-full bg-surface-container rounded-full h-2 overflow-hidden border border-white/10">
+                    <div class="${isDem ? 'bg-gradient-to-r from-green-400 to-primary-container' : 'bg-amber-400'} h-full" style="width: ${s.evidenceScore || (isDem ? 85 : 40)}%"></div>
+                  </div>
+                </div>
+
+                ${artifacts ? `<div class="text-[10px] text-on-surface-variant border-t border-white/5 pt-1">🔗 ${artifacts}</div>` : ''}
+              </div>
+
+              <div class="flex items-center gap-2 pt-2 border-t border-white/10">
+                <button onclick="editSkillItem('${s._id}', '${s.name}', '${s.category}', '${s.level}')" class="flex-1 py-1 rounded-lg bg-white/10 text-white hover:bg-white/20 text-[10px] font-bold">EDIT ✎</button>
+                <button onclick="deleteSkillItem('${s._id}')" class="py-1 px-2.5 rounded-lg bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px] font-bold">✕</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function editSkillItem(id, name, category, level) {
+      document.getElementById('edit-skill-id').value = id;
+      document.getElementById('edit-skill-name-input').value = name;
+      document.getElementById('edit-skill-cat-input').value = category || 'PROGRAMMING';
+      document.getElementById('edit-skill-level-input').value = level || 'INTERMEDIATE';
+      document.getElementById('modal-edit-skill').classList.remove('hidden');
+    }
+
+    async function handleEditSkillSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('edit-skill-id').value;
+      const name = document.getElementById('edit-skill-name-input').value;
+      const category = document.getElementById('edit-skill-cat-input').value;
+      const level = document.getElementById('edit-skill-level-input').value;
+
+      await apiFetch(`/skills/${id}`, 'PUT', { name, category, level });
+      document.getElementById('modal-edit-skill').classList.add('hidden');
+      fetchSkills();
+      loadDashboardData();
+    }
+
+    async function deleteSkillItem(id) {
+      if (confirm('Are you sure you want to delete this skill synapse?')) {
+        await apiFetch(`/skills/${id}`, 'DELETE');
+        fetchSkills();
+        loadDashboardData();
+      }
+    }
+
+    // Projects CRUD
+    async function fetchProjects() {
+      const res = await apiFetch('/projects');
+      if (res.success && res.data) {
+        document.getElementById('projects-subhead').innerText = `${res.total} Technical artifacts deployed.`;
+        document.getElementById('projects-grid').innerHTML = res.data.map(p => {
+          const title = (p.title || p.name || 'Project').replace(/'/g, "\\'");
+          const desc = (p.description || p.desc || '').replace(/'/g, "\\'");
+          const techs = Array.isArray(p.technologies || p.techs) ? (p.technologies || p.techs).join(', ') : (p.technologies || p.techs || '');
+          const gh = p.githubUrl || p.githubLink || '';
+
+          return `
+            <div class="glass-panel-card rounded-2xl p-5 space-y-3 font-telemetry flex flex-col justify-between">
+              <div class="space-y-2">
+                <div class="flex justify-between items-start">
+                  <span class="font-bold text-white text-base font-headline">${p.title || p.name}</span>
+                  ${gh ? `<a href="${gh}" target="_blank" class="text-primary hover:underline text-xs">GitHub 🔗</a>` : ''}
+                </div>
+                <p class="text-xs text-on-surface-variant">${p.description || p.desc || ''}</p>
+                <div class="flex flex-wrap gap-1.5">${(p.technologies || p.techs || []).map(t=>`<span class="px-2 py-0.5 rounded bg-surface-container border border-white/10 text-[10px] text-primary">${t}</span>`).join('')}</div>
+              </div>
+              <div class="flex items-center gap-2 pt-2 border-t border-white/10">
+                <button onclick="editProjectItem('${p._id}', '${title}', '${desc}', '${techs}', '${gh}')" class="flex-1 py-1 rounded-lg bg-white/10 text-white hover:bg-white/20 text-[10px] font-bold">EDIT ARTIFACT ✎</button>
+                <button onclick="deleteProjectItem('${p._id}')" class="py-1 px-2.5 rounded-lg bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px] font-bold">✕</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function editProjectItem(id, title, desc, techs, githubUrl) {
+      document.getElementById('edit-proj-id').value = id;
+      document.getElementById('edit-proj-title-input').value = title;
+      document.getElementById('edit-proj-desc-input').value = desc;
+      document.getElementById('edit-proj-tech-input').value = techs || '';
+      document.getElementById('edit-proj-github-input').value = githubUrl || '';
+      document.getElementById('modal-edit-project').classList.remove('hidden');
+    }
+
+    async function handleEditProjectSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('edit-proj-id').value;
+      const title = document.getElementById('edit-proj-title-input').value;
+      const desc = document.getElementById('edit-proj-desc-input').value;
+      const techStr = document.getElementById('edit-proj-tech-input').value;
+      const githubUrl = document.getElementById('edit-proj-github-input').value;
+      const techs = techStr.split(',').map(t=>t.trim()).filter(Boolean);
+
+      await apiFetch(`/projects/${id}`, 'PUT', { title, name: title, desc, description: desc, techs, technologies: techs, githubUrl, githubLink: githubUrl });
+      document.getElementById('modal-edit-project').classList.add('hidden');
+      fetchProjects();
+      loadDashboardData();
+    }
+
+    async function deleteProjectItem(id) {
+      if (confirm('Are you sure you want to delete this engineering project?')) {
+        await apiFetch(`/projects/${id}`, 'DELETE');
+        fetchProjects();
+        loadDashboardData();
+      }
+    }
+
+    // Experience CRUD
+    async function fetchExperiences() {
+      const res = await apiFetch('/experience');
+      if (res.success && res.data) {
+        document.getElementById('experience-list').innerHTML = res.data.map(e => {
+          const role = (e.role || e.title || '').replace(/'/g, "\\'");
+          const company = (e.company || '').replace(/'/g, "\\'");
+          const type = e.type || 'Internship';
+          const duration = (e.duration || `${e.startDate||''} - ${e.endDate||'Present'}`).replace(/'/g, "\\'");
+          const desc = (e.description || e.desc || '').replace(/'/g, "\\'");
+
+          return `
+            <div class="glass-panel-card rounded-2xl p-5 space-y-2 font-telemetry flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start">
+                  <div class="font-bold text-white text-base">${e.role || e.title} at ${e.company}</div>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-primary/20 text-primary font-bold">${type}</span>
+                </div>
+                <div class="text-xs text-on-surface-variant font-mono mt-0.5">${duration}</div>
+                <p class="text-xs text-on-surface-variant mt-2">${e.description || e.desc || ''}</p>
+              </div>
+              <div class="flex items-center gap-2 pt-3 border-t border-white/10 mt-2">
+                <button onclick="editExperienceItem('${e._id}', '${role}', '${company}', '${type}', '${duration}', '${desc}')" class="flex-1 py-1 rounded-lg bg-white/10 text-white hover:bg-white/20 text-[10px] font-bold">EDIT EXPERIENCE ✎</button>
+                <button onclick="deleteExperienceItem('${e._id}')" class="py-1 px-2.5 rounded-lg bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px] font-bold">✕</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function editExperienceItem(id, role, company, type, duration, desc) {
+      document.getElementById('edit-exp-id').value = id;
+      document.getElementById('edit-exp-role-input').value = role || '';
+      document.getElementById('edit-exp-company-input').value = company || '';
+      document.getElementById('edit-exp-type-input').value = type || 'Internship';
+      document.getElementById('edit-exp-dur-input').value = duration || '';
+      document.getElementById('edit-exp-desc-input').value = desc || '';
+      document.getElementById('modal-edit-experience').classList.remove('hidden');
+    }
+
+    async function handleEditExperienceSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('edit-exp-id').value;
+      const role = document.getElementById('edit-exp-role-input').value;
+      const company = document.getElementById('edit-exp-company-input').value;
+      const type = document.getElementById('edit-exp-type-input').value;
+      const duration = document.getElementById('edit-exp-dur-input').value;
+      const desc = document.getElementById('edit-exp-desc-input').value;
+
+      await apiFetch(`/experience/${id}`, 'PUT', { role, title: role, company, type, duration, desc });
+      document.getElementById('modal-edit-experience').classList.add('hidden');
+      fetchExperiences();
+      loadDashboardData();
+    }
+
+    async function deleteExperienceItem(id) {
+      if (confirm('Are you sure you want to remove this experience record?')) {
+        await apiFetch(`/experience/${id}`, 'DELETE');
+        fetchExperiences();
+        loadDashboardData();
+      }
+    }
+
+    // Learning CRUD
+    async function fetchLearning() {
+      const res = await apiFetch('/learning');
+      if (res.success && res.data) {
+        document.getElementById('learning-grid').innerHTML = res.data.map(l => {
+          const title = (l.title || '').replace(/'/g, "\\'");
+          const provider = (l.provider || 'Online').replace(/'/g, "\\'");
+          const progress = l.progress || 0;
+          const status = l.status || 'In Progress';
+
+          return `
+            <div class="glass-panel-card rounded-2xl p-5 space-y-3 font-telemetry flex flex-col justify-between">
+              <div class="space-y-1">
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-white text-sm">${l.title}</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded ${status==='Completed'?'bg-green-500/20 text-green-300':'bg-primary/20 text-primary'} font-bold">${status}</span>
+                </div>
+                <div class="text-xs text-primary font-bold">${provider}</div>
+                <div class="w-full bg-surface-container rounded-full h-2 mt-2 overflow-hidden border border-white/10">
+                  <div class="bg-gradient-to-r from-primary-container to-secondary h-full" style="width: ${progress}%"></div>
+                </div>
+                <div class="text-[10px] text-on-surface-variant text-right font-mono">${progress}% Completed</div>
+              </div>
+              <div class="flex items-center gap-2 pt-2 border-t border-white/10">
+                <button onclick="editLearningItem('${l._id}', '${title}', '${provider}', ${progress}, '${status}')" class="flex-1 py-1 rounded-lg bg-white/10 text-white hover:bg-white/20 text-[10px] font-bold">UPDATE PROGRESS ✎</button>
+                <button onclick="deleteLearningItem('${l._id}')" class="py-1 px-2.5 rounded-lg bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px] font-bold">✕</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function editLearningItem(id, title, provider, progress, status) {
+      document.getElementById('edit-learn-id').value = id;
+      document.getElementById('edit-learn-title-input').value = title || '';
+      document.getElementById('edit-learn-prov-input').value = provider || '';
+      document.getElementById('edit-learn-prog-input').value = progress || 0;
+      document.getElementById('edit-learn-prog-val').innerText = progress || 0;
+      document.getElementById('edit-learn-stat-input').value = status || 'In Progress';
+      document.getElementById('modal-edit-learning').classList.remove('hidden');
+    }
+
+    async function handleEditLearningSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('edit-learn-id').value;
+      const title = document.getElementById('edit-learn-title-input').value;
+      const provider = document.getElementById('edit-learn-prov-input').value;
+      const progress = parseInt(document.getElementById('edit-learn-prog-input').value, 10);
+      const status = document.getElementById('edit-learn-stat-input').value;
+
+      await apiFetch(`/learning/${id}`, 'PUT', { title, provider, progress, status });
+      document.getElementById('modal-edit-learning').classList.add('hidden');
+      fetchLearning();
+      loadDashboardData();
+    }
+
+    async function deleteLearningItem(id) {
+      if (confirm('Are you sure you want to delete this learning track?')) {
+        await apiFetch(`/learning/${id}`, 'DELETE');
+        fetchLearning();
+        loadDashboardData();
+      }
+    }
+
+    async function fetchSkillGap() {
+      const res = await apiFetch('/skill-gap');
+      if (res.success && res.data) {
+        document.getElementById('skillgap-target-role').innerText = res.data.targetRole;
+        document.getElementById('skillgap-list').innerHTML = res.data.gapAnalysis.map(g => `
+          <div class="glass-panel-card rounded-2xl p-4 flex items-center justify-between">
+            <div>
+              <div class="font-bold text-white text-sm">${g.skillName}</div>
+              <div class="text-on-surface-variant text-[11px]">Required: ${g.requiredMinLevel} | Current: ${g.currentLevel}</div>
+            </div>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold ${g.gapPriority==='HIGH'?'bg-red-500/20 text-red-300':'bg-amber-500/20 text-amber-300'}">${g.gapPriority} GAP</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    async function fetchRoadmap() {
+      const res = await apiFetch('/roadmap');
+      if (res.success && res.data) {
+        const d = res.data;
+        document.getElementById('roadmap-target-role').innerText = d.targetRole;
+        document.getElementById('roadmap-alignment-badge').innerText = `Alignment: ${d.alignmentScore}%`;
+
+        // Section 1: SKILLS YOU ALREADY HAVE
+        const haveEl = document.getElementById('roadmap-skills-have');
+        if (haveEl && d.skillsYouHave) {
+          haveEl.innerHTML = d.skillsYouHave.length > 0
+            ? d.skillsYouHave.map(s => `
+                <div class="p-3 rounded-2xl bg-surface-container/80 border border-green-500/30 flex justify-between items-center">
+                  <div>
+                    <div class="font-bold text-white text-xs">${s.name} <span class="text-green-400 font-mono text-[10px]">(${s.level})</span></div>
+                    <div class="text-[10px] text-on-surface-variant">Evidence: ${s.evidence}</div>
+                  </div>
+                  <span class="text-green-400 font-mono font-bold text-xs">READY ✓</span>
+                </div>
+              `).join('')
+            : '<div class="text-on-surface-variant">No verified skills matching target role yet.</div>';
+        }
+
+        // Section 2: SKILLS TO DEVELOP
+        const devEl = document.getElementById('roadmap-skills-develop');
+        if (devEl && d.skillsToDevelop) {
+          devEl.innerHTML = d.skillsToDevelop.length > 0
+            ? d.skillsToDevelop.map(s => `
+                <div class="p-3 rounded-2xl bg-surface-container/80 border border-amber-500/30 flex justify-between items-center">
+                  <div>
+                    <div class="font-bold text-white text-xs">${s.name}</div>
+                    <div class="text-[10px] text-on-surface-variant">Target Level: ${s.requiredLevel || 'INTERMEDIATE'}</div>
+                  </div>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${s.priority==='HIGH'?'bg-red-500/20 text-red-300':'bg-amber-500/20 text-amber-300'}">${s.priority} PRIORITY</span>
+                </div>
+              `).join('')
+            : '<div class="text-green-400 font-bold">All target skills developed!</div>';
+        }
+
+        // Section 3: RECOMMENDED PROJECT AREAS
+        const projEl = document.getElementById('roadmap-projects-rec');
+        if (projEl && d.recommendedProjects) {
+          projEl.innerHTML = d.recommendedProjects.map(p => `
+            <div class="p-4 rounded-2xl bg-surface-container/80 border border-primary/30 space-y-2 flex flex-col justify-between">
+              <div>
+                <div class="font-bold text-white text-sm font-headline">${p.title}</div>
+                <p class="text-on-surface-variant text-[11px] mt-1">${p.description}</p>
+              </div>
+              <button onclick="openAddProjectModal()" class="w-full py-1.5 rounded-xl bg-primary/20 text-primary font-bold text-[10px] mt-2 hover:bg-primary/30">CREATE THIS ARTIFACT +</button>
+            </div>
+          `).join('');
+        }
+
+        // Section 4: SUGGESTED LEARNING SEQUENCE
+        const seqEl = document.getElementById('roadmap-learning-seq');
+        if (seqEl && d.suggestedLearningSequence) {
+          seqEl.innerHTML = d.suggestedLearningSequence.map(s => `
+            <div class="p-3.5 rounded-2xl bg-surface-container/80 border border-white/10 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary-container to-secondary text-on-primary-container font-bold flex items-center justify-center font-headline text-xs shadow-md">
+                ${s.step}
+              </div>
+              <div>
+                <div class="font-bold text-white text-xs">${s.title}</div>
+                <p class="text-on-surface-variant text-[11px]">${s.desc}</p>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        // Section 5: MONTHLY MILESTONE TIMELINE
+        document.getElementById('roadmap-timeline').innerHTML = (d.roadmap || []).map(m => `
+          <div class="glass-panel-card rounded-2xl p-5 space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-primary text-xs uppercase tracking-widest">${m.month || m.phase} (${m.estimatedDuration || '4 Weeks'})</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-primary/20 text-primary font-bold font-mono">${m.status}</span>
+            </div>
+            <h4 class="font-headline font-bold text-white text-base">${m.title}</h4>
+            <p class="text-xs text-on-surface-variant">${m.targetMilestone || m.description}</p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              ${(m.focusSkills || []).map(sk => `<span class="px-2 py-0.5 rounded bg-surface-container text-primary text-[10px] border border-white/10">${sk}</span>`).join('')}
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    async function fetchOpportunities() {
+      const res = await apiFetch('/opportunities');
+      if (res.success && res.data) {
+        document.getElementById('opportunities-grid').innerHTML = res.data.map(o => `
+          <div class="glass-panel-card rounded-2xl p-5 space-y-3 font-telemetry">
+            <div class="flex justify-between items-start">
+              <div>
+                <h4 class="font-headline font-bold text-white text-base">${o.title}</h4>
+                <div class="text-xs text-primary font-bold">${o.company} • ${o.location}</div>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-primary/20 text-primary font-mono text-xs font-bold">${o.matchScore}% MATCH</span>
+            </div>
+            <p class="text-xs text-on-surface-variant">${o.description}</p>
+            <button onclick="applyOpportunity('${o._id}')" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-on-primary-container font-headline font-bold text-xs">1-CLICK KRICS APPLY →</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    async function applyOpportunity(id) {
+      const res = await apiFetch('/opportunities/apply', 'POST', { opportunityId: id });
+      alert(res.message || 'Application Submitted!');
+    }
+
+    async function fetchCareerPaths() {
+      const res = await apiFetch('/career-paths');
+      if (res.success && res.data) {
+        document.getElementById('careerpaths-grid').innerHTML = res.data.map(cp => `
+          <div class="glass-panel-card rounded-2xl p-5 space-y-3 font-telemetry">
+            <h4 class="font-headline font-bold text-white text-lg">${cp.title}</h4>
+            <p class="text-xs text-on-surface-variant">${cp.description}</p>
+            <button onclick="selectCareerGoal('${cp.title}')" class="px-4 py-2 rounded-xl bg-primary-container text-on-primary-container font-bold text-xs font-headline">SELECT AS TARGET GOAL →</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    async function selectCareerGoal(goal) {
+      await apiFetch('/career-goal', 'PUT', { careerGoal: goal });
+      loadDashboardData();
+      alert(`Target Goal updated to ${goal}!`);
+    }
+
+    async function fetchResume() {
+      const res = await apiFetch('/resume');
+      if (res.success && res.data) {
+        const d = res.data;
+        document.getElementById('resume-content').innerHTML = `
+          <div class="border-b border-white/10 pb-4 flex items-center justify-between">
+            <div>
+              <h2 class="font-headline text-2xl font-bold text-white">${d.user.fullName}</h2>
+              <div class="text-xs text-primary font-bold">${d.user.careerGoal || 'Data Scientist'} • ${d.user.location || 'Remote'}</div>
+              <div class="text-xs text-on-surface-variant mt-1">${d.user.email} | GitHub: ${d.user.githubUrl || 'N/A'}</div>
+            </div>
+            ${d.user.photoUrl ? `<img src="${d.user.photoUrl}" class="w-16 h-16 rounded-full object-cover border border-primary/40"/>` : ''}
+          </div>
+          <div>
+            <h3 class="font-headline font-bold text-white text-sm uppercase">Verified Skills</h3>
+            <div class="flex flex-wrap gap-2 mt-2">${(d.skills||[]).map(s=>`<span class="px-2.5 py-1 rounded bg-surface-container text-white text-xs border border-white/10">${s.name} (${s.level})</span>`).join('')}</div>
+          </div>
+          <div>
+            <h3 class="font-headline font-bold text-white text-sm uppercase">Projects & Evidence</h3>
+            <div class="space-y-2 mt-2">${(d.projects||[]).map(p=>`<div><strong class="text-white">${p.title || p.name}</strong>: ${p.description || p.desc}</div>`).join('')}</div>
+          </div>
+        `;
+      }
+    }
+
+    async function fetchAnalytics() {
+      const res = await apiFetch('/analytics');
+      if (res.success && res.data) {
+        document.getElementById('analytics-content').innerHTML = res.data.map(a => `
+          <div class="glass-panel-card rounded-xl p-3 font-telemetry text-xs flex justify-between">
+            <span class="text-white">${a.eventType}: ${a.eventDescription || ''}</span>
+            <span class="text-on-surface-variant text-[10px]">${new Date(a.createdAt).toLocaleTimeString()}</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Modal Helpers
+    function showAuthModal(mode) {
+      document.getElementById('modal-auth').classList.remove('hidden');
+      if (mode === 'signup') {
+        document.getElementById('auth-title').innerText = 'INITIALIZE INSTANCE';
+        document.getElementById('auth-subtitle').innerText = 'Create your user record in the neural graph.';
+        document.getElementById('auth-field-fullname').classList.remove('hidden');
+        document.getElementById('auth-submit-btn').innerText = 'INITIALIZE INSTANCE →';
+        document.getElementById('auth-toggle-prompt').innerText = 'Already initialized?';
+        document.getElementById('auth-toggle-btn').innerText = 'Sign In';
+      } else {
+        document.getElementById('auth-title').innerText = 'ACCESS KRICS';
+        document.getElementById('auth-subtitle').innerText = 'Enter your system credentials.';
+        document.getElementById('auth-field-fullname').classList.add('hidden');
+        document.getElementById('auth-submit-btn').innerText = 'ENTER PORTAL →';
+        document.getElementById('auth-toggle-prompt').innerText = 'Need an instance?';
+        document.getElementById('auth-toggle-btn').innerText = 'Build My KRICS';
+      }
+    }
+    function closeAuthModal() { document.getElementById('modal-auth').classList.add('hidden'); }
+    function toggleAuthMode() {
+      const isSignup = !document.getElementById('auth-field-fullname').classList.contains('hidden');
+      showAuthModal(isSignup ? 'login' : 'signup');
+    }
+
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('auth-input-email').value;
+      const password = document.getElementById('auth-input-password').value;
+      const isSignup = !document.getElementById('auth-field-fullname').classList.contains('hidden');
+      const endpoint = isSignup ? '/auth/register' : '/auth/login';
+      const body = isSignup 
+        ? { fullName: document.getElementById('auth-input-fullname').value, email, password }
+        : { email, password };
+
+      const res = await apiFetch(endpoint, 'POST', body);
+      if (res.token) {
+        state.token = res.token;
+        state.user = res.user;
+        localStorage.setItem('krics_token', res.token);
+        closeAuthModal();
+        showDashboardView();
+      } else {
+        const errEl = document.getElementById('auth-error-message');
+        errEl.innerText = res.message || 'Authentication failed';
+        errEl.classList.remove('hidden');
+      }
+    }
+
+    function openMyKrics() {
+      document.getElementById('view-mykrics').classList.remove('hidden');
+      fetchAndRenderNetwork();
+    }
+    function closeMyKrics() { document.getElementById('view-mykrics').classList.add('hidden'); }
+
+    function openGithubModal() { document.getElementById('modal-github').classList.remove('hidden'); }
+    function closeGithubModal() { document.getElementById('modal-github').classList.add('hidden'); }
+    async function handleGithubImport(e) {
+      e.preventDefault();
+      const username = document.getElementById('gh-username-input').value;
+      const res = await apiFetch('/github/import', 'POST', { username });
+      closeGithubModal();
+      alert(res.message || 'GitHub projects synced!');
+      fetchProjects();
+    }
+
+    function openAddSkillModal() { document.getElementById('modal-add-skill').classList.remove('hidden'); }
+    function closeAddSkillModal() { document.getElementById('modal-add-skill').classList.add('hidden'); }
+    async function handleAddSkillSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('skill-name-input').value;
+      const category = document.getElementById('skill-cat-input').value;
+      const level = document.getElementById('skill-level-input').value;
+      await apiFetch('/skills', 'POST', { name, category, level });
+      closeAddSkillModal();
+      fetchSkills();
+      loadDashboardData();
+    }
+
+    function openAddProjectModal() { document.getElementById('modal-add-project').classList.remove('hidden'); }
+    function closeAddProjectModal() { document.getElementById('modal-add-project').classList.add('hidden'); }
+    async function handleAddProjectSubmit(e) {
+      e.preventDefault();
+      const title = document.getElementById('proj-title-input').value;
+      const description = document.getElementById('proj-desc-input').value;
+      const techStr = document.getElementById('proj-tech-input').value;
+      const githubUrl = document.getElementById('proj-github-input').value;
+      const technologies = techStr.split(',').map(t=>t.trim()).filter(Boolean);
+      await apiFetch('/projects', 'POST', { title, name: title, desc: description, description, technologies, techs: technologies, githubUrl, githubLink: githubUrl });
+      closeAddProjectModal();
+      fetchProjects();
+      loadDashboardData();
+    }
+
+    function openAddExperienceModal() { document.getElementById('modal-add-experience').classList.remove('hidden'); }
+    function closeAddExperienceModal() { document.getElementById('modal-add-experience').classList.add('hidden'); }
+    async function handleAddExperienceSubmit(e) {
+      e.preventDefault();
+      const role = document.getElementById('exp-role-input').value;
+      const company = document.getElementById('exp-company-input').value;
+      const type = document.getElementById('exp-type-input').value;
+      const duration = document.getElementById('exp-dur-input').value;
+      const desc = document.getElementById('exp-desc-input').value;
+      await apiFetch('/experience', 'POST', { role, title: role, company, type, duration, desc });
+      closeAddExperienceModal();
+      fetchExperiences();
+      loadDashboardData();
+    }
+
+    function openAddLearningModal() { document.getElementById('modal-add-learning').classList.remove('hidden'); }
+    function closeAddLearningModal() { document.getElementById('modal-add-learning').classList.add('hidden'); }
+    async function handleAddLearningSubmit(e) {
+      e.preventDefault();
+      const title = document.getElementById('learn-title-input').value;
+      const provider = document.getElementById('learn-prov-input').value;
+      await apiFetch('/learning', 'POST', { title, provider, progress: 0, status: 'In Progress' });
+      closeAddLearningModal();
+      fetchLearning();
+      loadDashboardData();
+    }
+
+    function openShareModal() {
+      document.getElementById('modal-share').classList.remove('hidden');
+      fetchShareLink();
+    }
+    function closeShareModal() { document.getElementById('modal-share').classList.add('hidden'); }
+    async function fetchShareLink() {
+      const res = await apiFetch('/share/generate-link');
+      if (res.success) {
+        document.getElementById('share-url-input').value = res.shareUrl;
+        document.getElementById('share-qr-code').src = res.qrCodeUrl;
+      }
+    }
+    function copyShareUrl() {
+      const el = document.getElementById('share-url-input');
+      el.select();
+      document.execCommand('copy');
+      alert('Share URL copied to clipboard!');
+    }
+
+    let mentorVoiceEnabled = true;
+
+    function toggleMentorVoice() {
+      mentorVoiceEnabled = !mentorVoiceEnabled;
+      const btnText = document.getElementById('voice-btn-text');
+      const btnIcon = document.getElementById('voice-btn-icon');
+      if (mentorVoiceEnabled) {
+        if (btnText) btnText.innerText = 'VOICE ON';
+        if (btnIcon) btnIcon.innerText = 'volume_up';
+        const b = document.getElementById('mentor-voice-btn');
+        if (b) b.className = 'px-2.5 py-1 rounded-full bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 text-[10px] font-bold flex items-center gap-1 transition-all';
+      } else {
+        if (btnText) btnText.innerText = 'MUTED';
+        if (btnIcon) btnIcon.innerText = 'volume_off';
+        const b = document.getElementById('mentor-voice-btn');
+        if (b) b.className = 'px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-on-surface-variant border border-white/20 text-[10px] font-bold flex items-center gap-1 transition-all';
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      }
+    }
+
+    function speakMentorAdvice(rawText) {
+      if (!mentorVoiceEnabled || !('speechSynthesis' in window)) return;
+
+      let cleanText = (rawText || '')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/[*#_~`📌⚡🔍🎯🛡️📊🔮🤖🚀✓✕]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (!cleanText) return;
+
+      window.speechSynthesis.cancel();
+
+      const utt = new SpeechSynthesisUtterance(cleanText);
+      utt.pitch = 0.70; // Ultra bold deep masculine bass pitch
+      utt.rate = 0.90;  // Deliberate, bold, authoritative cadence
+      utt.volume = 1.0;
+
+      const setVoice = () => {
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+          // Prioritize deepest, boldest male voices
+          const maleVoice = voices.find(v => {
+            const n = v.name.toLowerCase();
+            return (n.includes('google us english male') || n.includes('google uk english male') || n.includes('david') || n.includes('mark') || n.includes('george') || n.includes('james') || n.includes('richard') || n.includes('alex') || n.includes('daniel') || n.includes('male') || n.includes('man') || n.includes('guy')) && (v.lang.startsWith('en'));
+          }) || voices.find(v => v.lang.startsWith('en'));
+
+          if (maleVoice) utt.voice = maleVoice;
+        }
+      };
+
+      setVoice();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = setVoice;
+      }
+
+      const stageSpeechEl = document.querySelector('#ai-mentor-drawer .font-body');
+      utt.onstart = () => {
+        const soundwaves = document.querySelectorAll('.mentor-soundwave span');
+        soundwaves.forEach(s => s.style.animationPlayState = 'running');
+        if (stageSpeechEl && cleanText.length < 180) stageSpeechEl.innerText = `"${cleanText}"`;
+      };
+      utt.onend = () => {
+        const soundwaves = document.querySelectorAll('.mentor-soundwave span');
+        soundwaves.forEach(s => s.style.animationPlayState = 'paused');
+      };
+
+      window.speechSynthesis.speak(utt);
+    }
+
+    function handleMentorTouch(e) {
+      const circleBtn = document.getElementById('ai-mentor-circle-btn');
+      if (circleBtn) {
+        circleBtn.classList.remove('animate-mentor-boom');
+        void circleBtn.offsetWidth; // Trigger reflow
+        circleBtn.classList.add('animate-mentor-boom');
+      }
+
+      toggleAiMentor();
+
+      const drawer = document.getElementById('ai-mentor-drawer');
+      if (drawer && !drawer.classList.contains('hidden')) {
+        speakMentorAdvice("Greetings Krishna! I am active and ready to guide your career path. What should we work on next?");
+      }
+    }
+
+    function toggleAiMentor() { document.getElementById('ai-mentor-drawer').classList.toggle('hidden'); }
+    
+    async function sendQuickAiQuestion(q) {
+      if (document.getElementById('ai-mentor-drawer').classList.contains('hidden')) {
+        toggleAiMentor();
+      }
+      document.getElementById('ai-chat-input').value = q;
+      await processAiChat(q);
+    }
+
+    async function askAiAboutNode() {
+      if (!state.selectedNode) return;
+      const q = `Explain my node [${state.selectedNode.label}] (${state.selectedNode.category || state.selectedNode.type}) and how it impacts my career goal.`;
+      await sendQuickAiQuestion(q);
+    }
+
+    async function handleAiChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('ai-chat-input');
+      const text = input.value;
+      if (!text) return;
+      input.value = '';
+      await processAiChat(text);
+    }
+
+    async function processAiChat(text) {
+      const msgContainer = document.getElementById('ai-chat-messages');
+      msgContainer.innerHTML += `
+        <div class="p-3 rounded-2xl bg-primary/20 border border-primary/30 text-white font-bold text-[11px] self-end">
+          ${text}
+        </div>
+      `;
+      msgContainer.scrollTop = msgContainer.scrollHeight;
+
+      const res = await apiFetch('/ai/chat', 'POST', {
+        message: text,
+        currentRoute: state.currentRoute,
+        selectedNode: state.selectedNode
+      });
+
+      if (res.success && res.data) {
+        const advice = (res.data.coachingAdvice || '').replace(/\n/g, '<br/>');
+        msgContainer.innerHTML += `
+          <div class="p-3.5 rounded-2xl bg-surface-container/90 text-on-surface text-[11px] leading-relaxed border border-secondary/30 flex items-start gap-2.5 shadow-lg">
+            <div class="relative w-7 h-7 rounded-full overflow-hidden border border-secondary shadow-[0_0_10px_rgba(201,174,255,0.7)] mentor-avatar-animated mentor-scan-wrapper bg-surface-container shrink-0 mt-0.5">
+              <img src="ai-mentor-avatar.png" class="w-full h-full object-cover object-top scale-110"/>
+            </div>
+            <div class="space-y-1 leading-relaxed flex-1">${advice}</div>
+          </div>
+        `;
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+
+        // Speak response with bold male AI voice
+        speakMentorAdvice(res.data.coachingAdvice);
+      }
+    }
+
+    // Global title hover state reference for hero canvas particle interaction
+    window.titleHoverState = {
+      active: false,
+      x: 0,
+      y: 0
+    };
+
+    // Particle Background Engine with Interactive Hero Title Attraction
+    function initParticleCanvas() {
+      const canvas = document.getElementById('hero-particle-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = window.innerWidth;
+      let h = canvas.height = window.innerHeight;
+
+      const particles = Array.from({ length: 75 }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: (Math.random() - 0.5) * 0.45,
+        baseR: Math.random() * 2 + 1,
+        r: Math.random() * 2 + 1
+      }));
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+
+        const titleState = window.titleHoverState || { active: false, x: 0, y: 0 };
+
+        particles.forEach(p => {
+          // Normal particle drift
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+
+          let currentR = p.baseR;
+          let alpha = 0.4;
+          let colorPrefix = 'rgba(56, 189, 248, ';
+
+          // Particle interaction when hovering KRICS title: nearby particles brighten and gently drift to center
+          if (titleState.active) {
+            const dx = titleState.x - p.x;
+            const dy = titleState.y - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const maxRadius = 340;
+
+            if (dist < maxRadius) {
+              const factor = 1 - (dist / maxRadius);
+              p.x += (dx / dist) * (1.2 * factor);
+              p.y += (dy / dist) * (1.2 * factor);
+
+              alpha = 0.4 + (0.55 * factor);
+              currentR = p.baseR * (1 + (0.75 * factor));
+              colorPrefix = factor > 0.5 ? 'rgba(165, 243, 252, ' : 'rgba(210, 187, 255, ';
+            }
+          }
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, currentR, 0, Math.PI * 2);
+          ctx.fillStyle = colorPrefix + alpha + ')';
+          ctx.fill();
+        });
+
+        requestAnimationFrame(draw);
+      }
+      draw();
+      window.onresize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
+    }
+
+    // KRICS Title Interactive Mouse Hover & GPU-Accelerated Lerp Engine
+    (function initTitleInteractiveEngine() {
+      const title = document.getElementById('krics-hero-title');
+      if (!title) return;
+
+      let targetX = 0, targetY = 0;
+      let currentX = 0, currentY = 0;
+      let targetTiltX = 0, targetTiltY = 0;
+      let currentTiltX = 0, currentTiltY = 0;
+      let isHovered = false;
+      let animFrameId = null;
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function updateTitleHoverCenter() {
+        const rect = title.getBoundingClientRect();
+        window.titleHoverState.x = rect.left + rect.width / 2;
+        window.titleHoverState.y = rect.top + rect.height / 2;
+      }
+
+      title.addEventListener('mouseenter', (e) => {
+        isHovered = true;
+        title.classList.add('title-hover-active', 'title-sweep-active');
+
+        updateTitleHoverCenter();
+        window.titleHoverState.active = true;
+
+        if (!animFrameId && !prefersReducedMotion) {
+          animFrameId = requestAnimationFrame(renderTitleLoop);
+        }
+      });
+
+      title.addEventListener('mousemove', (e) => {
+        if (prefersReducedMotion) return;
+
+        const rect = title.getBoundingClientRect();
+        const normX = ((e.clientX - rect.left) / rect.width) - 0.5; // -0.5 to 0.5
+        const normY = ((e.clientY - rect.top) / rect.height) - 0.5; // -0.5 to 0.5
+
+        // Controlled 3D/Parallax response (max 8px translation, 4deg tilt for cinematic glass depth)
+        targetX = normX * 8;
+        targetY = normY * 6;
+        targetTiltX = -normY * 4;
+        targetTiltY = normX * 4;
+
+        updateTitleHoverCenter();
+        window.titleHoverState.active = true;
+      });
+
+      title.addEventListener('mouseleave', () => {
+        isHovered = false;
+        title.classList.remove('title-hover-active', 'title-sweep-active');
+
+        window.titleHoverState.active = false;
+
+        targetX = 0;
+        targetY = 0;
+        targetTiltX = 0;
+        targetTiltY = 0;
+      });
+
+      function renderTitleLoop() {
+        const lerp = 0.08; // Smooth linear interpolation
+
+        currentX += (targetX - currentX) * lerp;
+        currentY += (targetY - currentY) * lerp;
+        currentTiltX += (targetTiltX - currentTiltX) * lerp;
+        currentTiltY += (targetTiltY - currentTiltY) * lerp;
+
+        if (prefersReducedMotion) {
+          title.style.transform = 'none';
+        } else {
+          title.style.transform = `perspective(800px) translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0px) rotateX(${currentTiltX.toFixed(2)}deg) rotateY(${currentTiltY.toFixed(2)}deg)`;
+        }
+
+        // Dynamic reflection overlay position shift based on cursor
+        const reflection = title.querySelector('.title-holo-reflection');
+        if (reflection) {
+          const reflX = 50 + (currentX * 4);
+          const reflY = 50 + (currentY * 4);
+          reflection.style.background = `radial-gradient(circle at ${reflX}% ${reflY}%, rgba(56, 189, 248, 0.45) 0%, rgba(168, 85, 247, 0.3) 40%, transparent 75%)`;
+        }
+
+        // Dynamic cursor-responsive edge text shadow & glow
+        if (isHovered) {
+          const shadowCyanX = -currentX * 1.8;
+          const shadowCyanY = -currentY * 1.8;
+          const shadowPurpleX = currentX * 2.2;
+          const shadowPurpleY = currentY * 2.2;
+
+          title.style.textShadow = `${shadowCyanX.toFixed(1)}px ${shadowCyanY.toFixed(1)}px 30px rgba(56, 189, 248, 0.85), ${shadowPurpleX.toFixed(1)}px ${shadowPurpleY.toFixed(1)}px 45px rgba(168, 85, 247, 0.65), 0 0 65px rgba(56, 189, 248, 0.4)`;
+        } else {
+          title.style.textShadow = '0 0 35px rgba(56, 189, 248, 0.45)';
+        }
+
+        // Keep loop running if hovered or still returning to resting position
+        if (isHovered || Math.abs(currentX) > 0.05 || Math.abs(currentY) > 0.05) {
+          animFrameId = requestAnimationFrame(renderTitleLoop);
+        } else {
+          title.style.transform = 'none';
+          animFrameId = null;
+        }
+      }
+    })();
+
+    function handleLogout() { state.token = null; state.user = null; localStorage.removeItem('krics_token'); showLandingView(); }
+
+    // 3D WebGL Career Knowledge Graph Engine
+    let scene3D, camera3D, renderer3D, controls3D, raycaster3D, mouse3D;
+    let nodeMeshes3D = [], lineMeshes3D = [];
+
+    async function fetchAndRenderNetwork() {
+      const res = await apiFetch('/network');
+      if (res.success && res.data) {
+        state.networkData = res.data;
+        document.getElementById('3d-stats-badge').innerText = `NODES: ${res.data.totalNodes} | EDGES: ${res.data.totalEdges}`;
+        renderAccessibleTree(res.data);
+        init3DScene(res.data.nodes, res.data.edges);
+      }
+    }
+
+    function init3DScene(nodes, edges) {
+      const container = document.getElementById('3d-graph-container');
+      container.innerHTML = '';
+
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+
+      scene3D = new THREE.Scene();
+      scene3D.fog = new THREE.FogExp2(0x0b0d1a, 0.0015);
+
+      camera3D = new THREE.PerspectiveCamera(60, w / h, 1, 2000);
+      camera3D.position.set(0, 80, 450);
+
+      renderer3D = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer3D.setSize(w, h);
+      renderer3D.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer3D.domElement);
+
+      controls3D = new THREE.OrbitControls(camera3D, renderer3D.domElement);
+      controls3D.enableDamping = true;
+      controls3D.dampingFactor = 0.05;
+      controls3D.maxDistance = 800;
+      controls3D.minDistance = 50;
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+      scene3D.add(ambientLight);
+      const pointLight = new THREE.PointLight(0x38bdf8, 2, 600);
+      pointLight.position.set(0, 0, 0);
+      scene3D.add(pointLight);
+
+      const pGeo = new THREE.BufferGeometry();
+      const pCount = 600;
+      const pPos = new Float32Array(pCount * 3);
+      for (let i = 0; i < pCount * 3; i++) pPos[i] = (Math.random() - 0.5) * 1200;
+      pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+      const pMat = new THREE.PointsMaterial({ size: 2, color: 0x38bdf8, transparent: true, opacity: 0.35 });
+      const pPoints = new THREE.Points(pGeo, pMat);
+      scene3D.add(pPoints);
+
+      nodeMeshes3D = [];
+      const nodeMap = {};
+
+      nodes.forEach((n, idx) => {
+        let geo, mat;
+        const nodeColor = parseInt((n.color || '#38bdf8').replace('#', '0x'));
+
+        if (n.type === 'USER') {
+          geo = new THREE.SphereGeometry(22, 32, 32);
+          mat = new THREE.MeshPhongMaterial({ color: 0x8ed5ff, emissive: 0x004965, shininess: 100 });
+        } else if (n.type === 'SKILL') {
+          geo = new THREE.SphereGeometry(12, 24, 24);
+          mat = new THREE.MeshPhongMaterial({ color: 0x38bdf8, emissive: 0x003344, shininess: 80 });
+        } else if (n.type === 'PROJECT') {
+          geo = new THREE.BoxGeometry(16, 16, 16);
+          mat = new THREE.MeshPhongMaterial({ color: 0x54ddfc, emissive: 0x002233, shininess: 90 });
+        } else if (n.type === 'EXPERIENCE') {
+          geo = new THREE.CylinderGeometry(10, 10, 16, 6);
+          mat = new THREE.MeshPhongMaterial({ color: 0xc9aeff, emissive: 0x220044, shininess: 70 });
+        } else if (n.type === 'EDUCATION') {
+          geo = new THREE.OctahedronGeometry(14);
+          mat = new THREE.MeshPhongMaterial({ color: 0xfacc15, emissive: 0x332200, shininess: 80 });
+        } else if (n.type === 'CERTIFICATION') {
+          geo = new THREE.TorusGeometry(12, 4, 16, 32);
+          mat = new THREE.MeshPhongMaterial({ color: 0xf472b6, emissive: 0x440022, shininess: 90 });
+        } else if (n.type === 'LEARNING') {
+          geo = new THREE.TorusGeometry(10, 3, 16, 24);
+          mat = new THREE.MeshPhongMaterial({ color: 0xfb923c, emissive: 0x331100, shininess: 80 });
+        } else if (n.type === 'CAREER_GOAL' || n.type === 'CAREER') {
+          geo = new THREE.IcosahedronGeometry(18);
+          mat = new THREE.MeshPhongMaterial({ color: 0xd2bbff, emissive: 0x330066, shininess: 100 });
+        } else if (n.type === 'OPPORTUNITY') {
+          geo = new THREE.OctahedronGeometry(12);
+          mat = new THREE.MeshPhongMaterial({ color: 0x34d399, emissive: 0x004422, shininess: 90 });
+        } else {
+          geo = new THREE.IcosahedronGeometry(10);
+          mat = new THREE.MeshPhongMaterial({ color: nodeColor, shininess: 60 });
+        }
+
+        const mesh = new THREE.Mesh(geo, mat);
+
+        if (n.type === 'USER') {
+          mesh.position.set(0, 0, 0);
+        } else {
+          const radius = 130 + (idx * 15);
+          const theta = idx * 0.7;
+          const phi = (idx % 3) * 0.8;
+          mesh.position.x = radius * Math.sin(theta) * Math.cos(phi);
+          mesh.position.y = (Math.sin(idx * 2) * 50);
+          mesh.position.z = radius * Math.cos(theta) * Math.cos(phi);
+        }
+
+        mesh.userData = { ...n };
+        scene3D.add(mesh);
+        nodeMeshes3D.push(mesh);
+        nodeMap[n.id] = mesh;
+      });
+
+      lineMeshes3D = [];
+      edges.forEach(e => {
+        const srcMesh = nodeMap[e.source];
+        const tgtMesh = nodeMap[e.target];
+        if (srcMesh && tgtMesh) {
+          const lGeo = new THREE.BufferGeometry().setFromPoints([srcMesh.position, tgtMesh.position]);
+          const lMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.3, linewidth: 1 });
+          const line = new THREE.Line(lGeo, lMat);
+          scene3D.add(line);
+          lineMeshes3D.push(line);
+        }
+      });
+
+      raycaster3D = new THREE.Raycaster();
+      mouse3D = new THREE.Vector2();
+
+      renderer3D.domElement.onmousemove = (e) => {
+        const rect = renderer3D.domElement.getBoundingClientRect();
+        mouse3D.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse3D.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster3D.setFromCamera(mouse3D, camera3D);
+        const intersects = raycaster3D.intersectObjects(nodeMeshes3D);
+
+        nodeMeshes3D.forEach(m => m.scale.set(1, 1, 1));
+        if (intersects.length > 0) {
+          const hit = intersects[0].object;
+          hit.scale.set(1.25, 1.25, 1.25);
+        }
+      };
+
+      renderer3D.domElement.onclick = (e) => {
+        raycaster3D.setFromCamera(mouse3D, camera3D);
+        const intersects = raycaster3D.intersectObjects(nodeMeshes3D);
+        if (intersects.length > 0) {
+          const hit = intersects[0].object;
+          state.selectedNode = hit.userData;
+          document.getElementById('graph-node-title').innerText = hit.userData.label;
+          document.getElementById('graph-node-category').innerText = hit.userData.category;
+          document.getElementById('graph-node-detail').innerText = hit.userData.detail || '';
+          document.getElementById('graph-details-drawer').classList.remove('hidden');
+        }
+      };
+
+      function animate3D() {
+        if (document.getElementById('view-mykrics').classList.contains('hidden')) return;
+        requestAnimationFrame(animate3D);
+
+        nodeMeshes3D.forEach(m => {
+          if (m.userData.type === 'USER' || m.userData.type === 'CAREER_GOAL') {
+            m.rotation.y += 0.005;
+            m.rotation.x += 0.003;
+          }
+        });
+
+        controls3D.update();
+        renderer3D.render(scene3D, camera3D);
+      }
+      animate3D();
+    }
+
+    function reset3DCamera() {
+      if (camera3D && controls3D) {
+        camera3D.position.set(0, 80, 450);
+        controls3D.target.set(0, 0, 0);
+        controls3D.update();
+      }
+    }
+
+    function focusOnNode() {
+      if (!state.selectedNode) return;
+      const targetMesh = nodeMeshes3D.find(m => m.userData.id === state.selectedNode.id);
+      if (targetMesh && camera3D && controls3D) {
+        const p = targetMesh.position;
+        camera3D.position.set(p.x + 40, p.y + 30, p.z + 120);
+        controls3D.target.set(p.x, p.y, p.z);
+        controls3D.update();
+      }
+    }
+
+    function search3DNodes(query) {
+      if (!query) return;
+      const match = nodeMeshes3D.find(m => m.userData.label.toLowerCase().includes(query.toLowerCase()));
+      if (match) {
+        state.selectedNode = match.userData;
+        focusOnNode();
+      }
+    }
+
+    function toggleViewMode() {
+      const view3D = document.getElementById('3d-graph-container');
+      const viewList = document.getElementById('mykrics-list-view');
+      const btn = document.getElementById('toggle-view-btn');
+
+      if (state.viewMode === '3d') {
+        state.viewMode = 'list';
+        view3D.classList.add('hidden');
+        viewList.classList.remove('hidden');
+        btn.innerText = '3D Graph View';
+      } else {
+        state.viewMode = '3d';
+        viewList.classList.add('hidden');
+        view3D.classList.remove('hidden');
+        btn.innerText = 'List View';
+      }
+    }
+
+    function renderAccessibleTree(data) {
+      const container = document.getElementById('accessible-tree-content');
+      if (!data || !data.nodes) return;
+
+      const userNode = data.nodes.find(n => n.type === 'USER') || { label: 'YOU' };
+      const skills = data.nodes.filter(n => n.type === 'SKILL');
+      const projects = data.nodes.filter(n => n.type === 'PROJECT');
+      const experience = data.nodes.filter(n => n.type === 'EXPERIENCE');
+
+      container.innerHTML = `
+        <div class="p-4 rounded-2xl bg-surface-container border border-primary/30 space-y-2">
+          <div class="font-bold text-primary text-sm">USER: ${userNode.label}</div>
+          <div class="pl-4 space-y-1">
+            <div class="text-white font-bold">Skills (${skills.length})</div>
+            <div class="pl-4 text-on-surface-variant">${skills.map(s => `• ${s.label} (${s.detail||''})`).join('<br/>')}</div>
+
+            <div class="text-white font-bold mt-2">Projects (${projects.length})</div>
+            <div class="pl-4 text-on-surface-variant">${projects.map(p => `• ${p.label}`).join('<br/>')}</div>
+
+            <div class="text-white font-bold mt-2">Experience (${experience.length})</div>
+            <div class="pl-4 text-on-surface-variant">${experience.map(e => `• ${e.label}`).join('<br/>')}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function handleVideoError() { const v = document.querySelector('.hero-video-wrapper'); if (v) v.style.display = 'none'; }
+  </script>
+</body>
+</html>
