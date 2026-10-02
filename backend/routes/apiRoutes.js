@@ -46,12 +46,17 @@ router.post('/skills', protect, skillController.addSkill);
 router.put('/skills/:id', protect, skillController.updateSkill);
 router.delete('/skills/:id', protect, skillController.deleteSkill);
 
-// 5. Projects & GitHub Auto-Import
+// 5. Projects & GitHub Career Evidence Engine
 router.get('/projects', protect, projectController.getProjects);
 router.post('/projects', protect, projectController.addProject);
 router.put('/projects/:id', protect, projectController.updateProject);
 router.delete('/projects/:id', protect, projectController.deleteProject);
-router.post('/github/import', protect, githubController.importGitHubRepositories);
+router.get('/github/status', protect, githubController.getGitHubStatus);
+router.post('/github/connect', protect, githubController.connectGitHub);
+router.post('/github/sync', protect, githubController.syncGitHubRepositories);
+router.post('/github/confirm-project', protect, githubController.confirmPotentialProject);
+router.post('/github/disconnect', protect, githubController.disconnectGitHub);
+router.post('/github/import', protect, githubController.connectGitHub);
 
 // 6. Experience
 router.get('/experience', protect, experienceController.getExperiences);

@@ -487,6 +487,7 @@
 
           <div class="space-y-1">
             <div class="text-[10px] text-on-surface-variant uppercase tracking-widest font-semibold px-3">INTELLIGENCE & OPPORTUNITIES</div>
+            <a href="#" onclick="switchRoute('githubintelligence')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="githubintelligence"><span class="material-symbols-outlined text-sm text-cyan-400">code</span> GitHub Intelligence <span class="ml-auto px-1.5 py-0.5 rounded text-[9px] bg-primary/20 text-primary font-bold">LIVE</span></a>
             <a href="#" onclick="switchRoute('careerpaths')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="careerpaths"><span class="material-symbols-outlined text-sm">route</span> Career Paths</a>
             <a href="#" onclick="switchRoute('opportunities')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="opportunities"><span class="material-symbols-outlined text-sm">satellite_alt</span> Opportunities</a>
             <a href="#" onclick="switchRoute('resume')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="resume"><span class="material-symbols-outlined text-sm">badge</span> Resume</a>
@@ -871,6 +872,148 @@
           <!-- MISSIONS GRID -->
           <div id="mc-missions-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Dynamically populated mission cards -->
+          </div>
+        </div>
+
+        <!-- ROUTE 13: GITHUB CAREER EVIDENCE ENGINE DASHBOARD -->
+        <div id="route-view-githubintelligence" class="route-view hidden space-y-8 font-telemetry">
+          <!-- Top Connection Banner -->
+          <div class="glass-panel-card rounded-3xl p-6 sm:p-8 space-y-6 relative overflow-hidden border border-cyan-500/30">
+            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
+              <div class="space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold text-[10px] uppercase tracking-wider flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">code</span> GITHUB EVIDENCE ENGINE</span>
+                  <span id="gh-status-pill" class="px-2.5 py-0.5 rounded-full bg-green-500/20 text-green-300 font-bold text-[10px] uppercase border border-green-500/40">CONNECTED ✓</span>
+                </div>
+                <h2 class="font-headline text-2xl sm:text-3xl font-black text-white tracking-wide flex items-center gap-3">
+                  GITHUB CAREER EVIDENCE DASHBOARD
+                </h2>
+                <p class="font-body text-xs text-on-surface-variant max-w-2xl leading-relaxed">
+                  Turn your actual GitHub repositories into verified engineering evidence for your KRICS Career Graph. KRICS inspects repository topics, tech stacks, and commit signals to validate your skill matrix.
+                </p>
+              </div>
+
+              <!-- Top Right GitHub Account Quick Card -->
+              <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-white/10 flex items-center gap-4 min-w-[260px]">
+                <img id="gh-user-avatar" src="https://github.com/KRISHNA-K19.png" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/bottts/svg?seed=GitHub'" class="w-12 h-12 rounded-2xl border border-cyan-400 shadow-[0_0_15px_rgba(56,189,248,0.4)] object-cover bg-black"/>
+                <div>
+                  <div class="text-sm font-bold text-white font-headline" id="gh-username-display">@KRISHNA-K19</div>
+                  <div class="text-[10px] text-on-surface-variant font-mono" id="gh-last-synced">Last synced: Just now</div>
+                  <div class="flex items-center gap-2 pt-1">
+                    <button onclick="syncGitHubNow()" class="px-2.5 py-1 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 font-bold text-[9px] uppercase tracking-wider transition-all flex items-center gap-1">
+                      <span class="material-symbols-outlined text-[11px]">sync</span> Sync Now
+                    </button>
+                    <button onclick="promptConnectGitHub()" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/15 font-bold text-[9px] uppercase tracking-wider transition-all">
+                      Change Account
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STAT CARDS BAR -->
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-4 border-t border-white/10 text-xs">
+              <div class="p-3 rounded-2xl bg-surface-container-lowest/80 border border-white/5 space-y-1">
+                <div class="text-[9px] text-on-surface-variant uppercase">PUBLIC REPOS</div>
+                <div class="text-xl font-extrabold text-white font-mono" id="gh-stat-repos">24</div>
+              </div>
+              <div class="p-3 rounded-2xl bg-surface-container-lowest/80 border border-white/5 space-y-1">
+                <div class="text-[9px] text-on-surface-variant uppercase">SELECTED FOR KRICS</div>
+                <div class="text-xl font-extrabold text-primary font-mono" id="gh-stat-selected">8</div>
+              </div>
+              <div class="p-3 rounded-2xl bg-surface-container-lowest/80 border border-white/5 space-y-1">
+                <div class="text-[9px] text-on-surface-variant uppercase">LANGUAGES DETECTED</div>
+                <div class="text-xl font-extrabold text-secondary font-mono" id="gh-stat-langs">7</div>
+              </div>
+              <div class="p-3 rounded-2xl bg-surface-container-lowest/80 border border-white/5 space-y-1">
+                <div class="text-[9px] text-on-surface-variant uppercase">PROJECT EVIDENCE</div>
+                <div class="text-xl font-extrabold text-amber-300 font-mono" id="gh-stat-projects">6</div>
+              </div>
+              <div class="p-3 rounded-2xl bg-surface-container-lowest/80 border border-white/5 space-y-1">
+                <div class="text-[9px] text-on-surface-variant uppercase">SKILL EVIDENCE LINKS</div>
+                <div class="text-xl font-extrabold text-cyan-300 font-mono" id="gh-stat-skills">12</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI INSIGHT & EVIDENCE LEVEL CLASSIFIER -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left 7 Cols: Skill Evidence Strength Matrix -->
+            <div class="lg:col-span-7 glass-panel-card rounded-3xl p-6 space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-headline text-base font-bold text-white flex items-center gap-2">
+                  <span class="material-symbols-outlined text-cyan-400">verified</span> Skill Evidence Strength Matrix
+                </h3>
+                <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold uppercase">Multi-Level Proof</span>
+              </div>
+              <p class="font-body text-xs text-on-surface-variant">
+                KRICS distinguishes self-claimed skills from skills supported by real GitHub implementation code, commit activity, and README documentation.
+              </p>
+
+              <div id="gh-skill-evidence-list" class="space-y-3 pt-2">
+                <!-- Dynamically populated skill evidence rows -->
+              </div>
+            </div>
+
+            <!-- Right 5 Cols: KRICS AI Evidence Insight & Repository Selector -->
+            <div class="lg:col-span-5 space-y-6">
+              <!-- AI Evidence Insight Box -->
+              <div class="glass-panel-card rounded-3xl p-6 space-y-4 border border-secondary/30">
+                <div class="flex items-center gap-3">
+                  <img src="public/ai-mentor-avatar.png" onerror="this.onerror=null; this.src='ai-mentor-avatar.png'; this.onerror=function(){this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'}" class="w-9 h-9 rounded-full border border-secondary object-cover shrink-0"/>
+                  <div>
+                    <div class="text-xs font-bold text-white font-headline">HUKUM GitHub Evidence Analysis</div>
+                    <div class="text-[10px] text-secondary">Target: Data Scientist</div>
+                  </div>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-surface-container-lowest/90 border border-white/10 space-y-2 text-xs">
+                  <div class="text-[10px] text-primary uppercase font-bold flex items-center gap-1.5"><span class="material-symbols-outlined text-[12px]">psychology</span> EVIDENCE EVALUATION</div>
+                  <p id="gh-ai-summary" class="text-white/90 leading-relaxed text-[11px]">Your connected GitHub activity provides verified project evidence for Python, Machine Learning, and Data Analysis.</p>
+                  <div id="gh-ai-gap" class="text-amber-300 text-[11px] leading-relaxed pt-1 border-t border-white/10 font-mono">Statistics and experimental design currently have fewer direct GitHub project signals.</div>
+                </div>
+              </div>
+
+              <!-- Repository Selector Box -->
+              <div class="glass-panel-card rounded-3xl p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="font-headline text-sm font-bold text-white">Select Repositories for KRICS</h3>
+                  <button onclick="syncGitHubNow()" class="text-xs text-primary font-bold hover:underline">Update Selected →</button>
+                </div>
+                <div id="gh-repo-checkbox-list" class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                  <!-- Dynamically populated repo checkboxes -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- POTENTIAL PROJECTS DISCOVERY (USER CONFIRMATION FLOW) -->
+          <div class="glass-panel-card rounded-3xl p-6 space-y-5 border border-primary/30">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+              <div>
+                <h3 class="font-headline text-lg font-bold text-white flex items-center gap-2">
+                  <span class="material-symbols-outlined text-amber-400">auto_awesome</span> Detected Potential GitHub Projects
+                </h3>
+                <p class="font-body text-xs text-on-surface-variant">
+                  KRICS detected these repositories as potential project artifacts. Review and confirm to import them safely into your portfolio.
+                </p>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 font-bold text-[10px] uppercase tracking-wider">User Confirmation Required</span>
+            </div>
+
+            <div id="gh-potential-projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <!-- Dynamically populated potential project cards -->
+            </div>
+          </div>
+
+          <!-- DEVELOPER EVIDENCE TIMELINE -->
+          <div class="glass-panel-card rounded-3xl p-6 space-y-4 font-telemetry">
+            <h3 class="font-headline text-base font-bold text-white flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary">history</span> Developer Evidence Timeline
+            </h3>
+            <div id="gh-timeline-list" class="space-y-3 text-xs">
+              <!-- Dynamically populated timeline events -->
+            </div>
           </div>
         </div>
 
@@ -1393,6 +1536,7 @@
 
       if (route === 'skills') fetchSkills();
       if (route === 'quests') fetchQuests();
+      if (route === 'githubintelligence') fetchGitHubStatus();
       if (route === 'skillgap') fetchSkillGap();
       if (route === 'projects') fetchProjects();
       if (route === 'roadmap') fetchRoadmap();
@@ -2067,6 +2211,176 @@
 
     function closeXpJourneyModal() {
       document.getElementById('modal-xp-journey').classList.add('hidden');
+    }
+
+    // ============================================================
+    // AUTONOMOUS GITHUB CAREER EVIDENCE ENGINE
+    // ============================================================
+
+    state.githubData = null;
+
+    async function fetchGitHubStatus() {
+      const res = await apiFetch('/github/status');
+      if (res.success && res.data) {
+        state.githubData = res.data;
+        renderGitHubDashboard(res.data);
+      }
+    }
+
+    function renderGitHubDashboard(g) {
+      const userAvatar = document.getElementById('gh-user-avatar');
+      const usernameDisplay = document.getElementById('gh-username-display');
+      const lastSynced = document.getElementById('gh-last-synced');
+      const statusPill = document.getElementById('gh-status-pill');
+
+      if (userAvatar) userAvatar.src = g.avatarUrl || `https://github.com/${g.username}.png`;
+      if (usernameDisplay) usernameDisplay.innerText = `@${g.username}`;
+      if (lastSynced) lastSynced.innerText = `Last synced: ${new Date(g.lastSyncedAt).toLocaleTimeString()}`;
+      if (statusPill) {
+        statusPill.className = g.connected 
+          ? 'px-2.5 py-0.5 rounded-full bg-green-500/20 text-green-300 font-bold text-[10px] uppercase border border-green-500/40'
+          : 'px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold text-[10px] uppercase border border-amber-500/40';
+        statusPill.innerText = g.connected ? 'CONNECTED ✓' : 'DISCONNECTED';
+      }
+
+      document.getElementById('gh-stat-repos').innerText = g.publicReposCount || 0;
+      document.getElementById('gh-stat-selected').innerText = g.selectedReposCount || 0;
+      document.getElementById('gh-stat-langs').innerText = g.analyzedRepos ? new Set(g.analyzedRepos.map(r => r.language)).size : 0;
+      document.getElementById('gh-stat-projects').innerText = g.potentialProjects ? (g.analyzedRepos.length - g.potentialProjects.length) : 0;
+      document.getElementById('gh-stat-skills').innerText = g.skillEvidenceMatrix ? g.skillEvidenceMatrix.filter(s => s.evidence.backedByGithub).length : 0;
+
+      const skillListContainer = document.getElementById('gh-skill-evidence-list');
+      if (skillListContainer && g.skillEvidenceMatrix) {
+        skillListContainer.innerHTML = g.skillEvidenceMatrix.map(s => {
+          const ev = s.evidence;
+          return `
+            <div class="p-3.5 rounded-2xl bg-surface-container-lowest/80 border border-white/10 space-y-2 font-telemetry text-xs transition-all hover:border-cyan-500/40">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-white text-sm">${s.name}</span>
+                  <span class="text-[10px] text-on-surface-variant font-mono">(${s.level})</span>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${ev.color} bg-white/5 border border-white/10">
+                  ${ev.badgeLabel}
+                </span>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2 text-[10px]">
+                ${ev.backedByGithub ? '<span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold flex items-center gap-1"><span class="material-symbols-outlined text-[11px]">code</span> GitHub Verified ✓</span>' : ''}
+                ${ev.backedByProject ? '<span class="px-2 py-0.5 rounded bg-primary/20 text-primary font-bold flex items-center gap-1"><span class="material-symbols-outlined text-[11px]">folder_code</span> Project Evidence</span>' : ''}
+                ${ev.backedByLearning ? '<span class="px-2 py-0.5 rounded bg-secondary/20 text-secondary font-bold flex items-center gap-1"><span class="material-symbols-outlined text-[11px]">auto_stories</span> Learning Track</span>' : ''}
+                ${!ev.backedByGithub && !ev.backedByProject ? '<span class="px-2 py-0.5 rounded bg-white/10 text-on-surface-variant">Claimed Only</span>' : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      if (g.aiInsight) {
+        document.getElementById('gh-ai-summary').innerText = g.aiInsight.summary;
+        document.getElementById('gh-ai-gap').innerText = g.aiInsight.gapInsight;
+      }
+
+      const repoBox = document.getElementById('gh-repo-checkbox-list');
+      if (repoBox && g.analyzedRepos) {
+        repoBox.innerHTML = g.analyzedRepos.map(r => {
+          const isSelected = g.selectedRepos ? g.selectedRepos.includes(r.name) : true;
+          return `
+            <label class="p-2.5 rounded-xl bg-surface-container-lowest/80 border border-white/5 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-all text-xs">
+              <div class="flex items-center gap-2.5 truncate">
+                <input type="checkbox" value="${r.name}" ${isSelected ? 'checked' : ''} onchange="toggleRepoSelection(this)" class="rounded accent-cyan-400"/>
+                <span class="font-bold text-white truncate">${r.name}</span>
+              </div>
+              <span class="px-2 py-0.5 rounded bg-white/10 text-[9px] font-mono text-cyan-300 font-bold shrink-0">${r.language || 'Code'}</span>
+            </label>
+          `;
+        }).join('');
+      }
+
+      const potGrid = document.getElementById('gh-potential-projects-grid');
+      if (potGrid && g.potentialProjects) {
+        if (g.potentialProjects.length === 0) {
+          potGrid.innerHTML = `<div class="col-span-full p-4 text-center text-xs text-on-surface-variant font-mono">All detected repositories confirmed as KRICS Projects ✓</div>`;
+        } else {
+          potGrid.innerHTML = g.potentialProjects.map(p => `
+            <div class="p-4 rounded-2xl bg-surface-container-lowest/80 border border-white/10 space-y-3 font-telemetry flex flex-col justify-between">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-white truncate">${p.title}</span>
+                  <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[9px] font-mono font-bold">${p.language}</span>
+                </div>
+                <p class="text-[11px] text-on-surface-variant leading-relaxed line-clamp-2">${p.description}</p>
+                
+                <div class="flex flex-wrap gap-1 pt-1">
+                  ${p.detectedTechs.map(t => `<span class="px-2 py-0.5 rounded bg-white/10 text-white text-[9px] font-bold">${t}</span>`).join('')}
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-white/10 flex items-center gap-2">
+                <button onclick="confirmPotentialProjectAction('${p.repoName}', 'ADD')" class="flex-1 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 font-bold text-[10px] uppercase transition-all shadow">
+                  [ADD TO PROJECTS]
+                </button>
+                <button onclick="confirmPotentialProjectAction('${p.repoName}', 'IGNORE')" class="px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-on-surface-variant font-bold text-[10px] uppercase transition-all">
+                  IGNORE
+                </button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      const timelineList = document.getElementById('gh-timeline-list');
+      if (timelineList && g.timeline) {
+        timelineList.innerHTML = g.timeline.map(t => `
+          <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-white/5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#38bdf8]"></div>
+              <div>
+                <div class="font-bold text-white text-xs">${t.title}</div>
+                <div class="text-[10px] text-on-surface-variant font-mono">${t.repoName}</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-on-surface-variant font-mono">${new Date(t.date).toLocaleDateString()}</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    async function syncGitHubNow() {
+      const checkboxes = document.querySelectorAll('#gh-repo-checkbox-list input[type="checkbox"]:checked');
+      const selectedRepos = Array.from(checkboxes).map(cb => cb.value);
+
+      const res = await apiFetch('/github/sync', 'POST', { selectedRepos });
+      if (res.success) {
+        alert('GitHub Career Evidence synchronized! Skill Matrix and Career Graph updated.');
+        await fetchGitHubStatus();
+        loadDashboardData();
+      }
+    }
+
+    async function confirmPotentialProjectAction(repoName, action) {
+      const res = await apiFetch('/github/confirm-project', 'POST', { repoName, action });
+      if (res.success) {
+        alert(res.message);
+        await fetchGitHubStatus();
+        loadDashboardData();
+      }
+    }
+
+    async function promptConnectGitHub() {
+      const username = prompt('Enter your GitHub username to connect:', state.githubData ? state.githubData.username : 'KRISHNA-K19');
+      if (!username) return;
+
+      const res = await apiFetch('/github/connect', 'POST', { username });
+      if (res.success) {
+        alert(`Successfully connected GitHub account @${username}! Analyzing repositories...`);
+        await fetchGitHubStatus();
+        loadDashboardData();
+      }
+    }
+
+    function toggleRepoSelection(cb) {
+      syncGitHubNow();
     }
 
     async function runSimulation() {
@@ -3082,6 +3396,9 @@
         } else if (n.type === 'CAREER_GOAL' || n.type === 'CAREER') {
           geo = new THREE.IcosahedronGeometry(18);
           mat = new THREE.MeshPhongMaterial({ color: 0xd2bbff, emissive: 0x330066, shininess: 100 });
+        } else if (n.type === 'GITHUB_EVIDENCE' || n.type === 'GITHUB') {
+          geo = new THREE.DodecahedronGeometry(13);
+          mat = new THREE.MeshPhongMaterial({ color: 0x06b6d4, emissive: 0x004455, shininess: 95 });
         } else if (n.type === 'OPPORTUNITY') {
           geo = new THREE.OctahedronGeometry(12);
           mat = new THREE.MeshPhongMaterial({ color: 0x34d399, emissive: 0x004422, shininess: 90 });

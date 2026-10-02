@@ -35,6 +35,28 @@ const UserSchema = new mongoose.Schema({
     count: { type: Number, default: 3 },
     lastActionDate: { type: Date, default: Date.now }
   },
+  githubProfile: {
+    connected: { type: Boolean, default: false },
+    username: { type: String, default: '' },
+    avatarUrl: { type: String, default: '' },
+    publicReposCount: { type: Number, default: 0 },
+    selectedRepos: [{ type: String }],
+    detectedLanguages: [{ type: String }],
+    detectedTechnologies: [{ type: String }],
+    lastSyncedAt: { type: Date },
+    timeline: [{
+      date: { type: Date, default: Date.now },
+      title: { type: String },
+      repoName: { type: String },
+      action: { type: String }
+    }],
+    evidenceStats: {
+      totalReposAnalyzed: { type: Number, default: 0 },
+      confirmedProjectsCount: { type: Number, default: 0 },
+      skillEvidenceCount: { type: Number, default: 0 },
+      evidenceLevel: { type: String, default: 'GITHUB EVIDENCE' }
+    }
+  },
   isVerified: { type: Boolean, default: false },
   onboardingCompleted: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }

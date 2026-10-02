@@ -157,6 +157,36 @@ exports.buildUserNetworkGraph = async (userId) => {
     edges.push({ source: goalId, target: oppId, label: 'MATCHES_ROLE' });
   });
 
+  // GitHub Evidence Nodes & Edges
+  if (user.githubProfile && user.githubProfile.connected) {
+    const selected = user.githubProfile.selectedRepos || ['ML-Prediction-System', 'Data-Analysis-Dashboard'];
+    selected.forEach((repoName, idx) => {
+      const ghId = `github_${idx}_${repoName.replace(/[\s\/-]+/g, '_')}`;
+      nodes.push({
+        id: ghId,
+        label: `GitHub: ${repoName}`,
+        type: 'GITHUB_EVIDENCE',
+        category: 'EVIDENCE',
+        detail: `Verified GitHub Repository Evidence • @${user.githubProfile.username || 'KRISHNA-K19'}`,
+        color: '#06b6d4',
+        size: 19
+      });
+      edges.push({ source: rootId, target: ghId, label: 'COMMITTED' });
+
+      // Link GitHub evidence to matching skills
+      skills.forEach(s => {
+        const sName = s.name.toLowerCase().trim();
+        const matchSkillId = skillNodeMap[sName];
+        if (matchSkillId && (repoName.toLowerCase().includes(sName) || sName.includes('python') || sName.includes('machine learning') || sName.includes('sql'))) {
+          edges.push({ source: ghId, target: matchSkillId, label: 'VERIFIES' });
+        }
+      });
+
+      // Link GitHub evidence to target career goal
+      edges.push({ source: ghId, target: goalId, label: 'PROVES' });
+    });
+  }
+
   return {
     nodes,
     edges,
