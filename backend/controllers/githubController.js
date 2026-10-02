@@ -13,6 +13,15 @@ const { calculateCareerAlignment } = require('../services/careerAlignmentService
 const { calculateSkillGap } = require('../services/skillGapEngine');
 const { logActivity } = require('../services/activityService');
 
+function sanitizeGitHubUsername(input) {
+  if (!input) return '';
+  let str = String(input).trim();
+  str = str.replace(/^https?:\/\/(www\.)?github\.com\//i, '');
+  str = str.replace(/^[@\/]+/, '');
+  str = str.replace(/^https?:\/\/(www\.)?github\.com\//i, '');
+  return str.split('/')[0].split('?')[0].split('#')[0].trim();
+}
+
 async function getUserId(req) {
   if (req.user && req.user._id) return req.user._id;
   let user = await User.findOne().sort({ createdAt: -1 });
@@ -35,7 +44,8 @@ exports.getGitHubStatus = async (req, res) => {
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
     const gh = user.githubProfile || {};
-    const username = gh.username || user.github || '';
+    const rawUsername = gh.username || user.github || '';
+    const username = sanitizeGitHubUsername(rawUsername);
     const isConnected = !!gh.connected;
 
     // Fetch real persisted repositories from DB

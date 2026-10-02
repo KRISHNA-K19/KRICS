@@ -11,35 +11,73 @@ function logDiag(stage, detail) {
   console.log(`[GitHub Pipeline] ${stage}:`, detail);
 }
 
-// Fetch authenticated or public GitHub user profile
+// Helper: Sanitize GitHub username handle from full URLs or leading symbols
+function sanitizeGitHubUsername(input) {
+  if (!input) return '';
+  let str = String(input).trim();
+  str = str.replace(/^https?:\/\/(www\.)?github\.com\//i, '');
+  str = str.replace(/^[@\/]+/, '');
+  str = str.replace(/^https?:\/\/(www\.)?github\.com\//i, '');
+  return str.split('/')[0].split('?')[0].split('#')[0].trim();
+}
+
+// Fetch authenticated or public GitHub user profile with 403 Rate-limit fallback
 async function fetchGitHubUser(username, accessToken) {
+  const cleanUsername = sanitizeGitHubUsername(username);
   const headers = { 'User-Agent': 'KRICS-Career-Evidence-Engine' };
   if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
 
   const url = accessToken 
     ? 'https://api.github.com/user'
-    : `https://api.github.com/users/${encodeURIComponent(username)}`;
+    : `https://api.github.com/users/${encodeURIComponent(cleanUsername)}`;
 
   logDiag('FetchUser', `Querying ${url}`);
-  const res = await fetch(url, { headers });
-  if (!res.ok) {
-    throw new Error(`GitHub API user fetch failed with status ${res.status}`);
+  try {
+    const res = await fetch(url, { headers });
+    if (res.status === 403 || res.status === 429) {
+      logDiag('FetchUser', `Rate limit hit (HTTP ${res.status}). Using identity snapshot for @${cleanUsername}.`);
+      return {
+        githubUserId: 0,
+        login: cleanUsername,
+        name: cleanUsername,
+        avatarUrl: `https://github.com/${cleanUsername}.png`,
+        profileUrl: `https://github.com/${cleanUsername}`,
+        publicRepos: 0,
+        isRateLimited: true
+      };
+    }
+    if (!res.ok) {
+      throw new Error(`GitHub account "@${cleanUsername}" was not found or API returned status ${res.status}`);
+    }
+    const data = await res.json();
+    logDiag('FetchUser', `Verified identity @${data.login}`);
+    return {
+      githubUserId: data.id,
+      login: data.login,
+      name: data.name || data.login,
+      avatarUrl: data.avatar_url,
+      profileUrl: data.html_url,
+      publicRepos: data.public_repos || 0,
+      type: data.type || 'User',
+      isRateLimited: false
+    };
+  } catch (err) {
+    if (err.message.includes('not found')) throw err;
+    return {
+      githubUserId: 0,
+      login: cleanUsername,
+      name: cleanUsername,
+      avatarUrl: `https://github.com/${cleanUsername}.png`,
+      profileUrl: `https://github.com/${cleanUsername}`,
+      publicRepos: 0,
+      isRateLimited: true
+    };
   }
-  const data = await res.json();
-  logDiag('FetchUser', `Verified identity @${data.login}`);
-  return {
-    githubUserId: data.id,
-    login: data.login,
-    name: data.name || data.login,
-    avatarUrl: data.avatar_url,
-    profileUrl: data.html_url,
-    publicRepos: data.public_repos || 0,
-    type: data.type || 'User'
-  };
 }
 
-// Fetch real paginated repositories
+// Fetch real paginated repositories with rate-limit handling
 async function fetchGitHubRepos(username, accessToken) {
+  const cleanUsername = sanitizeGitHubUsername(username);
   const headers = { 'User-Agent': 'KRICS-Career-Evidence-Engine' };
   if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
 
@@ -47,24 +85,31 @@ async function fetchGitHubRepos(username, accessToken) {
   let page = 1;
   const perPage = 100;
 
-  while (page <= 5) {
-    const baseUrl = accessToken
-      ? `https://api.github.com/user/repos?per_page=${perPage}&page=${page}&sort=updated`
-      : `https://api.github.com/users/${encodeURIComponent(username)}/repos?per_page=${perPage}&page=${page}&sort=updated`;
+  try {
+    while (page <= 5) {
+      const baseUrl = accessToken
+        ? `https://api.github.com/user/repos?per_page=${perPage}&page=${page}&sort=updated`
+        : `https://api.github.com/users/${encodeURIComponent(cleanUsername)}/repos?per_page=${perPage}&page=${page}&sort=updated`;
 
-    logDiag('FetchRepos', `Fetching page ${page} from ${baseUrl}`);
-    const res = await fetch(baseUrl, { headers });
-    if (!res.ok) break;
+      logDiag('FetchRepos', `Fetching page ${page} from ${baseUrl}`);
+      const res = await fetch(baseUrl, { headers });
+      if (res.status === 403 || res.status === 429 || !res.ok) {
+        logDiag('FetchRepos', `API limit/response code ${res.status} on page ${page}`);
+        break;
+      }
 
-    const repos = await res.json();
-    if (!Array.isArray(repos) || repos.length === 0) break;
+      const repos = await res.json();
+      if (!Array.isArray(repos) || repos.length === 0) break;
 
-    allRepos = allRepos.concat(repos);
-    if (repos.length < perPage) break;
-    page++;
+      allRepos = allRepos.concat(repos);
+      if (repos.length < perPage) break;
+      page++;
+    }
+  } catch (err) {
+    logDiag('FetchRepos', `Error fetching repos: ${err.message}`);
   }
 
-  logDiag('FetchRepos', `Discovered ${allRepos.length} total accessible repositories`);
+  logDiag('FetchRepos', `Retrieved ${allRepos.length} repositories from API`);
   return allRepos;
 }
 
@@ -183,7 +228,8 @@ async function syncUserGitHubData(userId, usernameInput, accessToken = null, sel
   const user = await User.findById(userId);
   if (!user) throw new Error('User not found');
 
-  const username = usernameInput || user.githubProfile?.username || user.github || 'KRISHNA-K19';
+  const rawUsername = usernameInput || user.githubProfile?.username || user.github || 'KRISHNA-K19';
+  const username = sanitizeGitHubUsername(rawUsername);
 
   // Step 1: Verify authenticated user
   const ghUser = await fetchGitHubUser(username, accessToken);
@@ -197,73 +243,77 @@ async function syncUserGitHubData(userId, usernameInput, accessToken = null, sel
 
   const updatedRepoDocs = [];
 
-  for (let i = 0; i < rawRepos.length; i++) {
-    const r = rawRepos[i];
-    const owner = r.owner?.login || ghUser.login;
+  if (rawRepos.length > 0) {
+    for (let i = 0; i < rawRepos.length; i++) {
+      const r = rawRepos[i];
+      const owner = r.owner?.login || ghUser.login;
 
-    // Fetch repo details only for top 15 most active/recent repos to respect rate limits
-    let langBreakdown = [];
-    let readmeInfo = { available: false, content: '', sha: null };
-    let commitInfo = { count: 0, recentActivityAt: null };
+      let langBreakdown = [];
+      let readmeInfo = { available: false, content: '', sha: null };
+      let commitInfo = { count: 0, recentActivityAt: null };
 
-    if (i < 15) {
-      langBreakdown = await fetchRepoLanguages(owner, r.name, accessToken);
-      readmeInfo = await fetchRepoReadme(owner, r.name, accessToken);
-      commitInfo = await fetchRepoCommits(owner, r.name, accessToken);
+      if (i < 15 && !ghUser.isRateLimited) {
+        langBreakdown = await fetchRepoLanguages(owner, r.name, accessToken);
+        readmeInfo = await fetchRepoReadme(owner, r.name, accessToken);
+        commitInfo = await fetchRepoCommits(owner, r.name, accessToken);
+      }
+
+      const detectedTechs = analyzeRepoStack(r, langBreakdown, readmeInfo.content);
+
+      const existingDoc = existingMap.get(r.id);
+
+      let isSelected = false;
+      if (Array.isArray(selectedRepoNames)) {
+        isSelected = selectedRepoNames.includes(r.name);
+      } else if (existingDoc) {
+        isSelected = existingDoc.selectedForKrics;
+      } else {
+        isSelected = i < 4;
+      }
+
+      const repoFields = {
+        user: userId,
+        githubRepoId: r.id,
+        name: r.name,
+        fullName: r.full_name,
+        owner,
+        description: r.description || '',
+        htmlUrl: r.html_url,
+        defaultBranch: r.default_branch || 'main',
+        visibility: r.visibility || (r.private ? 'private' : 'public'),
+        isPrivate: !!r.private,
+        isFork: !!r.fork,
+        isArchived: !!r.archived,
+        stars: r.stargazers_count || 0,
+        forks: r.forks_count || 0,
+        openIssues: r.open_issues_count || 0,
+        language: r.language || 'Code',
+        languages: langBreakdown.length > 0 ? langBreakdown : (existingDoc?.languages || []),
+        topics: r.topics || [],
+        readmeAvailable: readmeInfo.available || (existingDoc?.readmeAvailable || false),
+        readmeContent: readmeInfo.content || (existingDoc?.readmeContent || ''),
+        readmeSha: readmeInfo.sha || (existingDoc?.readmeSha || null),
+        commitCount: commitInfo.count || (existingDoc?.commitCount || 0),
+        recentActivityAt: commitInfo.recentActivityAt || new Date(r.pushed_at || r.updated_at),
+        detectedTechs: detectedTechs.length > 0 ? detectedTechs : (existingDoc?.detectedTechs || [r.language].filter(Boolean)),
+        selectedForKrics: isSelected,
+        lastSyncedAt: new Date(),
+        githubCreatedAt: r.created_at ? new Date(r.created_at) : null,
+        githubUpdatedAt: r.updated_at ? new Date(r.updated_at) : null,
+        githubPushedAt: r.pushed_at ? new Date(r.pushed_at) : null
+      };
+
+      const doc = await GitHubRepo.findOneAndUpdate(
+        { user: userId, githubRepoId: r.id },
+        repoFields,
+        { upsert: true, new: true }
+      );
+      updatedRepoDocs.push(doc);
     }
-
-    const detectedTechs = analyzeRepoStack(r, langBreakdown, readmeInfo.content);
-
-    const existingDoc = existingMap.get(r.id);
-
-    let isSelected = false;
-    if (Array.isArray(selectedRepoNames)) {
-      isSelected = selectedRepoNames.includes(r.name);
-    } else if (existingDoc) {
-      isSelected = existingDoc.selectedForKrics;
-    } else {
-      // Default select first 4 repos by default if new sync
-      isSelected = i < 4;
-    }
-
-    const repoFields = {
-      user: userId,
-      githubRepoId: r.id,
-      name: r.name,
-      fullName: r.full_name,
-      owner,
-      description: r.description || '',
-      htmlUrl: r.html_url,
-      defaultBranch: r.default_branch || 'main',
-      visibility: r.visibility || (r.private ? 'private' : 'public'),
-      isPrivate: !!r.private,
-      isFork: !!r.fork,
-      isArchived: !!r.archived,
-      stars: r.stargazers_count || 0,
-      forks: r.forks_count || 0,
-      openIssues: r.open_issues_count || 0,
-      language: r.language || 'Code',
-      languages: langBreakdown,
-      topics: r.topics || [],
-      readmeAvailable: readmeInfo.available,
-      readmeContent: readmeInfo.content,
-      readmeSha: readmeInfo.sha,
-      commitCount: commitInfo.count,
-      recentActivityAt: commitInfo.recentActivityAt || new Date(r.pushed_at || r.updated_at),
-      detectedTechs,
-      selectedForKrics: isSelected,
-      lastSyncedAt: new Date(),
-      githubCreatedAt: r.created_at ? new Date(r.created_at) : null,
-      githubUpdatedAt: r.updated_at ? new Date(r.updated_at) : null,
-      githubPushedAt: r.pushed_at ? new Date(r.pushed_at) : null
-    };
-
-    const doc = await GitHubRepo.findOneAndUpdate(
-      { user: userId, githubRepoId: r.id },
-      repoFields,
-      { upsert: true, new: true }
-    );
-    updatedRepoDocs.push(doc);
+  } else if (existingRepos.length > 0) {
+    // If rate limited or 0 repos returned, preserve existing stored repo snapshot
+    logDiag('SyncPipeline', `Rate limited or API returned 0 repos. Retaining ${existingRepos.length} existing DB repos.`);
+    existingRepos.forEach(r => updatedRepoDocs.push(r));
   }
 
   // Step 4: Build Real Evidence Records in GitHubEvidence model
@@ -271,16 +321,13 @@ async function syncUserGitHubData(userId, usernameInput, accessToken = null, sel
   const userProjects = await Project.find({ user: userId });
   const selectedDocs = updatedRepoDocs.filter(r => r.selectedForKrics);
 
-  // Clear obsolete automatic evidence records
   await GitHubEvidence.deleteMany({ user: userId });
 
   let evidenceCreatedCount = 0;
 
   for (const repoDoc of selectedDocs) {
     for (const tech of repoDoc.detectedTechs) {
-      // Match against user's skills
       const matchingSkill = userSkills.find(s => s.name.toLowerCase().trim() === tech.toLowerCase().trim());
-      // Match against user's projects
       const matchingProject = userProjects.find(p => p.name.toLowerCase().includes(repoDoc.name.toLowerCase()) || (p.githubLink && p.githubLink.includes(repoDoc.name)));
 
       const evidenceDoc = new GitHubEvidence({
@@ -332,13 +379,13 @@ async function syncUserGitHubData(userId, usernameInput, accessToken = null, sel
     timeline: [
       {
         date: new Date(),
-        title: `Synchronized ${rawRepos.length} GitHub repositories`,
+        title: `Synchronized ${updatedRepoDocs.length} GitHub repositories`,
         repoName: `@${ghUser.login}`,
         action: 'SYNCED'
       }
     ],
     evidenceStats: {
-      totalReposAnalyzed: rawRepos.length,
+      totalReposAnalyzed: updatedRepoDocs.length,
       confirmedProjectsCount: projectEvidenceLinksCount,
       skillEvidenceCount: skillEvidenceLinksCount,
       evidenceLevel: skillEvidenceLinksCount > 0 ? 'VERIFIED GITHUB EVIDENCE' : 'GITHUB CONNECTED'
@@ -346,10 +393,10 @@ async function syncUserGitHubData(userId, usernameInput, accessToken = null, sel
   };
   await user.save();
 
-  logDiag('SyncPipeline', `Sync completed cleanly. ${rawRepos.length} repos persisted.`);
+  logDiag('SyncPipeline', `Sync completed. ${updatedRepoDocs.length} repos persisted.`);
 
   return {
-    status: 'SYNCED',
+    status: ghUser.isRateLimited ? 'PARTIAL_SYNC' : 'SYNCED',
     githubUser: ghUser,
     metrics: {
       publicReposCount,
