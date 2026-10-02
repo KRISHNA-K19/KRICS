@@ -56,17 +56,48 @@
 
   <!-- Custom CSS for Cinematic Video Overlay, Glassmorphism, Holographic Text & Animations -->
   <style>
-    /* Reset & Base */
+    /* Reset, Base & Responsive Tokens */
+    :root {
+      --sat: env(safe-area-inset-top, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+      --sal: env(safe-area-inset-left, 0px);
+      --sar: env(safe-area-inset-right, 0px);
+    }
     html, body {
       margin: 0;
       padding: 0;
       background-color: #0b0d1a;
       color: #e1e1f4;
       font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
+      width: 100%;
+      min-height: 100dvh;
+      overflow-x: hidden !important;
       scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
     }
     ::-webkit-scrollbar { display: none; }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      display: block;
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(11, 13, 26, 0.5);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.3);
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(56, 189, 248, 0.6);
+    }
+
+    .break-words-custom {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      min-width: 0;
+    }
 
     /* Video Background Container */
     .hero-video-wrapper {
@@ -74,7 +105,7 @@
       top: 0;
       left: 0;
       width: 100vw;
-      height: 100vh;
+      height: 100dvh;
       z-index: 0;
       pointer-events: none;
       overflow: hidden;
@@ -414,8 +445,8 @@
   <!-- ========================================== -->
   <!-- 3. AUTHENTICATION & ONBOARDING MODAL -->
   <!-- ========================================== -->
-  <div id="modal-auth" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-md rounded-3xl p-8 space-y-6 relative border border-white/20 shadow-2xl">
+  <div id="modal-auth" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-6 relative border border-white/20 shadow-2xl my-auto min-w-0 custom-scrollbar">
       <button onclick="closeAuthModal()" class="absolute top-6 right-6 text-on-surface-variant hover:text-white"><span class="material-symbols-outlined">close</span></button>
 
       <div class="text-center space-y-2">
@@ -513,25 +544,25 @@
 
     <!-- MAIN ROUTE DISPLAY AREA -->
     <main class="flex-1 flex flex-col min-h-screen">
-      <header class="h-16 bg-surface-container-low/60 backdrop-blur-xl border-b border-white/10 px-6 flex items-center justify-between sticky top-0 z-30">
-        <div>
-          <h1 class="font-headline text-base font-bold text-white" id="dash-greeting">Good day, Krishna.</h1>
-          <p class="font-body text-xs text-on-surface-variant">Connected Career Intelligence Engine Active.</p>
+      <header class="min-h-[4rem] h-auto bg-surface-container-low/60 backdrop-blur-xl border-b border-white/10 px-4 sm:px-6 py-2.5 flex items-center justify-between sticky top-0 z-30 flex-wrap sm:flex-nowrap gap-3">
+        <div class="min-w-0">
+          <h1 class="font-headline text-sm sm:text-base font-bold text-white truncate" id="dash-greeting">Good day, Krishna.</h1>
+          <p class="font-body text-[11px] sm:text-xs text-on-surface-variant truncate">Connected Career Intelligence Engine Active.</p>
         </div>
-        <div class="flex items-center gap-3 font-telemetry text-xs">
-          <button onclick="openXpJourneyModal()" title="View XP Journey Audit Log" class="px-3.5 py-1.5 rounded-full bg-surface-container-high/80 hover:bg-surface-container-high border border-amber-400/40 text-amber-300 font-bold flex items-center gap-2 transition-all cursor-pointer shadow-[0_0_15px_rgba(251,191,36,0.2)] hover:scale-105" id="top-bar-xp-btn">
-            <span class="material-symbols-outlined text-base text-amber-400 animate-pulse">stars</span>
-            <span id="top-bar-level-badge" class="px-2 py-0.5 rounded-md bg-amber-400/20 text-[10px] text-amber-300 uppercase tracking-wider">LVL 1</span>
-            <span id="top-bar-xp-counter" class="font-mono text-white text-xs font-extrabold">1,250 XP</span>
+        <div class="flex items-center gap-2 sm:gap-3 font-telemetry text-xs flex-wrap sm:flex-nowrap shrink-0">
+          <button onclick="openXpJourneyModal()" title="View XP Journey Audit Log" class="px-2.5 sm:px-3.5 py-1.5 rounded-full bg-surface-container-high/80 hover:bg-surface-container-high border border-amber-400/40 text-amber-300 font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-[0_0_15px_rgba(251,191,36,0.2)] hover:scale-105" id="top-bar-xp-btn">
+            <span class="material-symbols-outlined text-sm sm:text-base text-amber-400 animate-pulse">stars</span>
+            <span id="top-bar-level-badge" class="px-1.5 py-0.5 rounded-md bg-amber-400/20 text-[9px] sm:text-[10px] text-amber-300 uppercase tracking-wider">LVL 1</span>
+            <span id="top-bar-xp-counter" class="font-mono text-white text-[11px] sm:text-xs font-extrabold">1,250 XP</span>
           </button>
-          <button onclick="openShareModal()" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold flex items-center gap-1.5 transition-all">
-            <span class="material-symbols-outlined text-sm text-primary">share</span> SHARE PROFILE
+          <button onclick="openShareModal()" class="px-2.5 sm:px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold flex items-center gap-1 transition-all text-[11px] sm:text-xs">
+            <span class="material-symbols-outlined text-xs sm:text-sm text-primary">share</span> SHARE
           </button>
-          <div class="px-3 py-1 rounded-full bg-surface-container border border-primary/30 text-primary" id="dash-alignment-badge">Alignment: 78.4%</div>
+          <div class="px-2.5 sm:px-3 py-1 rounded-full bg-surface-container border border-primary/30 text-primary text-[10px] sm:text-xs" id="dash-alignment-badge">Alignment: 78.4%</div>
         </div>
       </header>
 
-      <div class="p-6 max-w-7xl mx-auto w-full pb-24 space-y-8" id="route-container-workspace">
+      <div class="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full pb-36 sm:pb-24 space-y-6 sm:space-y-8 min-w-0" id="route-container-workspace">
         
         <!-- ROUTE 01: OVERVIEW DASHBOARD -->
         <div id="route-view-overview" class="route-view space-y-8">
@@ -1018,11 +1049,39 @@
         </div>
 
       </div>
+
+      <!-- MOBILE BOTTOM NAVIGATION RAIL (Supports iOS & Android Safe Areas) -->
+      <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-surface-container-lowest/90 backdrop-blur-2xl border-t border-white/15 px-2 py-1.5 flex items-center justify-around font-telemetry text-[10px] text-on-surface-variant pb-[calc(0.5rem+env(safe-area-inset-bottom))] shadow-2xl">
+        <button onclick="switchRoute('overview')" class="flex flex-col items-center gap-0.5 p-1 hover:text-white" data-mobile-route="overview">
+          <span class="material-symbols-outlined text-lg">dashboard</span>
+          <span>Home</span>
+        </button>
+        <button onclick="switchRoute('quests')" class="flex flex-col items-center gap-0.5 p-1 hover:text-white" data-mobile-route="quests">
+          <span class="material-symbols-outlined text-lg text-amber-400">military_tech</span>
+          <span>Missions</span>
+        </button>
+        <button onclick="openMyKrics()" class="flex flex-col items-center gap-0.5 p-1 text-primary hover:text-white font-bold">
+          <span class="material-symbols-outlined text-lg">hub</span>
+          <span>3D Graph</span>
+        </button>
+        <button onclick="switchRoute('skills')" class="flex flex-col items-center gap-0.5 p-1 hover:text-white" data-mobile-route="skills">
+          <span class="material-symbols-outlined text-lg">psychology</span>
+          <span>Skills</span>
+        </button>
+        <button onclick="switchRoute('projects')" class="flex flex-col items-center gap-0.5 p-1 hover:text-white" data-mobile-route="projects">
+          <span class="material-symbols-outlined text-lg">folder_code</span>
+          <span>Projects</span>
+        </button>
+        <button onclick="switchRoute('profile')" class="flex flex-col items-center gap-0.5 p-1 hover:text-white" data-mobile-route="profile">
+          <span class="material-symbols-outlined text-lg">account_circle</span>
+          <span>Profile</span>
+        </button>
+      </nav>
     </main>
   </div>
 
   <!-- FLOATING MEDIUM-SIZED CIRCULAR AI MENTOR MASCOT WIDGET -->
-  <div id="ai-mentor-trigger" class="fixed bottom-6 right-6 z-40 no-print flex items-end gap-3 group cursor-pointer" onclick="handleMentorTouch(event)">
+  <div id="ai-mentor-trigger" class="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40 no-print flex items-end gap-3 group cursor-pointer" onclick="handleMentorTouch(event)">
     <!-- INTERACTIVE FLOATING SPEECH BUBBLE -->
     <div class="hidden md:flex flex-col items-end mb-3 transition-all duration-300 opacity-90 group-hover:opacity-100 group-hover:-translate-y-1 animate-bounce">
       <div class="glass-panel-card px-4 py-2 rounded-2xl rounded-br-none border border-primary/40 text-xs font-telemetry text-white shadow-[0_0_20px_rgba(56,189,248,0.5)] flex items-center gap-2.5 group-hover:shadow-[0_0_35px_rgba(56,189,248,0.95)] group-hover:border-primary group-hover:bg-primary/20 transition-all duration-300">
@@ -1032,14 +1091,14 @@
     </div>
 
     <!-- MEDIUM CIRCULAR AVATAR BUTTON -->
-    <div id="ai-mentor-circle-btn" class="relative w-20 h-20 sm:w-22 sm:h-22 rounded-full glass-panel-card border-2 border-secondary shadow-[0_0_30px_rgba(56,189,248,0.7)] mentor-avatar-animated mentor-scan-wrapper hover:scale-110 hover:border-primary transition-all duration-300 bg-surface-container flex items-center justify-center p-1 group-hover:shadow-[0_0_45px_rgba(210,187,255,0.9)] shrink-0">
+    <div id="ai-mentor-circle-btn" class="relative w-16 h-16 sm:w-22 sm:h-22 rounded-full glass-panel-card border-2 border-secondary shadow-[0_0_30px_rgba(56,189,248,0.7)] mentor-avatar-animated mentor-scan-wrapper hover:scale-110 hover:border-primary transition-all duration-300 bg-surface-container flex items-center justify-center p-1 group-hover:shadow-[0_0_45px_rgba(210,187,255,0.9)] shrink-0">
       <img src="public/ai-mentor-avatar.png" onerror="this.onerror=null; this.src='ai-mentor-avatar.png'; this.onerror=function(){this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'}" class="w-full h-full object-cover object-top rounded-full scale-110 group-hover:scale-125 transition-transform duration-500"/>
-      <div class="absolute top-0 right-0 w-4 h-4 rounded-full bg-green-400 border-2 border-surface-container-lowest shadow-[0_0_10px_#4ade80] animate-pulse" title="AI Mentor Active"></div>
+      <div class="absolute top-0 right-0 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-green-400 border-2 border-surface-container-lowest shadow-[0_0_10px_#4ade80] animate-pulse" title="AI Mentor Active"></div>
     </div>
   </div>
 
   <!-- EXPANDED 3D CYBER HOLOGRAPHIC AI MENTOR CONSOLE -->
-  <div id="ai-mentor-drawer" class="fixed bottom-6 right-6 z-50 w-[460px] max-w-[95vw] glass-panel-card rounded-3xl p-5 hidden flex flex-col h-[680px] shadow-[0_0_60px_rgba(0,0,0,0.9)] border-2 border-white/20">
+  <div id="ai-mentor-drawer" class="fixed bottom-20 right-3 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-1.5rem)] sm:w-[460px] max-h-[82dvh] sm:max-h-[680px] h-auto glass-panel-card rounded-3xl p-4 sm:p-5 hidden flex flex-col shadow-[0_0_60px_rgba(0,0,0,0.9)] border-2 border-white/20 overflow-y-auto custom-scrollbar">
     <div class="flex items-center justify-between pb-3 border-b border-white/10 font-headline">
       <div class="flex items-center gap-3 text-white font-bold text-sm">
         <div class="w-3 h-3 rounded-full bg-green-400 animate-ping"></div>
@@ -1109,8 +1168,8 @@
   </div>
 
   <!-- PUBLIC SHAREABLE PROFILE MODAL -->
-  <div id="modal-share" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20 shadow-2xl">
+  <div id="modal-share" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-4 relative border border-white/20 shadow-2xl my-auto min-w-0 custom-scrollbar">
       <button onclick="closeShareModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-white"><span class="material-symbols-outlined">close</span></button>
       <h3 class="font-headline text-lg font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-primary">share</span> Share Your Public KRICS Identity</h3>
       <p class="font-body text-xs text-on-surface-variant">Recruiters and peers can view your 3D career knowledge graph and verified skills.</p>
@@ -1127,8 +1186,8 @@
   </div>
 
   <!-- EDIT SKILL MODAL -->
-  <div id="modal-edit-skill" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20 shadow-2xl">
+  <div id="modal-edit-skill" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-4 relative border border-white/20 shadow-2xl my-auto min-w-0 custom-scrollbar">
       <button onclick="document.getElementById('modal-edit-skill').classList.add('hidden')" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
       <h3 class="font-headline text-lg font-bold text-white">Edit Skill Synapse</h3>
       <form onsubmit="handleEditSkillSubmit(event)" class="space-y-3 font-telemetry text-xs">
@@ -1142,8 +1201,8 @@
   </div>
 
   <!-- EDIT PROJECT MODAL -->
-  <div id="modal-edit-project" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20 shadow-2xl">
+  <div id="modal-edit-project" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-4 relative border border-white/20 shadow-2xl my-auto min-w-0 custom-scrollbar">
       <button onclick="document.getElementById('modal-edit-project').classList.add('hidden')" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
       <h3 class="font-headline text-lg font-bold text-white">Edit Engineering Project</h3>
       <form onsubmit="handleEditProjectSubmit(event)" class="space-y-3 font-telemetry text-xs">
@@ -1158,8 +1217,8 @@
   </div>
 
   <!-- EDIT EXPERIENCE MODAL -->
-  <div id="modal-edit-experience" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20 shadow-2xl">
+  <div id="modal-edit-experience" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-4 relative border border-white/20 shadow-2xl my-auto min-w-0 custom-scrollbar">
       <button onclick="document.getElementById('modal-edit-experience').classList.add('hidden')" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
       <h3 class="font-headline text-lg font-bold text-white">Edit Work Experience</h3>
       <form onsubmit="handleEditExperienceSubmit(event)" class="space-y-3 font-telemetry text-xs">
@@ -1175,8 +1234,8 @@
   </div>
 
   <!-- EDIT LEARNING MODAL -->
-  <div id="modal-edit-learning" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20 shadow-2xl">
+  <div id="modal-edit-learning" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-4 relative border border-white/20 shadow-2xl my-auto min-w-0 custom-scrollbar">
       <button onclick="document.getElementById('modal-edit-learning').classList.add('hidden')" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
       <h3 class="font-headline text-lg font-bold text-white">Update Learning Track Progress</h3>
       <form onsubmit="handleEditLearningSubmit(event)" class="space-y-3 font-telemetry text-xs">
@@ -1213,12 +1272,12 @@
 
     <div id="3d-graph-container" class="absolute inset-0 z-10"></div>
 
-    <div id="mykrics-list-view" class="absolute inset-x-6 top-24 bottom-6 z-20 hidden overflow-y-auto glass-panel-card rounded-3xl p-6 space-y-4">
+    <div id="mykrics-list-view" class="absolute inset-x-4 sm:inset-x-6 top-24 bottom-6 z-20 hidden overflow-y-auto glass-panel-card rounded-3xl p-4 sm:p-6 space-y-4 custom-scrollbar">
       <h3 class="font-headline text-xl font-bold text-white">Accessible Career Knowledge Topology</h3>
       <div id="accessible-tree-content" class="font-telemetry text-xs space-y-2"></div>
     </div>
 
-    <div id="graph-details-drawer" class="absolute bottom-6 left-6 z-20 w-80 glass-panel-card rounded-2xl p-4 hidden font-telemetry space-y-2 border border-primary/40 shadow-2xl">
+    <div id="graph-details-drawer" class="absolute bottom-6 left-4 sm:left-6 z-20 w-[calc(100vw-2rem)] sm:w-80 glass-panel-card rounded-2xl p-4 hidden font-telemetry space-y-2 border border-primary/40 shadow-2xl">
       <div class="flex justify-between items-center"><span class="text-xs text-primary font-bold uppercase" id="graph-node-category">SKILL</span><button onclick="document.getElementById('graph-details-drawer').classList.add('hidden')" class="text-on-surface-variant hover:text-white text-xs">✕</button></div>
       <div class="font-headline font-bold text-white text-base" id="graph-node-title">Python</div>
       <div class="text-xs text-on-surface-variant" id="graph-node-detail">Level: ADVANCED</div>
@@ -1230,8 +1289,8 @@
   </div>
 
   <!-- GITHUB AUTO-IMPORT MODAL -->
-  <div id="modal-github" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20 shadow-2xl">
+  <div id="modal-github" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-4 relative border border-white/20 shadow-2xl my-auto min-w-0 custom-scrollbar">
       <button onclick="closeGithubModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-white"><span class="material-symbols-outlined">close</span></button>
       <h3 class="font-headline text-lg font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-primary">code</span> Sync GitHub Repositories</h3>
       <p class="font-body text-xs text-on-surface-variant">Auto-import engineering projects & extract technologies into your KRICS graph.</p>
@@ -1243,8 +1302,8 @@
   </div>
 
   <!-- ADD SKILL MODAL -->
-  <div id="modal-add-skill" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20">
+  <div id="modal-add-skill" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-4 relative border border-white/20 my-auto min-w-0 custom-scrollbar">
       <button onclick="closeAddSkillModal()" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
       <h3 class="font-headline text-lg font-bold text-white">Add Skill to KRICS Matrix</h3>
       <form onsubmit="handleAddSkillSubmit(event)" class="space-y-3 font-telemetry text-xs">
@@ -1257,8 +1316,8 @@
   </div>
 
   <!-- ADD PROJECT MODAL -->
-  <div id="modal-add-project" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20">
+  <div id="modal-add-project" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-4 relative border border-white/20 my-auto min-w-0 custom-scrollbar">
       <button onclick="closeAddProjectModal()" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
       <h3 class="font-headline text-lg font-bold text-white">Deploy Engineering Project</h3>
       <form onsubmit="handleAddProjectSubmit(event)" class="space-y-3 font-telemetry text-xs">
@@ -1272,8 +1331,8 @@
   </div>
 
   <!-- ADD EXPERIENCE MODAL -->
-  <div id="modal-add-experience" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20">
+  <div id="modal-add-experience" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-4 relative border border-white/20 my-auto min-w-0 custom-scrollbar">
       <button onclick="closeAddExperienceModal()" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
       <h3 class="font-headline text-lg font-bold text-white">Add Experience Record</h3>
       <form onsubmit="handleAddExperienceSubmit(event)" class="space-y-3 font-telemetry text-xs">
@@ -1288,8 +1347,8 @@
   </div>
 
   <!-- ADD LEARNING MODAL -->
-  <div id="modal-add-learning" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 space-y-4 relative border border-white/20">
+  <div id="modal-add-learning" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-4 relative border border-white/20 my-auto min-w-0 custom-scrollbar">
       <button onclick="closeAddLearningModal()" class="absolute top-4 right-4 text-on-surface-variant"><span class="material-symbols-outlined">close</span></button>
       <h3 class="font-headline text-lg font-bold text-white">Add Learning Track</h3>
       <form onsubmit="handleAddLearningSubmit(event)" class="space-y-3 font-telemetry text-xs">
@@ -1301,29 +1360,29 @@
   </div>
 
   <!-- CINEMATIC GLASSMORPHIC MISSION DETAIL MODAL -->
-  <div id="modal-mission-detail" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4 overflow-y-auto">
-    <div class="glass-panel-card w-full max-w-2xl rounded-3xl p-6 sm:p-8 space-y-6 relative border border-primary/30 shadow-[0_0_50px_rgba(56,189,248,0.2)] my-8">
-      <button onclick="closeMissionDetailModal()" class="absolute top-6 right-6 text-on-surface-variant hover:text-white transition-all"><span class="material-symbols-outlined text-xl">close</span></button>
+  <div id="modal-mission-detail" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-2xl max-h-[90dvh] overflow-y-auto rounded-3xl p-4 sm:p-8 space-y-5 sm:space-y-6 relative border border-primary/30 shadow-[0_0_50px_rgba(56,189,248,0.2)] my-auto min-w-0 custom-scrollbar">
+      <button onclick="closeMissionDetailModal()" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-on-surface-variant hover:text-white transition-all"><span class="material-symbols-outlined text-xl">close</span></button>
       
       <!-- Modal Header -->
-      <div class="space-y-2">
-        <div class="flex items-center gap-2 font-telemetry text-[10px]">
+      <div class="space-y-2 pr-6 sm:pr-8">
+        <div class="flex flex-wrap items-center gap-2 font-telemetry text-[10px]">
           <span id="md-mission-priority" class="px-2.5 py-0.5 rounded-full bg-primary/20 text-primary font-bold uppercase tracking-wider">RECOMMENDED</span>
           <span id="md-mission-category" class="px-2.5 py-0.5 rounded-full bg-white/10 text-white font-bold uppercase tracking-wider">SKILLS MATRIX</span>
-          <span id="md-mission-badge" class="ml-auto font-mono text-amber-300 font-bold flex items-center gap-1"><span class="material-symbols-outlined text-sm">military_tech</span> +150 XP</span>
+          <span id="md-mission-badge" class="font-mono text-amber-300 font-bold flex items-center gap-1 shrink-0"><span class="material-symbols-outlined text-sm">military_tech</span> +150 XP</span>
         </div>
-        <h2 id="md-mission-title" class="font-headline text-2xl font-black text-white tracking-wide">EXPAND MACHINE LEARNING EVIDENCE</h2>
-        <p id="md-mission-subtitle" class="font-body text-xs text-on-surface-variant leading-relaxed">Strengthen your Machine Learning evidence to align with target Data Scientist role.</p>
+        <h2 id="md-mission-title" class="font-headline text-xl sm:text-2xl font-black text-white tracking-wide break-words-custom">EXPAND MACHINE LEARNING EVIDENCE</h2>
+        <p id="md-mission-subtitle" class="font-body text-xs text-on-surface-variant leading-relaxed break-words-custom">Strengthen your Machine Learning evidence to align with target Data Scientist role.</p>
       </div>
 
       <!-- Career Purpose Box -->
-      <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-white/10 space-y-2">
+      <div class="p-3.5 sm:p-4 rounded-2xl bg-surface-container-lowest/90 border border-white/10 space-y-2 min-w-0">
         <div class="font-telemetry text-[10px] text-primary uppercase font-bold flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">target</span> WHY THIS MISSION?</div>
-        <p id="md-mission-purpose" class="font-body text-xs text-white/90 leading-relaxed">Machine Learning is a core requirement for your Data Scientist path, but your current profile lacks direct backing evidence.</p>
+        <p id="md-mission-purpose" class="font-body text-xs text-white/90 leading-relaxed break-words-custom">Machine Learning is a core requirement for your Data Scientist path, but your current profile lacks direct backing evidence.</p>
       </div>
 
       <!-- Status & Requirements Checklist -->
-      <div class="space-y-3">
+      <div class="space-y-3 min-w-0">
         <div class="flex items-center justify-between font-telemetry">
           <div class="text-xs font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary">fact_check</span> MISSION REQUIREMENTS</div>
           <div id="md-mission-progress-text" class="text-xs font-mono text-primary font-bold">60% COMPLETED</div>
@@ -1337,61 +1396,61 @@
       </div>
 
       <!-- Before -> After Profile Impact Visualizer -->
-      <div class="p-4 rounded-2xl bg-surface-container-low/70 border border-primary/20 space-y-3 font-telemetry">
+      <div class="p-3.5 sm:p-4 rounded-2xl bg-surface-container-low/70 border border-primary/20 space-y-3 font-telemetry min-w-0">
         <div class="text-[11px] font-bold text-white uppercase tracking-wider flex items-center gap-2"><span class="material-symbols-outlined text-sm text-tertiary">insights</span> BEFORE → AFTER PROFILE IMPACT</div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-white/5 space-y-1">
+          <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-white/5 space-y-1 min-w-0">
             <div class="text-[9px] text-on-surface-variant uppercase">EVIDENCE STRENGTH</div>
-            <div id="md-impact-evidence" class="text-xs font-bold text-secondary">Limited → Stronger</div>
+            <div id="md-impact-evidence" class="text-xs font-bold text-secondary break-words-custom">Limited → Stronger</div>
           </div>
-          <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-white/5 space-y-1">
+          <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-white/5 space-y-1 min-w-0">
             <div class="text-[9px] text-on-surface-variant uppercase">SYNAPSE LINKS</div>
-            <div id="md-impact-synapse" class="text-xs font-bold text-primary">+2 Graph Links</div>
+            <div id="md-impact-synapse" class="text-xs font-bold text-primary break-words-custom">+2 Graph Links</div>
           </div>
-          <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-white/5 space-y-1">
+          <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-white/5 space-y-1 min-w-0">
             <div class="text-[9px] text-on-surface-variant uppercase">ALIGNMENT IMPACT</div>
-            <div id="md-impact-alignment" class="text-xs font-bold text-amber-300">+3.5% Expected</div>
+            <div id="md-impact-alignment" class="text-xs font-bold text-amber-300 break-words-custom">+3.5% Expected</div>
           </div>
         </div>
       </div>
 
       <!-- HUKUM Mentor Reactive Guidance -->
-      <div class="p-4 rounded-2xl bg-gradient-to-r from-secondary/15 to-primary/10 border border-secondary/30 flex items-start gap-3">
+      <div class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-secondary/15 to-primary/10 border border-secondary/30 flex flex-col sm:flex-row items-start gap-3 min-w-0">
         <img src="public/ai-mentor-avatar.png" onerror="this.onerror=null; this.src='ai-mentor-avatar.png'; this.onerror=function(){this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'}" class="w-8 h-8 rounded-full border border-secondary object-cover shrink-0 mt-0.5"/>
-        <div class="font-telemetry text-xs space-y-1">
+        <div class="font-telemetry text-xs space-y-1 min-w-0 flex-1">
           <div class="text-[10px] text-secondary font-bold uppercase tracking-wider">HUKUM MENTOR GUIDANCE</div>
-          <p id="md-mission-hukum" class="text-white/90 leading-relaxed text-[11px]">Connecting 1 engineering project or learning artifact will complete this mission and strengthen your career graph.</p>
+          <p id="md-mission-hukum" class="text-white/90 leading-relaxed text-[11px] break-words-custom">Connecting 1 engineering project or learning artifact will complete this mission and strengthen your career graph.</p>
         </div>
       </div>
 
       <!-- Modal Action Buttons -->
-      <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2" id="md-action-container">
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-2 w-full" id="md-action-container">
         <!-- Dynamically rendered verification/claim buttons -->
       </div>
     </div>
   </div>
 
   <!-- XP JOURNEY & AUDIT LOG MODAL -->
-  <div id="modal-xp-journey" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4 overflow-y-auto">
-    <div class="glass-panel-card w-full max-w-xl rounded-3xl p-6 sm:p-8 space-y-6 relative border border-primary/30 shadow-2xl my-8">
-      <button onclick="closeXpJourneyModal()" class="absolute top-6 right-6 text-on-surface-variant hover:text-white transition-all"><span class="material-symbols-outlined text-xl">close</span></button>
+  <div id="modal-xp-journey" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-xl max-h-[90dvh] overflow-y-auto rounded-3xl p-4 sm:p-8 space-y-6 relative border border-primary/30 shadow-2xl my-auto min-w-0 custom-scrollbar">
+      <button onclick="closeXpJourneyModal()" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-on-surface-variant hover:text-white transition-all"><span class="material-symbols-outlined text-xl">close</span></button>
       
       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center shadow-[0_0_20px_rgba(251,191,36,0.4)]">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center shadow-[0_0_20px_rgba(251,191,36,0.4)] shrink-0">
           <span class="material-symbols-outlined text-2xl text-black font-extrabold">stars</span>
         </div>
         <div>
-          <h2 class="font-headline text-xl font-bold text-white">XP Journey & Audit History</h2>
+          <h2 class="font-headline text-lg sm:text-xl font-bold text-white">XP Journey & Audit History</h2>
           <p class="font-telemetry text-xs text-on-surface-variant">Verified Career Progression Record</p>
         </div>
       </div>
 
       <!-- Total XP & Source Breakdown -->
       <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-white/10 space-y-4 font-telemetry">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
           <div>
             <div class="text-[10px] text-on-surface-variant uppercase">TOTAL VERIFIED CAREER XP</div>
-            <div class="text-3xl font-extrabold text-white font-mono" id="xpj-total-xp">1,250 XP</div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-white font-mono" id="xpj-total-xp">1,250 XP</div>
           </div>
           <div class="px-3 py-1.5 rounded-xl bg-amber-400/20 text-amber-300 font-bold text-xs" id="xpj-level-title">Level 3: Project Creator</div>
         </div>
@@ -1407,7 +1466,7 @@
       <!-- Audit History List -->
       <div class="space-y-3 font-telemetry">
         <div class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary">history</span> XP AUDIT LOG</div>
-        <div id="xpj-history-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+        <div id="xpj-history-list" class="space-y-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
           <!-- Dynamically populated history items -->
         </div>
       </div>
@@ -1415,16 +1474,16 @@
   </div>
 
   <!-- MISSION COMPLETE & LEVEL UP CEREMONY MODAL -->
-  <div id="modal-mission-complete" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-3xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-md rounded-3xl p-8 space-y-6 text-center relative border border-amber-400/40 shadow-[0_0_80px_rgba(251,191,36,0.3)]">
-      <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center shadow-[0_0_40px_rgba(251,191,36,0.6)]">
-        <span class="material-symbols-outlined text-4xl text-black font-extrabold">military_tech</span>
+  <div id="modal-mission-complete" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-3xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-6 sm:p-8 space-y-6 text-center relative border border-amber-400/40 shadow-[0_0_80px_rgba(251,191,36,0.3)] my-auto min-w-0 custom-scrollbar">
+      <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center shadow-[0_0_40px_rgba(251,191,36,0.6)] shrink-0">
+        <span class="material-symbols-outlined text-3xl sm:text-4xl text-black font-extrabold">military_tech</span>
       </div>
       
       <div class="space-y-2 font-telemetry">
         <div id="mc-tag" class="text-xs text-amber-300 font-extrabold uppercase tracking-widest">MISSION COMPLETED!</div>
-        <h2 id="mc-title" class="font-headline text-2xl font-black text-white">EXPAND MACHINE LEARNING EVIDENCE</h2>
-        <div id="mc-xp-earned" class="font-mono text-2xl font-extrabold text-amber-400 animate-bounce">+150 XP EARNED</div>
+        <h2 id="mc-title" class="font-headline text-xl sm:text-2xl font-black text-white break-words-custom">EXPAND MACHINE LEARNING EVIDENCE</h2>
+        <div id="mc-xp-earned" class="font-mono text-xl sm:text-2xl font-extrabold text-amber-400 animate-bounce">+150 XP EARNED</div>
       </div>
 
       <div id="mc-level-up-box" class="p-4 rounded-2xl bg-amber-400/10 border border-amber-400/30 font-telemetry text-xs space-y-1 hidden">
@@ -1436,7 +1495,7 @@
       <!-- HUKUM Reaction -->
       <div class="p-4 rounded-2xl bg-surface-container-lowest/80 border border-white/10 flex items-center gap-3 text-left">
         <img src="public/ai-mentor-avatar.png" onerror="this.onerror=null; this.src='ai-mentor-avatar.png'; this.onerror=function(){this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'}" class="w-10 h-10 rounded-full border border-secondary object-cover shrink-0"/>
-        <p id="mc-hukum-reaction" class="font-telemetry text-xs text-white/90 leading-relaxed">Excellent progress! Your machine learning synapse connections are now active in your profile graph.</p>
+        <p id="mc-hukum-reaction" class="font-telemetry text-xs text-white/90 leading-relaxed break-words-custom">Excellent progress! Your machine learning synapse connections are now active in your profile graph.</p>
       </div>
 
       <button onclick="closeMissionCompleteModal()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 font-headline font-black text-black text-xs shadow-lg hover:scale-105 transition-all">CONTINUE CAREER MISSION →</button>
@@ -1444,11 +1503,11 @@
   </div>
 
   <!-- GLOBAL KRICS GLASS TOAST CONTAINER -->
-  <div id="krics-toast-container" class="fixed top-6 right-6 z-[100] flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+  <div id="krics-toast-container" class="fixed top-6 right-4 sm:right-6 z-[100] flex flex-col gap-3 max-w-sm w-[calc(100vw-2rem)] pointer-events-none"></div>
 
   <!-- GLOBAL KRICS CONFIRMATION MODAL -->
-  <div id="modal-krics-confirm" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-md rounded-3xl p-6 sm:p-8 space-y-6 relative border border-white/20 shadow-2xl">
+  <div id="modal-krics-confirm" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-6 relative border border-white/20 shadow-2xl my-auto min-w-0 custom-scrollbar">
       <div class="flex items-center gap-3">
         <div id="kc-icon-box" class="w-12 h-12 rounded-2xl bg-red-500/20 border border-red-500/40 flex items-center justify-center text-red-400 shrink-0">
           <span class="material-symbols-outlined text-2xl">warning</span>
@@ -1459,7 +1518,7 @@
         </div>
       </div>
       
-      <p id="kc-description" class="font-body text-xs text-white/90 leading-relaxed">
+      <p id="kc-description" class="font-body text-xs text-white/90 leading-relaxed break-words-custom">
         Are you sure you want to perform this action?
       </p>
 
@@ -1475,21 +1534,21 @@
   </div>
 
   <!-- DEDICATED KRICS GITHUB OAUTH CONNECT MODAL -->
-  <div id="modal-krics-github-connect" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4">
-    <div class="glass-panel-card w-full max-w-lg rounded-3xl p-6 sm:p-8 space-y-6 relative border border-cyan-500/40 shadow-[0_0_50px_rgba(6,182,212,0.25)]">
-      <button onclick="closeGitHubConnectModal()" class="absolute top-6 right-6 text-on-surface-variant hover:text-white transition-all"><span class="material-symbols-outlined text-xl">close</span></button>
+  <div id="modal-krics-github-connect" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-lg max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-6 relative border border-cyan-500/40 shadow-[0_0_50px_rgba(6,182,212,0.25)] my-auto min-w-0 custom-scrollbar">
+      <button onclick="closeGitHubConnectModal()" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-on-surface-variant hover:text-white transition-all"><span class="material-symbols-outlined text-xl">close</span></button>
       
       <div class="flex items-center gap-4">
-        <div class="w-14 h-14 rounded-2xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-300 shrink-0 shadow-[0_0_20px_rgba(6,182,212,0.4)]">
-          <span class="material-symbols-outlined text-3xl">code</span>
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-300 shrink-0 shadow-[0_0_20px_rgba(6,182,212,0.4)]">
+          <span class="material-symbols-outlined text-2xl sm:text-3xl">code</span>
         </div>
         <div>
           <div class="font-telemetry text-[10px] text-cyan-300 font-bold uppercase tracking-wider">KRICS CAREER EVIDENCE ENGINE</div>
-          <h2 class="font-headline text-xl font-extrabold text-white">CONNECT GITHUB ACCOUNT</h2>
+          <h2 class="font-headline text-lg sm:text-xl font-extrabold text-white">CONNECT GITHUB ACCOUNT</h2>
         </div>
       </div>
 
-      <p class="font-body text-xs text-on-surface-variant leading-relaxed">
+      <p class="font-body text-xs text-on-surface-variant leading-relaxed break-words-custom">
         Connect your GitHub profile to automatically transform your repositories, commit activity, and language tech stacks into verified career evidence on your 3D KRICS Graph.
       </p>
 
@@ -1508,11 +1567,11 @@
           <input type="text" id="gh-modal-username-input" required placeholder="e.g. KRISHNA-K19" class="w-full glass-input rounded-xl px-4 py-2.5 text-xs text-white"/>
         </div>
 
-        <div class="flex items-center justify-end gap-3 pt-2">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-2">
           <button type="button" onclick="closeGitHubConnectModal()" class="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all">
             CANCEL
           </button>
-          <button type="submit" class="px-7 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-primary text-black font-headline font-black text-xs shadow-[0_0_20px_rgba(6,182,212,0.5)] hover:scale-105 transition-all uppercase flex items-center gap-2">
+          <button type="submit" class="px-7 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-primary text-black font-headline font-black text-xs shadow-[0_0_20px_rgba(6,182,212,0.5)] hover:scale-105 transition-all uppercase flex items-center justify-center gap-2 min-h-[44px]">
             <span>CONTINUE WITH GITHUB</span> →
           </button>
         </div>
@@ -1720,6 +1779,16 @@
           el.className = 'route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5';
         }
       });
+
+      document.querySelectorAll('[data-mobile-route]').forEach(el => {
+        if (el.dataset.mobileRoute === route) {
+          el.className = 'flex flex-col items-center gap-0.5 p-1 text-primary font-bold';
+        } else {
+          el.className = 'flex flex-col items-center gap-0.5 p-1 text-on-surface-variant hover:text-white';
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
       if (route === 'skills') fetchSkills();
       if (route === 'quests') fetchQuests();
@@ -2202,22 +2271,22 @@
       checklistContainer.innerHTML = m.requirements.map(req => {
         if (req.fulfilled) {
           return `
-            <div class="p-3.5 rounded-2xl bg-surface-container-lowest/80 border border-green-500/30 flex items-center justify-between">
-              <div class="flex items-center gap-2.5 text-green-300 font-semibold">
-                <span class="material-symbols-outlined text-base">check_circle</span>
-                <span>${req.label}</span>
+            <div class="p-3.5 rounded-2xl bg-surface-container-lowest/80 border border-green-500/30 flex items-center justify-between gap-3 min-w-0">
+              <div class="flex items-center gap-2.5 text-green-300 font-semibold min-w-0 flex-1">
+                <span class="material-symbols-outlined text-base shrink-0">check_circle</span>
+                <span class="break-words-custom">${req.label}</span>
               </div>
-              <span class="text-[10px] text-green-400 font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-green-500/20">VERIFIED ✓</span>
+              <span class="text-[10px] text-green-400 font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-green-500/20 shrink-0">VERIFIED ✓</span>
             </div>
           `;
         } else {
           return `
-            <div class="p-3.5 rounded-2xl bg-surface-container-lowest/80 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div class="flex items-center gap-2.5 text-white/90">
-                <span class="material-symbols-outlined text-base text-amber-400">radio_button_unchecked</span>
-                <span>${req.label}</span>
+            <div class="p-3.5 rounded-2xl bg-surface-container-lowest/80 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 min-w-0">
+              <div class="flex items-start gap-2.5 text-white/90 min-w-0 flex-1">
+                <span class="material-symbols-outlined text-base text-amber-400 shrink-0 mt-0.5">radio_button_unchecked</span>
+                <span class="break-words-custom">${req.label}</span>
               </div>
-              <button onclick="navigateFromMissionChecklist('${req.targetView}', '${req.actionText}')" class="px-3.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-[10px] uppercase flex items-center gap-1.5 transition-all shadow hover:scale-105 shrink-0">
+              <button onclick="navigateFromMissionChecklist('${req.targetView}', '${req.actionText}')" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs uppercase flex items-center justify-center gap-1.5 transition-all shadow hover:scale-105 shrink-0 min-h-[44px]">
                 ${req.actionText || '[TAKE ME THERE]'} →
               </button>
             </div>
@@ -2227,12 +2296,12 @@
 
       const actionContainer = document.getElementById('md-action-container');
       if (m.completed) {
-        actionContainer.innerHTML = `<span class="px-6 py-3 rounded-xl bg-green-500/20 text-green-300 font-bold text-xs border border-green-500/40 uppercase flex items-center gap-1.5"><span class="material-symbols-outlined text-base">check_circle</span> VERIFIED MISSION COMPLETED ✓</span>`;
+        actionContainer.innerHTML = `<span class="w-full sm:w-auto px-6 py-3 rounded-xl bg-green-500/20 text-green-300 font-bold text-xs border border-green-500/40 uppercase flex items-center justify-center gap-1.5"><span class="material-symbols-outlined text-base">check_circle</span> VERIFIED MISSION COMPLETED ✓</span>`;
       } else if (m.isClaimable) {
-        actionContainer.innerHTML = `<button onclick="claimMissionInModal('${m.id}', this)" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-amber-400 text-black font-extrabold text-xs shadow-[0_0_30px_rgba(251,191,36,0.7)] animate-pulse hover:scale-105 uppercase tracking-wider">CLAIM +${m.xp} XP NOW ★</button>`;
+        actionContainer.innerHTML = `<button onclick="claimMissionInModal('${m.id}', this)" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-amber-400 text-black font-extrabold text-xs shadow-[0_0_30px_rgba(251,191,36,0.7)] animate-pulse hover:scale-105 uppercase tracking-wider min-h-[44px]">CLAIM +${m.xp} XP NOW ★</button>`;
       } else {
         actionContainer.innerHTML = `
-          <button onclick="verifyMissionInModal('${m.id}')" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-on-primary-fixed font-headline font-bold text-xs hover:scale-105 shadow transition-all flex items-center justify-center gap-2">
+          <button onclick="verifyMissionInModal('${m.id}')" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-on-primary-fixed font-headline font-bold text-xs hover:scale-105 shadow transition-all flex items-center justify-center gap-2 min-h-[44px]">
             <span class="material-symbols-outlined text-sm">bolt</span> VERIFY REQUIREMENTS NOW
           </button>
         `;
