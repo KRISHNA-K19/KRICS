@@ -94,7 +94,9 @@ router.post('/opportunities/apply', protect, opportunityController.applyToOpport
 
 // 14. Quests & Level Progression
 router.get('/quests', protect, questController.getQuests);
-router.post('/quests/claim', protect, questController.claimQuestReward);
+router.post('/quests/verify', protect, questController.verifyMission);
+router.post('/quests/claim', protect, questController.claimMission);
+router.get('/quests/xp-journey', protect, questController.getXpJourney);
 
 // 15. Shareable Public Identity & QR Code
 router.get('/share/generate-link', protect, shareController.generateShareLink);

@@ -475,6 +475,7 @@
           <div class="space-y-1">
             <div class="text-[10px] text-on-surface-variant uppercase tracking-widest font-semibold px-3">CORE NEURAL SYSTEM</div>
             <a href="#" onclick="switchRoute('overview')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-white bg-white/10 font-bold" data-route="overview"><span class="material-symbols-outlined text-sm">dashboard</span> Overview</a>
+            <a href="#" onclick="switchRoute('quests')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="quests"><span class="material-symbols-outlined text-sm text-amber-400">military_tech</span> Mission Control</a>
             <a href="#" onclick="openMyKrics()" class="flex items-center gap-3 px-3 py-2 rounded-xl text-primary hover:bg-primary/10 transition-all font-bold"><span class="material-symbols-outlined text-sm">hub</span> 3D Career Graph</a>
             <a href="#" onclick="switchRoute('skills')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="skills"><span class="material-symbols-outlined text-sm">psychology</span> Skills Matrix</a>
             <a href="#" onclick="switchRoute('skillgap')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="skillgap"><span class="material-symbols-outlined text-sm">troubleshoot</span> Skill Gap</a>
@@ -517,6 +518,11 @@
           <p class="font-body text-xs text-on-surface-variant">Connected Career Intelligence Engine Active.</p>
         </div>
         <div class="flex items-center gap-3 font-telemetry text-xs">
+          <button onclick="openXpJourneyModal()" title="View XP Journey Audit Log" class="px-3.5 py-1.5 rounded-full bg-surface-container-high/80 hover:bg-surface-container-high border border-amber-400/40 text-amber-300 font-bold flex items-center gap-2 transition-all cursor-pointer shadow-[0_0_15px_rgba(251,191,36,0.2)] hover:scale-105" id="top-bar-xp-btn">
+            <span class="material-symbols-outlined text-base text-amber-400 animate-pulse">stars</span>
+            <span id="top-bar-level-badge" class="px-2 py-0.5 rounded-md bg-amber-400/20 text-[10px] text-amber-300 uppercase tracking-wider">LVL 1</span>
+            <span id="top-bar-xp-counter" class="font-mono text-white text-xs font-extrabold">1,250 XP</span>
+          </button>
           <button onclick="openShareModal()" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold flex items-center gap-1.5 transition-all">
             <span class="material-symbols-outlined text-sm text-primary">share</span> SHARE PROFILE
           </button>
@@ -807,6 +813,67 @@
           </div>
         </div>
 
+        <!-- ROUTE 12: MISSION CONTROL & LEVEL MASTERY SYSTEM -->
+        <div id="route-view-quests" class="route-view hidden space-y-8 font-telemetry">
+          <!-- Header Banner & Level Mastery Command Center -->
+          <div class="glass-panel-card rounded-3xl p-6 sm:p-8 space-y-6 relative overflow-hidden border border-primary/30">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
+              <div class="space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-full bg-primary/20 text-primary font-bold text-[10px] uppercase tracking-wider">CAREER PROGRESSION SYSTEM</span>
+                  <span class="text-on-surface-variant text-xs">• VERIFIED ACTIONS ONLY</span>
+                </div>
+                <h2 class="font-headline text-2xl sm:text-3xl font-black text-white tracking-wide">MISSION CONTROL & LEVEL MASTERY</h2>
+                <p class="font-body text-xs text-on-surface-variant max-w-xl leading-relaxed">Turn your career preparation into active, verifiable engineering missions. Complete real evidence tasks to advance levels and unlock strategic intelligence modules.</p>
+              </div>
+
+              <!-- Top Right Profile XP Summary Card -->
+              <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-white/10 flex items-center gap-4 min-w-[240px]" id="mc-xp-summary-card">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center text-black font-extrabold text-xl shadow-[0_0_20px_rgba(251,191,36,0.4)]" id="mc-level-badge-num">
+                  L3
+                </div>
+                <div>
+                  <div class="text-[10px] text-on-surface-variant uppercase font-bold" id="mc-level-title-label">LEVEL 3: PROJECT CREATOR</div>
+                  <div class="text-xl font-extrabold text-white font-mono" id="mc-total-xp-display">1,250 XP</div>
+                  <div class="text-[10px] text-primary flex items-center gap-1 cursor-pointer hover:underline" onclick="openXpJourneyModal()">
+                    <span class="material-symbols-outlined text-[12px]">history</span> Audit XP Journey →
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- LEVEL MASTERY PROGRESSION MAP (LEVELS 1 - 6) -->
+            <div class="space-y-3 pt-4 border-t border-white/10">
+              <div class="flex items-center justify-between">
+                <div class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><span class="material-symbols-outlined text-sm text-amber-400">military_tech</span> LEVEL MASTERY MAP (LEVELS 1 - 6)</div>
+                <div id="mc-next-level-progress-text" class="text-xs text-on-surface-variant font-mono">250 XP to Level 4</div>
+              </div>
+              
+              <!-- Progression Map Grid -->
+              <div id="mc-level-map-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                <!-- Dynamically populated Level 1 through 6 cards -->
+              </div>
+            </div>
+          </div>
+
+          <!-- CATEGORIES & FILTER BAR -->
+          <div class="flex flex-wrap items-center justify-between gap-4 bg-surface-container-lowest/60 p-3 rounded-2xl border border-white/10">
+            <div class="flex flex-wrap items-center gap-2" id="mission-filter-bar">
+              <button onclick="filterMissions('ALL')" class="mission-filter-btn px-3.5 py-1.5 rounded-xl font-bold text-xs bg-primary-container text-on-primary-container shadow transition-all" data-category="ALL">ALL MISSIONS</button>
+              <button onclick="filterMissions('SKILLS')" class="mission-filter-btn px-3.5 py-1.5 rounded-xl font-bold text-xs text-on-surface-variant hover:text-white hover:bg-white/10 transition-all" data-category="SKILLS">SKILLS</button>
+              <button onclick="filterMissions('PROJECTS')" class="mission-filter-btn px-3.5 py-1.5 rounded-xl font-bold text-xs text-on-surface-variant hover:text-white hover:bg-white/10 transition-all" data-category="PROJECTS">PROJECTS</button>
+              <button onclick="filterMissions('LEARNING')" class="mission-filter-btn px-3.5 py-1.5 rounded-xl font-bold text-xs text-on-surface-variant hover:text-white hover:bg-white/10 transition-all" data-category="LEARNING">LEARNING</button>
+              <button onclick="filterMissions('CAREER ALIGNMENT')" class="mission-filter-btn px-3.5 py-1.5 rounded-xl font-bold text-xs text-on-surface-variant hover:text-white hover:bg-white/10 transition-all" data-category="CAREER ALIGNMENT">ALIGNMENT</button>
+            </div>
+            <div class="text-xs text-on-surface-variant px-3 font-mono" id="mission-count-indicator">Loading missions...</div>
+          </div>
+
+          <!-- MISSIONS GRID -->
+          <div id="mc-missions-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Dynamically populated mission cards -->
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
@@ -1090,6 +1157,151 @@
     </div>
   </div>
 
+  <!-- CINEMATIC GLASSMORPHIC MISSION DETAIL MODAL -->
+  <div id="modal-mission-detail" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-2xl rounded-3xl p-6 sm:p-8 space-y-6 relative border border-primary/30 shadow-[0_0_50px_rgba(56,189,248,0.2)] my-8">
+      <button onclick="closeMissionDetailModal()" class="absolute top-6 right-6 text-on-surface-variant hover:text-white transition-all"><span class="material-symbols-outlined text-xl">close</span></button>
+      
+      <!-- Modal Header -->
+      <div class="space-y-2">
+        <div class="flex items-center gap-2 font-telemetry text-[10px]">
+          <span id="md-mission-priority" class="px-2.5 py-0.5 rounded-full bg-primary/20 text-primary font-bold uppercase tracking-wider">RECOMMENDED</span>
+          <span id="md-mission-category" class="px-2.5 py-0.5 rounded-full bg-white/10 text-white font-bold uppercase tracking-wider">SKILLS MATRIX</span>
+          <span id="md-mission-badge" class="ml-auto font-mono text-amber-300 font-bold flex items-center gap-1"><span class="material-symbols-outlined text-sm">military_tech</span> +150 XP</span>
+        </div>
+        <h2 id="md-mission-title" class="font-headline text-2xl font-black text-white tracking-wide">EXPAND MACHINE LEARNING EVIDENCE</h2>
+        <p id="md-mission-subtitle" class="font-body text-xs text-on-surface-variant leading-relaxed">Strengthen your Machine Learning evidence to align with target Data Scientist role.</p>
+      </div>
+
+      <!-- Career Purpose Box -->
+      <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-white/10 space-y-2">
+        <div class="font-telemetry text-[10px] text-primary uppercase font-bold flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">target</span> WHY THIS MISSION?</div>
+        <p id="md-mission-purpose" class="font-body text-xs text-white/90 leading-relaxed">Machine Learning is a core requirement for your Data Scientist path, but your current profile lacks direct backing evidence.</p>
+      </div>
+
+      <!-- Status & Requirements Checklist -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between font-telemetry">
+          <div class="text-xs font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary">fact_check</span> MISSION REQUIREMENTS</div>
+          <div id="md-mission-progress-text" class="text-xs font-mono text-primary font-bold">60% COMPLETED</div>
+        </div>
+        <div class="w-full h-2 rounded-full bg-surface-container-high overflow-hidden">
+          <div id="md-mission-progress-bar" class="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500" style="width: 60%"></div>
+        </div>
+        <div id="md-mission-checklist" class="space-y-2.5 font-telemetry text-xs pt-1">
+          <!-- Dynamically populated checklist items -->
+        </div>
+      </div>
+
+      <!-- Before -> After Profile Impact Visualizer -->
+      <div class="p-4 rounded-2xl bg-surface-container-low/70 border border-primary/20 space-y-3 font-telemetry">
+        <div class="text-[11px] font-bold text-white uppercase tracking-wider flex items-center gap-2"><span class="material-symbols-outlined text-sm text-tertiary">insights</span> BEFORE → AFTER PROFILE IMPACT</div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-white/5 space-y-1">
+            <div class="text-[9px] text-on-surface-variant uppercase">EVIDENCE STRENGTH</div>
+            <div id="md-impact-evidence" class="text-xs font-bold text-secondary">Limited → Stronger</div>
+          </div>
+          <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-white/5 space-y-1">
+            <div class="text-[9px] text-on-surface-variant uppercase">SYNAPSE LINKS</div>
+            <div id="md-impact-synapse" class="text-xs font-bold text-primary">+2 Graph Links</div>
+          </div>
+          <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-white/5 space-y-1">
+            <div class="text-[9px] text-on-surface-variant uppercase">ALIGNMENT IMPACT</div>
+            <div id="md-impact-alignment" class="text-xs font-bold text-amber-300">+3.5% Expected</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HUKUM Mentor Reactive Guidance -->
+      <div class="p-4 rounded-2xl bg-gradient-to-r from-secondary/15 to-primary/10 border border-secondary/30 flex items-start gap-3">
+        <img src="public/ai-mentor-avatar.png" onerror="this.onerror=null; this.src='ai-mentor-avatar.png'; this.onerror=function(){this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'}" class="w-8 h-8 rounded-full border border-secondary object-cover shrink-0 mt-0.5"/>
+        <div class="font-telemetry text-xs space-y-1">
+          <div class="text-[10px] text-secondary font-bold uppercase tracking-wider">HUKUM MENTOR GUIDANCE</div>
+          <p id="md-mission-hukum" class="text-white/90 leading-relaxed text-[11px]">Connecting 1 engineering project or learning artifact will complete this mission and strengthen your career graph.</p>
+        </div>
+      </div>
+
+      <!-- Modal Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2" id="md-action-container">
+        <!-- Dynamically rendered verification/claim buttons -->
+      </div>
+    </div>
+  </div>
+
+  <!-- XP JOURNEY & AUDIT LOG MODAL -->
+  <div id="modal-xp-journey" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-xl rounded-3xl p-6 sm:p-8 space-y-6 relative border border-primary/30 shadow-2xl my-8">
+      <button onclick="closeXpJourneyModal()" class="absolute top-6 right-6 text-on-surface-variant hover:text-white transition-all"><span class="material-symbols-outlined text-xl">close</span></button>
+      
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center shadow-[0_0_20px_rgba(251,191,36,0.4)]">
+          <span class="material-symbols-outlined text-2xl text-black font-extrabold">stars</span>
+        </div>
+        <div>
+          <h2 class="font-headline text-xl font-bold text-white">XP Journey & Audit History</h2>
+          <p class="font-telemetry text-xs text-on-surface-variant">Verified Career Progression Record</p>
+        </div>
+      </div>
+
+      <!-- Total XP & Source Breakdown -->
+      <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-white/10 space-y-4 font-telemetry">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-[10px] text-on-surface-variant uppercase">TOTAL VERIFIED CAREER XP</div>
+            <div class="text-3xl font-extrabold text-white font-mono" id="xpj-total-xp">1,250 XP</div>
+          </div>
+          <div class="px-3 py-1.5 rounded-xl bg-amber-400/20 text-amber-300 font-bold text-xs" id="xpj-level-title">Level 3: Project Creator</div>
+        </div>
+        
+        <div class="space-y-2 pt-2 border-t border-white/10">
+          <div class="text-[10px] text-on-surface-variant uppercase font-bold">XP DISTRIBUTION SOURCES</div>
+          <div id="xpj-sources-container" class="space-y-2">
+            <!-- Dynamically populated source bars -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Audit History List -->
+      <div class="space-y-3 font-telemetry">
+        <div class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary">history</span> XP AUDIT LOG</div>
+        <div id="xpj-history-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+          <!-- Dynamically populated history items -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MISSION COMPLETE & LEVEL UP CEREMONY MODAL -->
+  <div id="modal-mission-complete" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-3xl flex items-center justify-center p-4">
+    <div class="glass-panel-card w-full max-w-md rounded-3xl p-8 space-y-6 text-center relative border border-amber-400/40 shadow-[0_0_80px_rgba(251,191,36,0.3)]">
+      <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center shadow-[0_0_40px_rgba(251,191,36,0.6)]">
+        <span class="material-symbols-outlined text-4xl text-black font-extrabold">military_tech</span>
+      </div>
+      
+      <div class="space-y-2 font-telemetry">
+        <div id="mc-tag" class="text-xs text-amber-300 font-extrabold uppercase tracking-widest">MISSION COMPLETED!</div>
+        <h2 id="mc-title" class="font-headline text-2xl font-black text-white">EXPAND MACHINE LEARNING EVIDENCE</h2>
+        <div id="mc-xp-earned" class="font-mono text-2xl font-extrabold text-amber-400 animate-bounce">+150 XP EARNED</div>
+      </div>
+
+      <div id="mc-level-up-box" class="p-4 rounded-2xl bg-amber-400/10 border border-amber-400/30 font-telemetry text-xs space-y-1 hidden">
+        <div class="text-amber-300 font-bold uppercase tracking-wider text-[10px]">LEVEL UP ADVANCEMENT</div>
+        <div id="mc-level-title" class="text-white text-sm font-extrabold">LEVEL 3: PROJECT CREATOR</div>
+        <div id="mc-unlocked-feature" class="text-on-surface-variant text-[11px]">Unlocked: Project Intelligence Missions</div>
+      </div>
+
+      <!-- HUKUM Reaction -->
+      <div class="p-4 rounded-2xl bg-surface-container-lowest/80 border border-white/10 flex items-center gap-3 text-left">
+        <img src="public/ai-mentor-avatar.png" onerror="this.onerror=null; this.src='ai-mentor-avatar.png'; this.onerror=function(){this.src='https://api.dicebear.com/7.x/bottts/svg?seed=HUKUM'}" class="w-10 h-10 rounded-full border border-secondary object-cover shrink-0"/>
+        <p id="mc-hukum-reaction" class="font-telemetry text-xs text-white/90 leading-relaxed">Excellent progress! Your machine learning synapse connections are now active in your profile graph.</p>
+      </div>
+
+      <button onclick="closeMissionCompleteModal()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 font-headline font-black text-black text-xs shadow-lg hover:scale-105 transition-all">CONTINUE CAREER MISSION →</button>
+    </div>
+  </div>
+
+  <div id="xp-particle-container" class="pointer-events-none fixed inset-0 z-[100] overflow-hidden"></div>
+
   <!-- ========================================== -->
   <!-- CORE CLIENT APIS & APPLICATION LOGIC -->
   <!-- ========================================== -->
@@ -1180,6 +1392,7 @@
       });
 
       if (route === 'skills') fetchSkills();
+      if (route === 'quests') fetchQuests();
       if (route === 'skillgap') fetchSkillGap();
       if (route === 'projects') fetchProjects();
       if (route === 'roadmap') fetchRoadmap();
@@ -1418,26 +1631,442 @@
       fetchQuests();
     }
 
+    // ============================================================
+    // ADVANCED INTERACTIVE CAREER QUEST & LEVEL MASTERY SYSTEM
+    // ============================================================
+
+    state.questsData = null;
+    state.activeMissionFilter = 'ALL';
+    state.selectedMissionId = null;
+
     async function fetchQuests() {
       const res = await apiFetch('/quests');
       if (res.success && res.data) {
-        const q = res.data;
-        document.getElementById('quest-level-badge').innerText = `LEVEL ${q.level}: ${q.levelTitle}`;
-        document.getElementById('overview-quests-card').innerHTML = q.quests.map(quest => `
-          <div class="p-3 rounded-2xl bg-surface-container-lowest border border-white/10 flex items-center justify-between">
-            <div>
-              <div class="font-bold text-white text-xs">${quest.title} <span class="text-primary font-mono">(+${quest.xp} XP)</span></div>
-              <p class="text-on-surface-variant text-[11px]">${quest.description}</p>
-            </div>
-            ${quest.completed ? '<span class="text-green-400 font-bold text-xs">COMPLETED ✓</span>' : '<button onclick="claimQuest()" class="px-3 py-1 rounded-lg bg-primary-container text-on-primary-container font-bold text-[10px]">CLAIM XP</button>'}
-          </div>
-        `).join('');
+        state.questsData = res.data;
+        updateTopBarXpAndLevel(res.data);
+        renderOverviewQuestsSummary(res.data);
+        renderMissionControlView(res.data);
       }
     }
 
-    async function claimQuest() {
-      alert('XP Claimed! Your profile momentum is updated.');
-      loadDashboardData();
+    function updateTopBarXpAndLevel(q) {
+      const xpCounter = document.getElementById('top-bar-xp-counter');
+      const levelBadge = document.getElementById('top-bar-level-badge');
+      if (xpCounter) xpCounter.innerText = `${(q.xp || 0).toLocaleString()} XP`;
+      if (levelBadge) levelBadge.innerText = `LVL ${q.level}`;
+    }
+
+    function renderOverviewQuestsSummary(q) {
+      const badge = document.getElementById('quest-level-badge');
+      const cardContainer = document.getElementById('overview-quests-card');
+      
+      if (badge) badge.innerText = `LEVEL ${q.level}: ${q.levelTitle.toUpperCase()}`;
+      
+      if (!cardContainer) return;
+
+      const activeMissions = q.quests.slice(0, 3);
+      cardContainer.innerHTML = `
+        <div class="space-y-3">
+          ${activeMissions.map(m => `
+            <div class="p-4 rounded-2xl bg-surface-container-lowest/80 border border-white/10 space-y-2.5 transition-all hover:border-primary/40">
+              <div class="flex items-center justify-between font-telemetry">
+                <div class="flex items-center gap-2 text-[10px]">
+                  <span class="px-2 py-0.5 rounded bg-primary/20 text-primary font-bold uppercase">${m.priority}</span>
+                  <span class="px-2 py-0.5 rounded bg-white/10 text-white font-bold uppercase">${m.category}</span>
+                </div>
+                <div class="font-mono text-amber-300 font-bold text-xs">+${m.xp} XP</div>
+              </div>
+
+              <div>
+                <div class="font-bold text-white text-xs">${m.title}</div>
+                <p class="text-on-surface-variant text-[11px] leading-relaxed mt-0.5">${m.subtitle}</p>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-[10px] text-on-surface-variant font-mono">
+                  <span>PROGRESS</span>
+                  <span>${m.progress}%</span>
+                </div>
+                <div class="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+                  <div class="h-full bg-gradient-to-r from-primary to-secondary transition-all" style="width: ${m.progress}%"></div>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 font-telemetry">
+                <div class="text-[10px] text-cyan-300 font-bold flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[12px]">insights</span> ${m.careerImpact ? m.careerImpact.graphRelationshipDelta : '+2 Graph Links'}
+                </div>
+                ${m.completed 
+                  ? '<span class="text-green-400 font-bold text-xs uppercase flex items-center gap-1"><span class="material-symbols-outlined text-sm">check_circle</span> VERIFIED ✓</span>' 
+                  : m.isClaimable 
+                  ? `<button onclick="claimMissionInModal('${m.id}', this)" class="px-3.5 py-1 rounded-xl bg-amber-400 text-black font-extrabold text-[10px] shadow-[0_0_12px_rgba(251,191,36,0.5)] animate-pulse">CLAIM +${m.xp} XP ★</button>`
+                  : `<button onclick="openMissionDetailModal('${m.id}')" class="px-3 py-1 rounded-xl bg-primary-container text-on-primary-container font-headline font-bold text-[10px] hover:scale-105">ENTER MISSION →</button>`
+                }
+              </div>
+            </div>
+          `).join('')}
+
+          <button onclick="switchRoute('quests')" class="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-primary font-headline font-bold text-xs border border-primary/20 flex items-center justify-center gap-1 transition-all">
+            LAUNCH MISSION CONTROL COMMAND CENTER (${q.quests.length} CAREER MISSIONS) →
+          </button>
+        </div>
+      `;
+    }
+
+    function renderMissionControlView(q) {
+      const badgeNum = document.getElementById('mc-level-badge-num');
+      const titleLabel = document.getElementById('mc-level-title-label');
+      const totalXp = document.getElementById('mc-total-xp-display');
+      const progressText = document.getElementById('mc-next-level-progress-text');
+
+      if (badgeNum) badgeNum.innerText = `L${q.level}`;
+      if (titleLabel) titleLabel.innerText = `LEVEL ${q.level}: ${q.levelTitle.toUpperCase()}`;
+      if (totalXp) totalXp.innerText = `${q.xp.toLocaleString()} XP`;
+      if (progressText) progressText.innerText = q.xpToNextLevel > 0 ? `${q.xpToNextLevel} XP to Level ${q.nextLevel.level}` : 'MAX LEVEL ARCHITECT REACHED!';
+
+      const levelGrid = document.getElementById('mc-level-map-grid');
+      if (levelGrid && q.levelMap) {
+        levelGrid.innerHTML = q.levelMap.map(l => {
+          const isCurrent = l.level === q.level;
+          const isUnlocked = l.unlocked;
+          
+          return `
+            <div class="p-3 rounded-2xl ${isCurrent ? 'bg-amber-400/15 border-2 border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.3)]' : isUnlocked ? 'bg-surface-container-lowest/80 border border-primary/30' : 'bg-surface-container-lowest/40 border border-white/5 opacity-60'} space-y-2 relative transition-all">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-bold ${isCurrent ? 'text-amber-300' : isUnlocked ? 'text-primary' : 'text-on-surface-variant'} uppercase">LVL ${l.level}</span>
+                <span class="material-symbols-outlined text-sm ${isCurrent ? 'text-amber-400' : isUnlocked ? 'text-green-400' : 'text-on-surface-variant'}">
+                  ${isCurrent ? 'workspace_premium' : isUnlocked ? 'check_circle' : 'lock'}
+                </span>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-white truncate">${l.title}</div>
+                <div class="text-[9px] text-on-surface-variant font-mono mt-0.5">${l.minXp} XP MIN</div>
+              </div>
+              <div class="text-[9px] ${isCurrent ? 'text-amber-200' : 'text-on-surface-variant'} leading-tight border-t border-white/10 pt-1.5 line-clamp-2">
+                ${l.unlockText}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      renderFilteredMissionsGrid();
+    }
+
+    function renderFilteredMissionsGrid() {
+      if (!state.questsData) return;
+      const missionsGrid = document.getElementById('mc-missions-grid');
+      const countIndicator = document.getElementById('mission-count-indicator');
+      if (!missionsGrid) return;
+
+      const category = state.activeMissionFilter;
+      let missions = state.questsData.quests || [];
+      
+      if (category !== 'ALL') {
+        missions = missions.filter(m => m.category === category || m.priority === category);
+      }
+
+      if (countIndicator) countIndicator.innerText = `Showing ${missions.length} active career mission${missions.length !== 1 ? 's' : ''}`;
+
+      missionsGrid.innerHTML = missions.map(m => `
+        <div class="glass-panel-card rounded-3xl p-6 space-y-5 relative border ${m.completed ? 'border-green-500/30' : m.isClaimable ? 'border-amber-400/50 shadow-[0_0_25px_rgba(251,191,36,0.2)]' : 'border-white/15'} flex flex-col justify-between transition-all hover:border-primary/50">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between font-telemetry">
+              <div class="flex items-center gap-2 text-[10px]">
+                <span class="px-2.5 py-0.5 rounded-full ${m.priority === 'RECOMMENDED' ? 'bg-primary/20 text-primary' : 'bg-secondary/20 text-secondary'} font-bold uppercase tracking-wider">${m.priority}</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-white/10 text-white font-bold uppercase tracking-wider">${m.category}</span>
+              </div>
+              <div class="font-mono text-amber-300 font-extrabold text-sm flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">stars</span> +${m.xp} XP
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <h3 class="font-headline text-lg font-bold text-white tracking-wide">${m.title}</h3>
+              <p class="font-body text-xs text-on-surface-variant leading-relaxed">${m.subtitle}</p>
+            </div>
+
+            <div class="p-3 rounded-2xl bg-surface-container-lowest/80 border border-white/10 font-telemetry text-xs space-y-1">
+              <div class="text-[9px] text-primary uppercase font-bold flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">target</span> CAREER PURPOSE</div>
+              <p class="text-white/90 text-[11px] leading-relaxed line-clamp-2">${m.purpose}</p>
+            </div>
+
+            <div class="space-y-1.5 font-telemetry">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-on-surface-variant text-[10px] font-bold uppercase">REQUIREMENTS VERIFICATION</span>
+                <span class="font-mono text-white font-bold">${m.progress}%</span>
+              </div>
+              <div class="w-full h-2 rounded-full bg-surface-container-high overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500" style="width: ${m.progress}%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1.5 font-telemetry text-xs">
+              ${m.requirements.map(req => `
+                <div class="flex items-center gap-2 text-[11px] ${req.fulfilled ? 'text-green-300' : 'text-on-surface-variant'}">
+                  <span class="material-symbols-outlined text-sm shrink-0">${req.fulfilled ? 'check_circle' : 'radio_button_unchecked'}</span>
+                  <span class="truncate">${req.label}</span>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="p-3 rounded-xl bg-surface-container-low/60 border border-white/5 grid grid-cols-2 gap-2 font-telemetry text-[10px]">
+              <div><span class="text-on-surface-variant">GRAPH LINKS:</span> <span class="text-primary font-bold">${m.careerImpact ? m.careerImpact.graphRelationshipDelta : '+2 Graph Links'}</span></div>
+              <div><span class="text-on-surface-variant">ALIGNMENT:</span> <span class="text-amber-300 font-bold">${m.careerImpact ? m.careerImpact.expectedAlignmentImpact : '+3.5% Expected'}</span></div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-white/10 flex items-center justify-between font-telemetry">
+            <button onclick="openMissionDetailModal('${m.id}')" class="text-xs text-primary font-bold hover:underline flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">visibility</span> View Detailed Panel
+            </button>
+
+            ${m.completed 
+              ? '<span class="px-3.5 py-1.5 rounded-xl bg-green-500/20 text-green-300 font-bold text-xs border border-green-500/40 uppercase flex items-center gap-1"><span class="material-symbols-outlined text-sm">check_circle</span> VERIFIED COMPLETED ✓</span>' 
+              : m.isClaimable 
+              ? `<button onclick="claimMissionInModal('${m.id}', this)" class="px-5 py-2.5 rounded-xl bg-amber-400 text-black font-extrabold text-xs shadow-[0_0_20px_rgba(251,191,36,0.6)] animate-pulse hover:scale-105 uppercase">CLAIM +${m.xp} XP NOW ★</button>`
+              : `<button onclick="openMissionDetailModal('${m.id}')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-on-primary-container font-headline font-bold text-xs hover:scale-105 shadow uppercase">ENTER MISSION →</button>`
+            }
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterMissions(category) {
+      state.activeMissionFilter = category;
+      document.querySelectorAll('.mission-filter-btn').forEach(btn => {
+        if (btn.dataset.category === category) {
+          btn.className = 'mission-filter-btn px-3.5 py-1.5 rounded-xl font-bold text-xs bg-primary-container text-on-primary-container shadow transition-all';
+        } else {
+          btn.className = 'mission-filter-btn px-3.5 py-1.5 rounded-xl font-bold text-xs text-on-surface-variant hover:text-white hover:bg-white/10 transition-all';
+        }
+      });
+      renderFilteredMissionsGrid();
+    }
+
+    function openMissionDetailModal(missionId) {
+      if (!state.questsData) return;
+      const m = state.questsData.quests.find(item => item.id === missionId);
+      if (!m) return;
+
+      state.selectedMissionId = missionId;
+
+      document.getElementById('md-mission-priority').innerText = m.priority;
+      document.getElementById('md-mission-category').innerText = m.category;
+      document.getElementById('md-mission-badge').innerHTML = `<span class="material-symbols-outlined text-sm">military_tech</span> +${m.xp} XP`;
+      document.getElementById('md-mission-title').innerText = m.title;
+      document.getElementById('md-mission-subtitle').innerText = m.subtitle;
+      document.getElementById('md-mission-purpose').innerText = m.purpose;
+      document.getElementById('md-mission-progress-text').innerText = `${m.progress}% COMPLETED`;
+      document.getElementById('md-mission-progress-bar').style.width = `${m.progress}%`;
+      document.getElementById('md-mission-hukum').innerText = m.hukumGuidance;
+
+      if (m.careerImpact) {
+        document.getElementById('md-impact-evidence').innerText = m.careerImpact.evidenceDelta;
+        document.getElementById('md-impact-synapse').innerText = m.careerImpact.graphRelationshipDelta;
+        document.getElementById('md-impact-alignment').innerText = m.careerImpact.expectedAlignmentImpact;
+      }
+
+      const checklistContainer = document.getElementById('md-mission-checklist');
+      checklistContainer.innerHTML = m.requirements.map(req => {
+        if (req.fulfilled) {
+          return `
+            <div class="p-3.5 rounded-2xl bg-surface-container-lowest/80 border border-green-500/30 flex items-center justify-between">
+              <div class="flex items-center gap-2.5 text-green-300 font-semibold">
+                <span class="material-symbols-outlined text-base">check_circle</span>
+                <span>${req.label}</span>
+              </div>
+              <span class="text-[10px] text-green-400 font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-green-500/20">VERIFIED ✓</span>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="p-3.5 rounded-2xl bg-surface-container-lowest/80 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5 text-white/90">
+                <span class="material-symbols-outlined text-base text-amber-400">radio_button_unchecked</span>
+                <span>${req.label}</span>
+              </div>
+              <button onclick="navigateFromMissionChecklist('${req.targetView}', '${req.actionText}')" class="px-3.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-[10px] uppercase flex items-center gap-1.5 transition-all shadow hover:scale-105 shrink-0">
+                ${req.actionText || '[TAKE ME THERE]'} →
+              </button>
+            </div>
+          `;
+        }
+      }).join('');
+
+      const actionContainer = document.getElementById('md-action-container');
+      if (m.completed) {
+        actionContainer.innerHTML = `<span class="px-6 py-3 rounded-xl bg-green-500/20 text-green-300 font-bold text-xs border border-green-500/40 uppercase flex items-center gap-1.5"><span class="material-symbols-outlined text-base">check_circle</span> VERIFIED MISSION COMPLETED ✓</span>`;
+      } else if (m.isClaimable) {
+        actionContainer.innerHTML = `<button onclick="claimMissionInModal('${m.id}', this)" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-amber-400 text-black font-extrabold text-xs shadow-[0_0_30px_rgba(251,191,36,0.7)] animate-pulse hover:scale-105 uppercase tracking-wider">CLAIM +${m.xp} XP NOW ★</button>`;
+      } else {
+        actionContainer.innerHTML = `
+          <button onclick="verifyMissionInModal('${m.id}')" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-on-primary-fixed font-headline font-bold text-xs hover:scale-105 shadow transition-all flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-sm">bolt</span> VERIFY REQUIREMENTS NOW
+          </button>
+        `;
+      }
+
+      document.getElementById('modal-mission-detail').classList.remove('hidden');
+    }
+
+    function closeMissionDetailModal() {
+      document.getElementById('modal-mission-detail').classList.add('hidden');
+    }
+
+    function navigateFromMissionChecklist(targetView, actionText) {
+      closeMissionDetailModal();
+
+      if (targetView === 'skills') {
+        switchRoute('skills');
+        if (actionText && actionText.includes('ADD')) {
+          setTimeout(() => openAddSkillModal(), 300);
+        }
+      } else if (targetView === 'projects') {
+        switchRoute('projects');
+        if (actionText && actionText.includes('CREATE')) {
+          setTimeout(() => openAddProjectModal(), 300);
+        }
+      } else if (targetView === 'learning') {
+        switchRoute('learning');
+        if (actionText && actionText.includes('ENROLL')) {
+          setTimeout(() => openAddLearningModal(), 300);
+        }
+      } else if (targetView === 'experience') {
+        switchRoute('experience');
+      } else if (targetView === 'careerpaths') {
+        switchRoute('careerpaths');
+      } else if (targetView === 'profile') {
+        switchRoute('profile');
+      } else {
+        switchRoute('overview');
+      }
+    }
+
+    async function verifyMissionInModal(missionId) {
+      const res = await apiFetch('/quests/verify', 'POST', { missionId });
+      if (res.success && res.data) {
+        await fetchQuests();
+        if (res.data.isClaimable) {
+          alert('Verification Complete! All requirements fulfilled. You can now claim your XP!');
+        } else {
+          alert(`Verification Check: ${res.data.fulfilledCount} / ${res.data.totalRequirements} requirements satisfied.`);
+        }
+        openMissionDetailModal(missionId);
+      }
+    }
+
+    async function claimMissionInModal(missionId, elementRef) {
+      triggerXpParticlePath(elementRef || document.getElementById('md-mission-badge'));
+
+      const res = await apiFetch('/quests/claim', 'POST', { missionId });
+      if (res.success && res.data) {
+        closeMissionDetailModal();
+
+        const claimInfo = res.data;
+
+        document.getElementById('mc-title').innerText = claimInfo.title;
+        document.getElementById('mc-xp-earned').innerText = `+${claimInfo.earnedXp} XP EARNED`;
+        document.getElementById('mc-hukum-reaction').innerText = claimInfo.hukumReaction;
+
+        const levelUpBox = document.getElementById('mc-level-up-box');
+        if (claimInfo.isLevelUp) {
+          levelUpBox.classList.remove('hidden');
+          document.getElementById('mc-level-title').innerText = `LEVEL ${claimInfo.newLevel}`;
+          document.getElementById('mc-unlocked-feature').innerText = claimInfo.unlockedFeature ? `Unlocked: ${claimInfo.unlockedFeature}` : 'New Career Missions Unlocked!';
+        } else {
+          levelUpBox.classList.add('hidden');
+        }
+
+        document.getElementById('modal-mission-complete').classList.remove('hidden');
+
+        await fetchQuests();
+        loadDashboardData();
+      } else {
+        alert(res.message || 'Unable to claim reward. Please verify requirements first.');
+      }
+    }
+
+    function closeMissionCompleteModal() {
+      document.getElementById('modal-mission-complete').classList.add('hidden');
+    }
+
+    function triggerXpParticlePath(sourceEl) {
+      const container = document.getElementById('xp-particle-container');
+      if (!container) return;
+
+      const targetEl = document.getElementById('top-bar-xp-btn') || document.getElementById('top-bar-xp-counter');
+      const srcRect = sourceEl ? sourceEl.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 0, height: 0 };
+      const tgtRect = targetEl ? targetEl.getBoundingClientRect() : { left: window.innerWidth - 150, top: 20, width: 0, height: 0 };
+
+      const startX = srcRect.left + (srcRect.width / 2);
+      const startY = srcRect.top + (srcRect.height / 2);
+      const endX = tgtRect.left + (tgtRect.width / 2);
+      const endY = tgtRect.top + (tgtRect.height / 2);
+
+      for (let i = 0; i < 14; i++) {
+        setTimeout(() => {
+          const p = document.createElement('div');
+          p.className = 'fixed w-3.5 h-3.5 rounded-full bg-amber-400 shadow-[0_0_15px_#f59e0b] pointer-events-none transition-all duration-700 ease-out z-[100]';
+          p.style.left = `${startX + (Math.random() * 40 - 20)}px`;
+          p.style.top = `${startY + (Math.random() * 40 - 20)}px`;
+          container.appendChild(p);
+
+          requestAnimationFrame(() => {
+            p.style.transform = `translate(${endX - startX}px, ${endY - startY}px) scale(0.3)`;
+            p.style.opacity = '0';
+          });
+
+          setTimeout(() => p.remove(), 750);
+        }, i * 45);
+      }
+    }
+
+    async function openXpJourneyModal() {
+      const res = await apiFetch('/quests/xp-journey');
+      if (res.success && res.data) {
+        const j = res.data;
+        document.getElementById('xpj-total-xp').innerText = `${j.totalXp.toLocaleString()} XP`;
+        
+        if (state.questsData) {
+          document.getElementById('xpj-level-title').innerText = `Level ${state.questsData.level}: ${state.questsData.levelTitle}`;
+        }
+
+        const sourcesContainer = document.getElementById('xpj-sources-container');
+        if (sourcesContainer && j.sources) {
+          const maxSourceXp = Math.max(...Object.values(j.sources), 1);
+          sourcesContainer.innerHTML = Object.entries(j.sources).map(([sourceName, val]) => `
+            <div class="space-y-1 text-xs">
+              <div class="flex justify-between text-[11px]">
+                <span class="text-white/90">${sourceName}</span>
+                <span class="font-mono text-primary font-bold">+${val} XP</span>
+              </div>
+              <div class="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+                <div class="h-full bg-primary transition-all" style="width: ${Math.round((val / maxSourceXp) * 100)}%"></div>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        const historyList = document.getElementById('xpj-history-list');
+        if (historyList && j.history) {
+          historyList.innerHTML = j.history.map(item => `
+            <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-white/10 flex items-center justify-between">
+              <div>
+                <div class="font-bold text-white text-xs">${item.title}</div>
+                <div class="text-[10px] text-on-surface-variant">${item.rationale || item.category}</div>
+              </div>
+              <div class="font-mono text-amber-300 font-bold text-xs">+${item.xp} XP</div>
+            </div>
+          `).join('');
+        }
+
+        document.getElementById('modal-xp-journey').classList.remove('hidden');
+      }
+    }
+
+    function closeXpJourneyModal() {
+      document.getElementById('modal-xp-journey').classList.add('hidden');
     }
 
     async function runSimulation() {
