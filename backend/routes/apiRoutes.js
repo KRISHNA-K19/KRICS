@@ -52,9 +52,14 @@ router.post('/projects', protect, projectController.addProject);
 router.put('/projects/:id', protect, projectController.updateProject);
 router.delete('/projects/:id', protect, projectController.deleteProject);
 router.get('/github/status', protect, githubController.getGitHubStatus);
+router.get('/github/auth-url', githubController.getOAuthUrl);
+router.get('/github/callback', githubController.handleOAuthCallback);
+router.get('/github/repositories', protect, githubController.getRepositories);
 router.post('/github/connect', protect, githubController.connectGitHub);
 router.post('/github/sync', protect, githubController.syncGitHubRepositories);
 router.post('/github/confirm-project', protect, githubController.confirmPotentialProject);
+router.post('/github/repositories/link-skill', protect, githubController.linkRepositoryToSkill);
+router.post('/github/repositories/link-experience', protect, githubController.linkRepositoryToExperience);
 router.post('/github/disconnect', protect, githubController.disconnectGitHub);
 router.post('/github/import', protect, githubController.connectGitHub);
 

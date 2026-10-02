@@ -2489,9 +2489,13 @@
       const lastSynced = document.getElementById('gh-last-synced');
       const statusPill = document.getElementById('gh-status-pill');
 
-      if (userAvatar) userAvatar.src = g.avatarUrl || `https://github.com/${g.username}.png`;
-      if (usernameDisplay) usernameDisplay.innerText = `@${g.username}`;
-      if (lastSynced) lastSynced.innerText = `Last synced: ${new Date(g.lastSyncedAt).toLocaleTimeString()}`;
+      if (userAvatar) userAvatar.src = g.avatarUrl || (g.username ? `https://github.com/${g.username}.png` : 'https://api.dicebear.com/7.x/bottts/svg?seed=GitHub');
+      if (usernameDisplay) usernameDisplay.innerText = g.username ? `@${g.username}` : '@Not Connected';
+      if (lastSynced) {
+        lastSynced.innerText = g.lastSyncedAt 
+          ? `Last synced: ${new Date(g.lastSyncedAt).toLocaleTimeString()}`
+          : 'Never synced';
+      }
       if (statusPill) {
         statusPill.className = g.connected 
           ? 'px-2.5 py-0.5 rounded-full bg-green-500/20 text-green-300 font-bold text-[10px] uppercase border border-green-500/40'
@@ -2501,9 +2505,9 @@
 
       document.getElementById('gh-stat-repos').innerText = g.publicReposCount || 0;
       document.getElementById('gh-stat-selected').innerText = g.selectedReposCount || 0;
-      document.getElementById('gh-stat-langs').innerText = g.analyzedRepos ? new Set(g.analyzedRepos.map(r => r.language)).size : 0;
-      document.getElementById('gh-stat-projects').innerText = g.potentialProjects ? (g.analyzedRepos.length - g.potentialProjects.length) : 0;
-      document.getElementById('gh-stat-skills').innerText = g.skillEvidenceMatrix ? g.skillEvidenceMatrix.filter(s => s.evidence.backedByGithub).length : 0;
+      document.getElementById('gh-stat-langs').innerText = g.languagesDetectedCount !== undefined ? g.languagesDetectedCount : (g.detectedLanguages ? g.detectedLanguages.length : 0);
+      document.getElementById('gh-stat-projects').innerText = g.projectEvidenceLinksCount !== undefined ? g.projectEvidenceLinksCount : 0;
+      document.getElementById('gh-stat-skills').innerText = g.skillEvidenceLinksCount !== undefined ? g.skillEvidenceLinksCount : 0;
 
       const skillListContainer = document.getElementById('gh-skill-evidence-list');
       if (skillListContainer && g.skillEvidenceMatrix) {
@@ -2539,18 +2543,25 @@
 
       const repoBox = document.getElementById('gh-repo-checkbox-list');
       if (repoBox && g.analyzedRepos) {
-        repoBox.innerHTML = g.analyzedRepos.map(r => {
-          const isSelected = g.selectedRepos ? g.selectedRepos.includes(r.name) : true;
-          return `
-            <label class="p-2.5 rounded-xl bg-surface-container-lowest/80 border border-white/5 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-all text-xs">
-              <div class="flex items-center gap-2.5 truncate">
-                <input type="checkbox" value="${r.name}" ${isSelected ? 'checked' : ''} onchange="toggleRepoSelection(this)" class="rounded accent-cyan-400"/>
-                <span class="font-bold text-white truncate">${r.name}</span>
-              </div>
-              <span class="px-2 py-0.5 rounded bg-white/10 text-[9px] font-mono text-cyan-300 font-bold shrink-0">${r.language || 'Code'}</span>
-            </label>
-          `;
-        }).join('');
+        if (g.analyzedRepos.length === 0) {
+          repoBox.innerHTML = `<div class="p-3 text-center text-xs text-on-surface-variant font-mono">No accessible repositories found.</div>`;
+        } else {
+          repoBox.innerHTML = g.analyzedRepos.map(r => {
+            const isSelected = r.selectedForKrics;
+            return `
+              <label class="p-2.5 rounded-xl bg-surface-container-lowest/80 border border-white/5 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-all text-xs">
+                <div class="flex items-center gap-2.5 truncate">
+                  <input type="checkbox" value="${r.name}" ${isSelected ? 'checked' : ''} onchange="toggleRepoSelection(this)" class="rounded accent-cyan-400"/>
+                  <span class="font-bold text-white truncate">${r.name}</span>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <span class="px-2 py-0.5 rounded bg-white/10 text-[9px] font-mono text-cyan-300 font-bold">${r.language || 'Code'}</span>
+                  ${r.stars ? `<span class="text-[9px] text-amber-300 font-mono">★ ${r.stars}</span>` : ''}
+                </div>
+              </label>
+            `;
+          }).join('');
+        }
       }
 
       const potGrid = document.getElementById('gh-potential-projects-grid');
@@ -2606,11 +2617,14 @@
       const checkboxes = document.querySelectorAll('#gh-repo-checkbox-list input[type="checkbox"]:checked');
       const selectedRepos = Array.from(checkboxes).map(cb => cb.value);
 
+      showKricsToast('Synchronizing real GitHub repository data...', 'info');
       const res = await apiFetch('/github/sync', 'POST', { selectedRepos });
       if (res.success) {
         showKricsToast('GitHub Career Evidence synchronized! Skill Matrix and Career Graph updated.', 'success');
         await fetchGitHubStatus();
         loadDashboardData();
+      } else {
+        showKricsToast(res.message || 'Synchronization failed.', 'error');
       }
     }
 
@@ -2620,10 +2634,22 @@
         showKricsToast(res.message, 'success');
         await fetchGitHubStatus();
         loadDashboardData();
+      } else {
+        showKricsToast(res.message || 'Failed to update project status', 'error');
       }
     }
 
-    function promptConnectGitHub() {
+    async function promptConnectGitHub() {
+      if (state.githubData && state.githubData.connected) {
+        const confirmed = await showKricsConfirm({
+          title: 'CHANGE GITHUB ACCOUNT?',
+          category: 'GitHub Disconnect & Re-authorization',
+          description: 'Your current GitHub connection will be disconnected. Your manually created KRICS skills, projects, and experiences will remain intact.',
+          confirmText: 'DISCONNECT & RE-AUTHORIZE',
+          isDanger: false
+        });
+        if (!confirmed) return;
+      }
       openGitHubConnectModal();
     }
 

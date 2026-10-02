@@ -5,6 +5,8 @@ const Experience = require('../models/Experience');
 const Certification = require('../models/Certification');
 const Learning = require('../models/Learning');
 const Opportunity = require('../models/Opportunity');
+const GitHubRepo = require('../models/GitHubRepo');
+const GitHubEvidence = require('../models/GitHubEvidence');
 
 exports.buildUserNetworkGraph = async (userId) => {
   const user = await User.findById(userId);
@@ -157,35 +159,39 @@ exports.buildUserNetworkGraph = async (userId) => {
     edges.push({ source: goalId, target: oppId, label: 'MATCHES_ROLE' });
   });
 
-  // GitHub Evidence Nodes & Edges
-  if (user.githubProfile && user.githubProfile.connected) {
-    const selected = user.githubProfile.selectedRepos || ['ML-Prediction-System', 'Data-Analysis-Dashboard'];
-    selected.forEach((repoName, idx) => {
-      const ghId = `github_${idx}_${repoName.replace(/[\s\/-]+/g, '_')}`;
-      nodes.push({
-        id: ghId,
-        label: `GitHub: ${repoName}`,
-        type: 'GITHUB_EVIDENCE',
-        category: 'EVIDENCE',
-        detail: `Verified GitHub Repository Evidence • @${user.githubProfile.username || 'KRISHNA-K19'}`,
-        color: '#06b6d4',
-        size: 19
-      });
-      edges.push({ source: rootId, target: ghId, label: 'COMMITTED' });
+  // Real GitHub Repository & Evidence Topology Nodes
+  const githubRepos = await GitHubRepo.find({ user: userId, selectedForKrics: true });
+  const githubEvidences = await GitHubEvidence.find({ user: userId });
 
-      // Link GitHub evidence to matching skills
-      skills.forEach(s => {
-        const sName = s.name.toLowerCase().trim();
-        const matchSkillId = skillNodeMap[sName];
-        if (matchSkillId && (repoName.toLowerCase().includes(sName) || sName.includes('python') || sName.includes('machine learning') || sName.includes('sql'))) {
-          edges.push({ source: ghId, target: matchSkillId, label: 'VERIFIES' });
-        }
-      });
-
-      // Link GitHub evidence to target career goal
-      edges.push({ source: ghId, target: goalId, label: 'PROVES' });
+  githubRepos.forEach(repo => {
+    const ghId = `github_repo_${repo._id}`;
+    nodes.push({
+      id: ghId,
+      label: `GitHub: ${repo.name}`,
+      type: 'GITHUB_REPOSITORY',
+      category: 'EVIDENCE',
+      detail: `Verified Repo • ${repo.language || 'Code'} • ${repo.stars} Stars • @${user.githubProfile?.username || user.github || 'GitHub'}`,
+      color: '#06b6d4',
+      size: 20
     });
-  }
+    edges.push({ source: rootId, target: ghId, label: 'COMMITTED' });
+
+    // Link GitHub Repo to matching Skill nodes
+    (repo.detectedTechs || []).forEach(tech => {
+      const matchSkillId = skillNodeMap[tech.toLowerCase().trim()];
+      if (matchSkillId) {
+        edges.push({ source: ghId, target: matchSkillId, label: 'VERIFIES' });
+      }
+    });
+
+    // Link to target career goal
+    edges.push({ source: ghId, target: goalId, label: 'PROVES' });
+
+    // Link to linked Project if exists
+    if (repo.linkedProjectId) {
+      edges.push({ source: ghId, target: `project_${repo.linkedProjectId}`, label: 'SUPPORTS_PROJECT' });
+    }
+  });
 
   return {
     nodes,

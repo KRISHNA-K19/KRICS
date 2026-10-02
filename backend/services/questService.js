@@ -4,6 +4,7 @@ const Project = require('../models/Project');
 const Experience = require('../models/Experience');
 const Learning = require('../models/Learning');
 const ActivityEvent = require('../models/ActivityEvent');
+const GitHubRepo = require('../models/GitHubRepo');
 const { calculateSkillGap } = require('./skillGapEngine');
 const { calculateCareerAlignment } = require('./careerAlignmentService');
 
@@ -53,7 +54,8 @@ exports.getUserQuests = async (userId) => {
 
   // Build Dynamic Missions based on real user profile evidence
   const mlSkill = skills.find(s => s.name.toLowerCase().includes(primaryFocusSkill.toLowerCase()) || s.name.toLowerCase().includes('machine learning'));
-  const hasGithubProject = projects.some(p => p.githubUrl || p.githubLink);
+  const githubRepoCount = await GitHubRepo.countDocuments({ user: userId, selectedForKrics: true });
+  const hasGithubProject = (githubRepoCount > 0) || projects.some(p => p.githubUrl || p.githubLink);
   const activeLearning = learnings.find(l => l.progress > 0) || learnings[0];
 
   const rawMissions = [
