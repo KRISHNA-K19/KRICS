@@ -74,21 +74,24 @@ exports.getPublicProfile = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Public profile not found' });
     }
 
-    const skills = await Skill.find({ user: user._id });
-    const projects = await Project.find({ user: user._id });
-    const experiences = await Experience.find({ user: user._id });
-    const certifications = await Certification.find({ user: user._id });
-    const educations = await Education.find({ user: user._id });
+    const skills = await Skill.find({ $or: [{ user: user._id }, { userId: user._id }] });
+    const projects = await Project.find({ $or: [{ user: user._id }, { userId: user._id }] });
+    const experiences = await Experience.find({ $or: [{ user: user._id }, { userId: user._id }] });
+    const certifications = await Certification.find({ $or: [{ user: user._id }, { userId: user._id }] });
+    const educations = await Education.find({ $or: [{ user: user._id }, { userId: user._id }] });
 
-    let alignment = { alignmentScore: user.alignmentScore || 78.4, targetRole: user.careerGoal };
+    let alignment = { alignmentScore: user.alignmentScore || 68.0, targetRole: user.careerGoal };
     try {
       alignment = await calculateCareerAlignment(user._id);
     } catch (e) {}
 
-    let dna = { primaryArchetype: 'Systems & Data Architect' };
+    let dna = { primaryArchetype: 'Data & Systems Architect' };
     try {
       dna = await calculateCareerDna(user._id);
     } catch (e) {}
+
+    const realAlignment = (alignment && alignment.alignmentScore !== undefined) ? alignment.alignmentScore : (user.alignmentScore || 68.0);
+    const realPhoto = user.photoUrl || user.profilePicture || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(user.fullName || 'KRICS')}`;
 
     res.status(200).json({
       success: true,
@@ -97,17 +100,17 @@ exports.getPublicProfile = async (req, res) => {
           _id: user._id,
           fullName: user.fullName || 'KRICS Architect',
           preferredName: user.preferredName || user.fullName,
-          careerGoal: user.careerGoal || 'Data Scientist',
+          careerGoal: user.careerGoal || 'AI/ML Engineer',
           location: user.location || 'Verified Profile',
           githubUrl: user.githubUrl || user.github,
           linkedinUrl: user.linkedinUrl || user.linkedin,
           email: user.email,
           bio: user.bio || 'Verified Career Profile on KRICS Intelligent System.',
-          avatar: user.profilePicture || `https://api.dicebear.com/7.x/bottts/svg?seed=${user._id}`
+          avatar: realPhoto
         },
-        alignmentScore: alignment.alignmentScore || 78.4,
-        targetRole: alignment.targetRole || user.careerGoal,
-        primaryArchetype: dna.primaryArchetype || 'Systems & Data Architect',
+        alignmentScore: realAlignment,
+        targetRole: alignment.targetRole || user.careerGoal || 'AI/ML Engineer',
+        primaryArchetype: dna.primaryArchetype || 'Data & Systems Architect',
         skillsCount: skills.length,
         projectsCount: projects.length,
         experiencesCount: experiences.length,

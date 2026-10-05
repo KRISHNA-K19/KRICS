@@ -74,20 +74,20 @@ exports.getIdentityCard = async (req, res) => {
       await user.save();
     }
 
-    const skills = await Skill.find({ user: user._id }) || [];
-    const projects = await Project.find({ user: user._id }) || [];
-    const experiences = await Experience.find({ user: user._id }) || [];
-    const certifications = await Certification.find({ user: user._id }) || [];
-    const educations = await Education.find({ user: user._id }) || [];
-    const learning = await Learning.find({ user: user._id }) || [];
-    const githubRepos = await GitHubRepo.find({ user: user._id, selectedForKrics: true }) || [];
+    const skills = (await Skill.find({ $or: [{ user: user._id }, { userId: user._id }] })) || [];
+    const projects = (await Project.find({ $or: [{ user: user._id }, { userId: user._id }] })) || [];
+    const experiences = (await Experience.find({ $or: [{ user: user._id }, { userId: user._id }] })) || [];
+    const certifications = (await Certification.find({ $or: [{ user: user._id }, { userId: user._id }] })) || [];
+    const educations = (await Education.find({ $or: [{ user: user._id }, { userId: user._id }] })) || [];
+    const learning = (await Learning.find({ $or: [{ user: user._id }, { userId: user._id }] })) || [];
+    const githubRepos = (await GitHubRepo.find({ $or: [{ user: user._id }, { userId: user._id }] })) || [];
 
-    let alignment = { alignmentScore: user.alignmentScore || 78.4, targetRole: user.careerGoal };
+    let alignment = { alignmentScore: user.alignmentScore || 68.0, targetRole: user.careerGoal };
     try {
       alignment = await calculateCareerAlignment(user._id);
     } catch (e) {}
 
-    let dna = { primaryArchetype: 'Systems & Data Architect' };
+    let dna = { primaryArchetype: 'Data & Systems Architect' };
     try {
       dna = await calculateCareerDna(user._id);
     } catch (e) {}
