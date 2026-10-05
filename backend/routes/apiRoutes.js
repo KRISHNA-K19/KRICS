@@ -91,6 +91,10 @@ router.delete('/learning/:id', protect, learningController.deleteLearning);
 router.get('/career-paths', protect, careerController.getCareerPaths);
 router.put('/career-goal', protect, careerController.setCareerGoal);
 router.get('/roadmap', protect, roadmapController.getCareerRoadmap);
+router.post('/roadmap/generate', protect, roadmapController.generateCareerRoadmap);
+router.post('/roadmap/recalculate', protect, roadmapController.recalculateCareerRoadmap);
+router.post('/roadmap/tasks/:taskId/complete', protect, roadmapController.completeRoadmapTask);
+router.get('/roadmap/next-action', protect, roadmapController.getNextActionCard);
 
 // 11. Skill Gap Engine
 router.get('/skill-gap', protect, skillGapController.getSkillGap);

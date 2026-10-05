@@ -7,6 +7,7 @@ const Learning = require('../models/Learning');
 const Opportunity = require('../models/Opportunity');
 const GitHubRepo = require('../models/GitHubRepo');
 const GitHubEvidence = require('../models/GitHubEvidence');
+const Roadmap = require('../models/Roadmap');
 
 exports.buildUserNetworkGraph = async (userId) => {
   const user = await User.findById(userId);
@@ -20,6 +21,7 @@ exports.buildUserNetworkGraph = async (userId) => {
   const certifications = await Certification.find({ user: userId });
   const learning = await Learning.find({ user: userId });
   const opportunities = await Opportunity.find().limit(5);
+  const roadmap = await Roadmap.findOne({ user: userId });
 
   const nodes = [];
   const edges = [];
@@ -48,6 +50,23 @@ exports.buildUserNetworkGraph = async (userId) => {
     size: 24
   });
   edges.push({ source: rootId, target: goalId, label: 'TARGETS' });
+
+  // Roadmap Phase Nodes
+  if (roadmap && roadmap.phases) {
+    roadmap.phases.forEach(p => {
+      const phaseNodeId = `roadmap_${p.phaseId}`;
+      nodes.push({
+        id: phaseNodeId,
+        label: `Phase 0${p.phaseNumber}: ${p.title}`,
+        type: 'ROADMAP_PHASE',
+        category: 'ROADMAP',
+        detail: `Status: ${p.status} • Progress: ${p.progress}%`,
+        color: p.status === 'COMPLETED' ? '#10b981' : (p.status === 'IN_PROGRESS' ? '#3b82f6' : '#94a3b8'),
+        size: 20
+      });
+      edges.push({ source: goalId, target: phaseNodeId, label: 'HAS_PHASE' });
+    });
+  }
 
   // Skill Nodes & Edges
   const skillNodeMap = {};
