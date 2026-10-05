@@ -1258,20 +1258,137 @@
     </form>
   </div>
 
-  <!-- PUBLIC SHAREABLE PROFILE MODAL -->
-  <div id="modal-share" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
-    <div class="glass-panel-card w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-4 relative border border-white/20 shadow-2xl my-auto min-w-0 custom-scrollbar">
-      <button onclick="closeShareModal()" class="absolute top-4 right-4 text-on-surface-variant hover:text-white"><span class="material-symbols-outlined">close</span></button>
-      <h3 class="font-headline text-lg font-bold text-white flex items-center gap-2"><span class="material-symbols-outlined text-primary">share</span> Share Your Public KRICS Identity</h3>
-      <p class="font-body text-xs text-on-surface-variant">Recruiters and peers can view your 3D career knowledge graph and verified skills.</p>
+  <!-- PUBLIC SHAREABLE IDENTITY CARD MODAL -->
+  <div id="modal-share" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="glass-panel-card w-full max-w-xl max-h-[90dvh] overflow-y-auto rounded-3xl p-5 sm:p-8 space-y-5 relative border border-primary/40 shadow-[0_0_50px_rgba(56,189,248,0.3)] my-auto min-w-0 custom-scrollbar font-telemetry">
+      <button onclick="closeShareModal()" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-on-surface-variant hover:text-white transition-all"><span class="material-symbols-outlined text-xl">close</span></button>
       
-      <div class="text-center py-2">
-        <img id="share-qr-code" src="" alt="QR Code" class="w-40 h-40 mx-auto rounded-xl border border-white/20 bg-white p-2"/>
+      <div class="flex items-center gap-3 border-b border-white/10 pb-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-black font-extrabold text-lg shadow-md font-headline">
+          ◈
+        </div>
+        <div>
+          <h3 class="font-headline text-lg font-bold text-white uppercase tracking-wider">YOUR PUBLIC KRICS IDENTITY CARD</h3>
+          <p class="font-body text-xs text-on-surface-variant">Click or tap card to flip between Front Profile Photo and Back Evidence Matrix.</p>
+        </div>
       </div>
 
-      <div class="flex gap-2">
+      <!-- 3D Flippable Identity Card Container -->
+      <div class="perspective-container w-full">
+        <div id="modal-share-card-wrapper" class="card-3d-wrapper cursor-pointer" onclick="toggleShareModalCardFlip(event)">
+          
+          <!-- FRONT SIDE OF CARD -->
+          <div class="card-face glass-panel-card rounded-3xl p-6 space-y-5 relative border border-primary/40 shadow-[0_0_40px_rgba(56,189,248,0.25)] bg-gradient-to-br from-surface-container-lowest/90 via-black/80 to-primary/10 overflow-hidden">
+            <!-- Hologram Corner Glow -->
+            <div class="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-primary/20 blur-3xl pointer-events-none"></div>
+
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+              <div class="text-[10px] text-cyan-300 font-mono font-bold tracking-wider">KRICS OFFICIAL VERIFIED IDENTITY CARD</div>
+              <div class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono text-[10px] font-bold">VERIFIED ✓</div>
+            </div>
+
+            <!-- Profile Avatar & Details -->
+            <div class="flex items-center gap-4">
+              <div id="modal-share-avatar-wrapper" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 border-primary shadow-[0_0_20px_rgba(56,189,248,0.4)] overflow-hidden shrink-0 bg-black flex items-center justify-center">
+                <img id="modal-share-avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=KRICS" class="w-full h-full object-cover"/>
+              </div>
+              <div class="space-y-1 min-w-0">
+                <h2 id="modal-share-fullname" class="font-headline text-xl font-black text-white truncate">Krishna Kumar</h2>
+                <div id="modal-share-role" class="text-xs text-primary font-bold font-mono uppercase tracking-wider">Data Scientist</div>
+                <div id="modal-share-location" class="text-[10px] text-on-surface-variant flex items-center gap-1 font-mono">
+                  <span class="material-symbols-outlined text-[12px]">location_on</span> <span id="modal-share-location-text">Verified KRICS Profile</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Alignment & Archetype -->
+            <div class="grid grid-cols-2 gap-3 p-3.5 rounded-2xl bg-surface-container-lowest/80 border border-white/10 text-xs">
+              <div class="space-y-0.5">
+                <div class="text-[9px] text-on-surface-variant uppercase font-bold">CAREER ALIGNMENT</div>
+                <div id="modal-share-alignment" class="text-xl font-black text-primary font-mono">78.4%</div>
+                <div class="text-[9px] text-emerald-400 font-mono">High Match Rating</div>
+              </div>
+              <div class="space-y-0.5 border-l border-white/10 pl-3">
+                <div class="text-[9px] text-on-surface-variant uppercase font-bold">PRIMARY ARCHETYPE</div>
+                <div id="modal-share-archetype" class="text-xs font-bold text-white font-headline leading-tight">Systems & Data Architect</div>
+                <div class="text-[9px] text-cyan-300 font-mono">Verified Topology</div>
+              </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-4 gap-2 text-center text-xs">
+              <div class="p-2 rounded-xl bg-surface-container/60 border border-white/5">
+                <div id="modal-share-stat-skills" class="text-sm font-bold text-white font-mono">0</div>
+                <div class="text-[9px] text-on-surface-variant">SKILLS</div>
+              </div>
+              <div class="p-2 rounded-xl bg-surface-container/60 border border-white/5">
+                <div id="modal-share-stat-projects" class="text-sm font-bold text-white font-mono">0</div>
+                <div class="text-[9px] text-on-surface-variant">PROJECTS</div>
+              </div>
+              <div class="p-2 rounded-xl bg-surface-container/60 border border-white/5">
+                <div id="modal-share-stat-exp" class="text-sm font-bold text-white font-mono">0</div>
+                <div class="text-[9px] text-on-surface-variant">EXPERIENCE</div>
+              </div>
+              <div class="p-2 rounded-xl bg-surface-container/60 border border-white/5">
+                <div id="modal-share-stat-certs" class="text-sm font-bold text-white font-mono">0</div>
+                <div class="text-[9px] text-on-surface-variant">CERTS</div>
+              </div>
+            </div>
+
+            <!-- Flip Trigger Button -->
+            <button type="button" class="w-full py-3 rounded-2xl bg-gradient-to-r from-primary-container via-primary to-secondary text-on-primary-container font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-2 hover:scale-[1.02] transition-all">
+              <span class="material-symbols-outlined text-base">sync</span> FLIP CARD FOR EVIDENCE DETAILS 🔄
+            </button>
+          </div>
+
+          <!-- BACK SIDE OF CARD -->
+          <div class="card-face card-face-back glass-panel-card rounded-3xl p-6 space-y-4 relative border border-cyan-500/40 shadow-[0_0_40px_rgba(6,182,212,0.25)] bg-gradient-to-br from-surface-container-lowest/95 via-black/90 to-cyan-950/20 overflow-hidden absolute inset-0 custom-scrollbar overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+              <div class="font-headline font-bold text-white text-xs uppercase tracking-wider flex items-center gap-2">
+                <span class="material-symbols-outlined text-cyan-400 text-base">checklist</span> PROOF-OF-WORK MATRIX
+              </div>
+              <div class="text-[9px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-mono font-bold">VERIFIED</div>
+            </div>
+
+            <!-- Top Verified Skills -->
+            <div class="space-y-1.5 text-xs">
+              <div class="text-[10px] font-bold text-cyan-300 uppercase tracking-wider font-mono">VERIFIED SKILLS</div>
+              <div id="modal-share-skills-list" class="flex flex-wrap gap-1.5">
+                <div class="text-on-surface-variant text-[11px]">Loading skills...</div>
+              </div>
+            </div>
+
+            <!-- Deployed Technical Projects -->
+            <div class="space-y-1.5 text-xs">
+              <div class="text-[10px] font-bold text-cyan-300 uppercase tracking-wider font-mono">KEY PROJECTS</div>
+              <div id="modal-share-projects-list" class="space-y-1.5">
+                <div class="text-on-surface-variant text-[11px]">Loading projects...</div>
+              </div>
+            </div>
+
+            <!-- Experience & Certifications -->
+            <div class="space-y-1.5 text-xs">
+              <div class="text-[10px] font-bold text-cyan-300 uppercase tracking-wider font-mono">WORK HISTORY & CREDENTIALS</div>
+              <div id="modal-share-exp-list" class="space-y-1 text-[11px] text-white/90">
+                <div class="text-on-surface-variant">Loading experience...</div>
+              </div>
+            </div>
+
+            <!-- Flip Back Button -->
+            <button type="button" class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-headline font-bold text-xs uppercase tracking-wider border border-white/20 flex items-center justify-center gap-2 transition-all">
+              <span class="material-symbols-outlined text-base">undo</span> FLIP TO FRONT ↺
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Copy Link Footer -->
+      <div class="flex gap-2 pt-2 border-t border-white/10">
         <input type="text" id="share-url-input" readonly class="glass-input flex-1 rounded-xl px-3 py-2 text-xs font-telemetry"/>
-        <button onclick="copyShareUrl()" class="px-4 py-2 rounded-xl bg-primary text-on-primary-fixed font-bold font-headline text-xs">COPY LINK</button>
+        <button onclick="copyShareUrl()" class="px-4 py-2 rounded-xl bg-primary text-on-primary-fixed font-bold font-headline text-xs flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">content_copy</span> COPY LINK
+        </button>
       </div>
     </div>
   </div>
@@ -3978,6 +4095,12 @@
       fetchShareLink();
     }
     function closeShareModal() { document.getElementById('modal-share').classList.add('hidden'); }
+    function toggleShareModalCardFlip(e) {
+      if (e && e.target && (e.target.tagName === 'A' || e.target.closest('a'))) return;
+      const wrapper = document.getElementById('modal-share-card-wrapper');
+      if (wrapper) wrapper.classList.toggle('flipped');
+    }
+
     async function fetchShareLink() {
       const res = await apiFetch('/share/generate-link');
       if (res.success) {
@@ -3985,10 +4108,59 @@
         if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && window.location.protocol !== 'file:') {
           shareUrl = `${window.location.origin}/?share=${res.shareToken}`;
         }
-        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(shareUrl)}`;
-
         document.getElementById('share-url-input').value = shareUrl;
-        document.getElementById('share-qr-code').src = qrCodeUrl;
+
+        // Fetch public profile data to populate identity card
+        const profileRes = await apiFetch(`/share/public-profile/${res.shareToken}`);
+        if (profileRes.success && profileRes.data) {
+          const d = profileRes.data;
+          const u = d.user;
+
+          document.getElementById('modal-share-fullname').innerText = u.preferredName || u.fullName || 'KRICS Architect';
+          document.getElementById('modal-share-role').innerText = u.careerGoal || 'Data Scientist';
+          document.getElementById('modal-share-location-text').innerText = u.location || 'Verified Profile';
+          document.getElementById('modal-share-alignment').innerText = `${d.alignmentScore || 78.4}%`;
+          document.getElementById('modal-share-archetype').innerText = d.primaryArchetype || 'Systems Architect';
+
+          if (u.avatar || (state.user && state.user.photoUrl)) {
+            document.getElementById('modal-share-avatar-img').src = (state.user && state.user.photoUrl) || u.avatar;
+          }
+
+          document.getElementById('modal-share-stat-skills').innerText = d.skillsCount || 0;
+          document.getElementById('modal-share-stat-projects').innerText = d.projectsCount || 0;
+          document.getElementById('modal-share-stat-exp').innerText = d.experiencesCount || 0;
+          document.getElementById('modal-share-stat-certs').innerText = d.certificationsCount || 0;
+
+          // Back card skills
+          const skillsEl = document.getElementById('modal-share-skills-list');
+          if (skillsEl && d.skills) {
+            skillsEl.innerHTML = d.skills.length > 0
+              ? d.skills.map(s => `<span class="px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[10px] font-mono font-bold">${s.name} (${s.level || 'INTERMEDIATE'})</span>`).join('')
+              : '<span class="text-on-surface-variant text-[11px]">No skills listed yet.</span>';
+          }
+
+          // Back card projects
+          const projectsEl = document.getElementById('modal-share-projects-list');
+          if (projectsEl && d.projects) {
+            projectsEl.innerHTML = d.projects.length > 0
+              ? d.projects.map(p => `
+                  <div class="p-2 rounded-xl bg-surface-container/60 border border-white/10 flex justify-between items-center text-[11px]">
+                    <div>
+                      <div class="font-bold text-white font-headline">${p.name || p.title}</div>
+                      <div class="text-[10px] text-on-surface-variant">${(p.techs || p.technologies || []).join(', ')}</div>
+                    </div>
+                  </div>
+                `).join('')
+              : '<div class="text-on-surface-variant text-[11px]">No projects deployed yet.</div>';
+          }
+
+          // Back card experience
+          const expEl = document.getElementById('modal-share-exp-list');
+          if (expEl && d.experiences) {
+            const expText = d.experiences.map(e => `• ${e.title} @ ${e.company}`).join('<br/>');
+            expEl.innerHTML = expText || '<span class="text-on-surface-variant">No work experience listed.</span>';
+          }
+        }
       }
     }
     function copyShareUrl() {
