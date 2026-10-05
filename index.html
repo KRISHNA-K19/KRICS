@@ -99,6 +99,28 @@
       min-width: 0;
     }
 
+    /* 3D Flip Card Component */
+    .perspective-container {
+      perspective: 1200px;
+    }
+    .card-3d-wrapper {
+      position: relative;
+      width: 100%;
+      min-height: 480px;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .card-3d-wrapper.flipped {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .card-face-back {
+      transform: rotateY(180deg);
+    }
+
     /* Video Background Container */
     .hero-video-wrapper {
       position: fixed;
@@ -1710,6 +1732,166 @@
     </div>
   </div>
 
+  <!-- PUBLIC INTERACTIVE 3D FLIPPABLE IDENTITY CARD OVERLAY -->
+  <div id="modal-public-identity-card" class="fixed inset-0 z-[200] hidden bg-black/90 backdrop-blur-3xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto font-telemetry">
+    <div class="w-full max-w-xl my-auto space-y-4">
+      
+      <!-- Top Action Header -->
+      <div class="flex items-center justify-between px-2 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="font-bold text-white uppercase tracking-wider text-[11px]">KRICS PUBLIC VERIFIED IDENTITY</span>
+        </div>
+        <button onclick="closePublicIdentityModal()" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white font-mono text-[10px] uppercase font-bold transition-all">
+          CLOSE ✕
+        </button>
+      </div>
+
+      <!-- Perspective Container for 3D Flip Card -->
+      <div class="perspective-container w-full">
+        <div id="public-card-wrapper" class="card-3d-wrapper cursor-pointer" onclick="togglePublicCardFlip(event)">
+          
+          <!-- FRONT OF IDENTITY CARD -->
+          <div class="card-face glass-panel-card rounded-3xl p-6 sm:p-8 space-y-6 relative border border-primary/40 shadow-[0_0_60px_rgba(56,189,248,0.3)] bg-gradient-to-br from-surface-container-lowest/90 via-black/80 to-primary/10 overflow-hidden">
+            <!-- Holographic Glow -->
+            <div class="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-primary/20 blur-3xl pointer-events-none"></div>
+
+            <!-- Top Header Badge -->
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-black font-extrabold text-lg shadow-[0_0_15px_rgba(56,189,248,0.5)] font-headline">
+                  ◈
+                </div>
+                <div>
+                  <div class="font-headline font-black text-white text-base tracking-wider">KRICS VERIFIED ID</div>
+                  <div class="text-[9px] text-cyan-300 font-mono">PROOF-OF-WORK IDENTITY CARD</div>
+                </div>
+              </div>
+
+              <div class="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono text-[10px] font-bold flex items-center gap-1">
+                <span class="material-symbols-outlined text-[12px]">verified</span> VERIFIED
+              </div>
+            </div>
+
+            <!-- Profile Info & Avatar -->
+            <div class="flex items-center gap-5">
+              <img id="pub-card-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=KRICS" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 border-primary shadow-[0_0_20px_rgba(56,189,248,0.4)] object-cover bg-black shrink-0"/>
+              <div class="space-y-1 min-w-0">
+                <h2 id="pub-card-fullname" class="font-headline text-xl sm:text-2xl font-black text-white truncate">Krishna Kumar</h2>
+                <div id="pub-card-role" class="text-xs text-primary font-bold font-mono uppercase tracking-wider">Data Scientist</div>
+                <div id="pub-card-location" class="text-[10px] text-on-surface-variant flex items-center gap-1 font-mono">
+                  <span class="material-symbols-outlined text-[12px]">location_on</span> <span id="pub-card-location-text">Remote / Verified</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Core Hero Alignment & Archetype -->
+            <div class="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-surface-container-lowest/80 border border-white/10 text-xs">
+              <div class="space-y-0.5">
+                <div class="text-[9px] text-on-surface-variant uppercase font-bold">CAREER ALIGNMENT</div>
+                <div id="pub-card-alignment" class="text-2xl font-black text-primary font-mono">78.4%</div>
+                <div class="text-[9px] text-emerald-400 font-mono">High Match Rating</div>
+              </div>
+              <div class="space-y-0.5 border-l border-white/10 pl-3">
+                <div class="text-[9px] text-on-surface-variant uppercase font-bold">PRIMARY ARCHETYPE</div>
+                <div id="pub-card-archetype" class="text-xs font-bold text-white font-headline leading-tight">Systems & Data Architect</div>
+                <div class="text-[9px] text-cyan-300 font-mono">Neural Graph Topology</div>
+              </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-4 gap-2 text-center text-xs pt-1">
+              <div class="p-2 rounded-xl bg-surface-container/60 border border-white/5">
+                <div id="pub-card-stat-skills" class="text-base font-bold text-white font-mono">0</div>
+                <div class="text-[9px] text-on-surface-variant">SKILLS</div>
+              </div>
+              <div class="p-2 rounded-xl bg-surface-container/60 border border-white/5">
+                <div id="pub-card-stat-projects" class="text-base font-bold text-white font-mono">0</div>
+                <div class="text-[9px] text-on-surface-variant">PROJECTS</div>
+              </div>
+              <div class="p-2 rounded-xl bg-surface-container/60 border border-white/5">
+                <div id="pub-card-stat-exp" class="text-base font-bold text-white font-mono">0</div>
+                <div class="text-[9px] text-on-surface-variant">EXPERIENCE</div>
+              </div>
+              <div class="p-2 rounded-xl bg-surface-container/60 border border-white/5">
+                <div id="pub-card-stat-certs" class="text-base font-bold text-white font-mono">0</div>
+                <div class="text-[9px] text-on-surface-variant">CERTS</div>
+              </div>
+            </div>
+
+            <!-- Flip Trigger Button -->
+            <button type="button" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-primary-container via-primary to-secondary text-on-primary-container font-headline font-black text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(56,189,248,0.4)] flex items-center justify-center gap-2 hover:scale-[1.02] transition-all">
+              <span class="material-symbols-outlined text-base animate-spin-slow">sync</span> FLIP CARD FOR EVIDENCE DETAILS 🔄
+            </button>
+
+            <!-- Card Footer -->
+            <div class="flex items-center justify-between text-[9px] text-on-surface-variant border-t border-white/10 pt-3 font-mono">
+              <div>KRICS PLATFORM • PUBLIC ID CARD</div>
+              <div class="text-primary font-bold">CLICK CARD TO FLIP</div>
+            </div>
+          </div>
+
+          <!-- BACK OF IDENTITY CARD -->
+          <div class="card-face card-face-back glass-panel-card rounded-3xl p-6 sm:p-8 space-y-5 relative border border-cyan-500/40 shadow-[0_0_60px_rgba(6,182,212,0.3)] bg-gradient-to-br from-surface-container-lowest/95 via-black/90 to-cyan-950/20 overflow-hidden absolute inset-0 custom-scrollbar overflow-y-auto">
+            
+            <!-- Back Header -->
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+              <div class="font-headline font-bold text-white text-sm uppercase tracking-wider flex items-center gap-2">
+                <span class="material-symbols-outlined text-cyan-400 text-base">checklist</span> PROOF-OF-WORK MATRIX
+              </div>
+              <div class="text-[9px] px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-mono font-bold border border-cyan-500/40">
+                VERIFIED EVIDENCE
+              </div>
+            </div>
+
+            <!-- Top Verified Skills -->
+            <div class="space-y-2 text-xs">
+              <div class="text-[10px] font-bold text-cyan-300 uppercase tracking-wider font-mono">TOP VERIFIED SKILLS</div>
+              <div id="pub-card-skills-list" class="flex flex-wrap gap-1.5">
+                <div class="text-on-surface-variant text-[11px]">Loading skills matrix...</div>
+              </div>
+            </div>
+
+            <!-- Deployed Technical Projects -->
+            <div class="space-y-2 text-xs">
+              <div class="text-[10px] font-bold text-cyan-300 uppercase tracking-wider font-mono">KEY DEPLOYED ARTIFACTS</div>
+              <div id="pub-card-projects-list" class="space-y-2">
+                <div class="text-on-surface-variant text-[11px]">Loading projects...</div>
+              </div>
+            </div>
+
+            <!-- Experience & Education -->
+            <div class="space-y-2 text-xs">
+              <div class="text-[10px] font-bold text-cyan-300 uppercase tracking-wider font-mono">WORK & CREDENTIALS</div>
+              <div id="pub-card-exp-list" class="space-y-1.5 text-[11px] text-white/90">
+                <div class="text-on-surface-variant">Loading experience...</div>
+              </div>
+            </div>
+
+            <!-- External Social Links Bar -->
+            <div id="pub-card-links-bar" class="flex flex-wrap gap-2 pt-1 border-t border-white/10">
+              <!-- Links populated dynamically -->
+            </div>
+
+            <!-- Flip Back Button -->
+            <button type="button" class="w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-headline font-bold text-xs uppercase tracking-wider border border-white/20 flex items-center justify-center gap-2 transition-all mt-2">
+              <span class="material-symbols-outlined text-base">undo</span> FLIP TO FRONT ↺
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Action for Unauthenticated Visitors -->
+      <div class="text-center pt-2 font-telemetry">
+        <button onclick="showAuthModal('signup')" class="px-6 py-2.5 rounded-full bg-primary/20 hover:bg-primary/30 border border-primary/40 text-primary font-bold text-xs font-headline tracking-wider transition-all">
+          BUILD YOUR OWN KRICS ROADMAP →
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ========================================== -->
   <!-- CORE CLIENT APIS & APPLICATION LOGIC -->
   <!-- ========================================== -->
@@ -1856,12 +2038,94 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       initParticleCanvas();
-      if (state.token) {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('share')) {
+        const shareToken = urlParams.get('share');
+        showLandingView();
+        loadPublicShareProfile(shareToken);
+      } else if (state.token) {
         verifySession();
       } else {
         showLandingView();
       }
     });
+
+    function togglePublicCardFlip(e) {
+      if (e && e.target && (e.target.tagName === 'A' || e.target.closest('a'))) return;
+      const wrapper = document.getElementById('public-card-wrapper');
+      if (wrapper) wrapper.classList.toggle('flipped');
+    }
+
+    async function loadPublicShareProfile(shareToken) {
+      const modal = document.getElementById('modal-public-identity-card');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+
+      const res = await apiFetch(`/share/public-profile/${shareToken}`);
+      if (res.success && res.data) {
+        const d = res.data;
+        const u = d.user;
+
+        document.getElementById('pub-card-fullname').innerText = u.preferredName || u.fullName || 'KRICS Architect';
+        document.getElementById('pub-card-role').innerText = u.careerGoal || 'Data Scientist';
+        document.getElementById('pub-card-location-text').innerText = u.location || 'Verified Profile';
+        document.getElementById('pub-card-alignment').innerText = `${d.alignmentScore || 78.4}%`;
+        document.getElementById('pub-card-archetype').innerText = d.primaryArchetype || 'Systems Architect';
+
+        if (u.avatar) document.getElementById('pub-card-avatar').src = u.avatar;
+
+        document.getElementById('pub-card-stat-skills').innerText = d.skillsCount || 0;
+        document.getElementById('pub-card-stat-projects').innerText = d.projectsCount || 0;
+        document.getElementById('pub-card-stat-exp').innerText = d.experiencesCount || 0;
+        document.getElementById('pub-card-stat-certs').innerText = d.certificationsCount || 0;
+
+        // Populate Back Card - Skills
+        const skillsEl = document.getElementById('pub-card-skills-list');
+        if (skillsEl && d.skills) {
+          skillsEl.innerHTML = d.skills.length > 0
+            ? d.skills.map(s => `<span class="px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[10px] font-mono font-bold">${s.name} (${s.level || 'INTERMEDIATE'})</span>`).join('')
+            : '<span class="text-on-surface-variant text-[11px]">No skills listed yet.</span>';
+        }
+
+        // Populate Back Card - Projects
+        const projectsEl = document.getElementById('pub-card-projects-list');
+        if (projectsEl && d.projects) {
+          projectsEl.innerHTML = d.projects.length > 0
+            ? d.projects.map(p => `
+                <div class="p-2.5 rounded-xl bg-surface-container/60 border border-white/10 flex justify-between items-center text-[11px]">
+                  <div>
+                    <div class="font-bold text-white font-headline">${p.name || p.title}</div>
+                    <div class="text-[10px] text-on-surface-variant">${(p.techs || p.technologies || []).join(', ')}</div>
+                  </div>
+                  ${(p.githubUrl || p.githubLink) ? `<a href="${p.githubUrl || p.githubLink}" target="_blank" onclick="event.stopPropagation()" class="px-2 py-1 rounded bg-cyan-500/20 text-cyan-300 text-[9px] font-mono font-bold hover:bg-cyan-500/30">GitHub ↗</a>` : ''}
+                </div>
+              `).join('')
+            : '<div class="text-on-surface-variant text-[11px]">No project artifacts listed.</div>';
+        }
+
+        // Populate Back Card - Experience & Certs
+        const expEl = document.getElementById('pub-card-exp-list');
+        if (expEl && d.experiences) {
+          const expText = d.experiences.map(e => `• ${e.title} @ ${e.company} (${e.duration || 'Verified'})`).join('<br/>');
+          const certText = (d.certifications || []).map(c => `• ${c.name} (${c.issuer})`).join('<br/>');
+          expEl.innerHTML = (expText || certText) ? `${expText}${certText ? '<br/>' + certText : ''}` : '<span class="text-on-surface-variant">No work experience listed yet.</span>';
+        }
+
+        // Populate Links Bar
+        const linksBar = document.getElementById('pub-card-links-bar');
+        if (linksBar) {
+          let linksHtml = '';
+          if (u.githubUrl) linksHtml += `<a href="${u.githubUrl}" target="_blank" onclick="event.stopPropagation()" class="px-3 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold font-mono">GitHub Profile ↗</a>`;
+          if (u.linkedinUrl) linksHtml += `<a href="${u.linkedinUrl}" target="_blank" onclick="event.stopPropagation()" class="px-3 py-1.5 rounded-xl bg-blue-500/20 text-blue-300 border border-blue-500/40 text-[10px] font-bold font-mono">LinkedIn Profile ↗</a>`;
+          if (u.email) linksHtml += `<a href="mailto:${u.email}" onclick="event.stopPropagation()" class="px-3 py-1.5 rounded-xl bg-white/10 text-white border border-white/20 text-[10px] font-bold font-mono">Contact Email ✉</a>`;
+          linksBar.innerHTML = linksHtml || '<span class="text-[10px] text-on-surface-variant">Verified KRICS Public Identity</span>';
+        }
+      }
+    }
+
+    function closePublicIdentityModal() {
+      document.getElementById('modal-public-identity-card').classList.add('hidden');
+    }
 
     async function verifySession() {
       const res = await apiFetch('/auth/me');
