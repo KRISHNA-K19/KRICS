@@ -95,8 +95,7 @@ exports.calculateCareerAlignment = async (userId, targetRoleOverride = null) => 
 
   // Update user profile alignment score if not simulation
   if (user && !targetRoleOverride) {
-    user.alignmentScore = alignmentScore;
-    await user.save();
+    await User.findOneAndUpdate({ _id: user._id }, { $set: { alignmentScore } }, { upsert: true });
   }
 
   return {

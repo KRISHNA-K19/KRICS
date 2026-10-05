@@ -331,11 +331,7 @@ exports.getRepositories = async (req, res) => {
 exports.disconnectGitHub = async (req, res) => {
   try {
     const userId = await getUserId(req);
-    const user = await User.findById(userId);
-    if (user && user.githubProfile) {
-      user.githubProfile.connected = false;
-      await user.save();
-    }
+    await User.findOneAndUpdate({ _id: userId }, { $set: { 'githubProfile.connected': false } });
     await logActivity(userId, 'DISCONNECT_GITHUB', 'Disconnected GitHub integration');
 
     res.status(200).json({ success: true, message: 'GitHub integration disconnected successfully.' });

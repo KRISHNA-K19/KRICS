@@ -391,7 +391,11 @@ async function syncUserGitHubData(userId, usernameInput, accessToken = null, sel
       evidenceLevel: skillEvidenceLinksCount > 0 ? 'VERIFIED GITHUB EVIDENCE' : 'GITHUB CONNECTED'
     }
   };
-  await user.save();
+  await User.findOneAndUpdate(
+    { _id: user._id },
+    { $set: { github: ghUser.login, githubProfile: user.githubProfile } },
+    { upsert: true }
+  );
 
   logDiag('SyncPipeline', `Sync completed. ${updatedRepoDocs.length} repos persisted.`);
 

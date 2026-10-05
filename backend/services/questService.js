@@ -280,33 +280,25 @@ exports.claimMissionReward = async (userId, missionId) => {
   const newLevelInfo = calculateUserLevel(newXp);
   const isLevelUp = newLevelInfo.current.level > oldLevelInfo.current.level;
 
-  user.xp = newXp;
-  user.level = newLevelInfo.current.level;
-  user.claimedMissionIds.push(missionId);
+  const updateQuery = {
+    $set: { xp: newXp, level: newLevelInfo.current.level },
+    $addToSet: { claimedMissionIds: missionId },
+    $push: {
+      xpHistory: {
+        $each: [{
+          title: mission.title,
+          xp: earnedXp,
+          category: mission.category,
+          rationale: `Completed mission: ${mission.subtitle}`,
+          createdAt: new Date()
+        }],
+        $position: 0
+      },
+      ...(unlockedAchievement ? { achievements: unlockedAchievement } : {})
+    }
+  };
 
-  // Append to XP history
-  user.xpHistory.unshift({
-    title: mission.title,
-    xp: earnedXp,
-    category: mission.category,
-    rationale: `Completed mission: ${mission.subtitle}`,
-    createdAt: new Date()
-  });
-
-  // Check achievement unlock
-  let unlockedAchievement = null;
-  if (user.claimedMissionIds.length === 1) {
-    unlockedAchievement = {
-      id: 'ach_first_mission',
-      title: 'FIRST MISSION COMPLETED',
-      description: 'Completed your first KRICS career intelligence mission.',
-      badge: '🎯',
-      unlockedAt: new Date()
-    };
-    user.achievements.push(unlockedAchievement);
-  }
-
-  await user.save();
+  await User.findOneAndUpdate({ _id: user._id }, updateQuery, { upsert: true, new: true });
 
   // Log activity event
   await ActivityEvent.create({
