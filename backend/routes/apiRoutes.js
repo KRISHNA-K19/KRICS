@@ -39,6 +39,7 @@ router.post('/onboarding/submit', protect, onboardingController.submitOnboarding
 // 3. Profile
 router.get('/profile', protect, profileController.getProfile);
 router.put('/profile', protect, profileController.updateProfile);
+router.get('/identity-card', protect, profileController.getIdentityCard);
 
 // 4. Skills
 router.get('/skills', protect, skillController.getSkills);

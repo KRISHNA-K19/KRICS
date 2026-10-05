@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema({
   github: { type: String },
   portfolio: { type: String },
   careerGoal: { type: String, default: 'Data Scientist' },
+  kricsId: { type: String, unique: true, sparse: true },
   alignmentScore: { type: Number, default: 78.4 },
   xp: { type: Number, default: 1250 },
   level: { type: Number, default: 4 },

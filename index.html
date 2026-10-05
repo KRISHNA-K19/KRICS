@@ -602,10 +602,138 @@
               <div id="overview-explainable-breakdown" class="font-telemetry text-xs space-y-1 text-on-surface-variant"></div>
             </div>
 
-            <div class="lg:col-span-5 glass-panel-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-4">
-              <h3 class="font-headline text-lg font-bold text-white">INTERACTIVE 3D MY KRICS</h3>
-              <p class="font-body text-xs text-on-surface-variant">Step into your 3D personal career universe.</p>
-              <button onclick="openMyKrics()" class="w-full py-3 rounded-xl font-headline text-xs font-bold text-white bg-gradient-to-r from-primary-container to-secondary shadow-lg hover:scale-105 transition-all">LAUNCH 3D CAREER GRAPH →</button>
+            <!-- 3D KRICS INTERACTIVE IDENTITY CARD (HERO EMBEDDED) -->
+            <div class="lg:col-span-5 flex flex-col justify-between space-y-4 font-telemetry">
+              <div class="perspective-container w-full">
+                <div id="hero-identity-card-wrapper" 
+                     class="card-3d-wrapper cursor-pointer" 
+                     tabindex="0"
+                     role="button"
+                     aria-label="KRICS Interactive Identity Card. Press Enter or Space to flip between Profile and Proof of Work."
+                     onclick="toggleHeroCardFlip(event)" 
+                     onkeydown="handleHeroCardKeyDown(event)">
+                  
+                  <!-- FRONT SIDE OF HERO IDENTITY CARD ("WHO AM I?") -->
+                  <div class="card-face glass-panel-card rounded-3xl p-5 sm:p-6 space-y-4 relative border border-primary/40 shadow-[0_0_40px_rgba(56,189,248,0.25)] bg-gradient-to-br from-surface-container-lowest/95 via-black/85 to-primary/10 overflow-hidden">
+                    <!-- Glare & Hologram overlay -->
+                    <div id="hero-card-glare" class="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-300 bg-[radial-gradient(circle_at_var(--mouse-x,50%)_var(--mouse-y,50%),rgba(56,189,248,0.25)_0%,transparent_60%)]"></div>
+                    <div class="absolute -top-16 -right-16 w-36 h-36 rounded-full bg-primary/20 blur-3xl pointer-events-none"></div>
+
+                    <!-- Verified Header -->
+                    <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+                      <div class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                        <span class="text-[10px] text-cyan-300 font-mono font-bold tracking-wider" id="hero-card-krics-id">KRICS OFFICIAL ID: KR-26-369B1</span>
+                      </div>
+                      <div class="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono text-[9px] font-bold">VERIFIED ARCHITECT ✓</div>
+                    </div>
+
+                    <!-- Profile Photo & Basic Details -->
+                    <div class="flex items-center gap-3.5">
+                      <div id="hero-card-avatar-wrapper" class="w-16 h-16 rounded-2xl border-2 border-primary shadow-[0_0_20px_rgba(56,189,248,0.4)] overflow-hidden shrink-0 bg-black flex items-center justify-center">
+                        <img id="hero-card-avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=KRICS" class="w-full h-full object-cover"/>
+                      </div>
+                      <div class="space-y-0.5 min-w-0 flex-1">
+                        <h3 id="hero-card-fullname" class="font-headline text-lg font-black text-white truncate">Krishna Kumar</h3>
+                        <div id="hero-card-role" class="text-xs text-primary font-bold font-mono uppercase tracking-wider truncate">Data Scientist</div>
+                        <div class="flex items-center gap-2 pt-0.5">
+                          <span id="hero-card-level-badge" class="px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30 text-[9px] font-mono font-bold">LEVEL 3</span>
+                          <span id="hero-card-xp-text" class="text-[9px] text-on-surface-variant font-mono">1,250 XP</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Alignment & Archetype -->
+                    <div class="grid grid-cols-2 gap-2.5 p-3 rounded-2xl bg-surface-container-lowest/80 border border-white/10 text-xs">
+                      <div class="space-y-0.5">
+                        <div class="text-[9px] text-on-surface-variant uppercase font-bold">CAREER MATCH</div>
+                        <div id="hero-card-alignment" class="text-lg font-black text-primary font-mono">78.4%</div>
+                        <div class="text-[8px] text-emerald-400 font-mono">Verified Alignment</div>
+                      </div>
+                      <div class="space-y-0.5 border-l border-white/10 pl-2.5">
+                        <div class="text-[9px] text-on-surface-variant uppercase font-bold">ARCHETYPE</div>
+                        <div id="hero-card-archetype" class="text-xs font-bold text-white font-headline leading-tight truncate">Systems Architect</div>
+                        <div class="text-[8px] text-cyan-300 font-mono">Active Topology</div>
+                      </div>
+                    </div>
+
+                    <!-- Proof of Work Stats Pill Grid -->
+                    <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
+                      <div class="p-1.5 rounded-xl bg-surface-container/60 border border-white/5">
+                        <div id="hero-card-stat-skills" class="text-xs font-bold text-white font-mono">0</div>
+                        <div class="text-[8px] text-on-surface-variant">SKILLS</div>
+                      </div>
+                      <div class="p-1.5 rounded-xl bg-surface-container/60 border border-white/5">
+                        <div id="hero-card-stat-projects" class="text-xs font-bold text-white font-mono">0</div>
+                        <div class="text-[8px] text-on-surface-variant">PROJECTS</div>
+                      </div>
+                      <div class="p-1.5 rounded-xl bg-surface-container/60 border border-white/5">
+                        <div id="hero-card-stat-exp" class="text-xs font-bold text-white font-mono">0</div>
+                        <div class="text-[8px] text-on-surface-variant">EXP</div>
+                      </div>
+                      <div class="p-1.5 rounded-xl bg-surface-container/60 border border-white/5">
+                        <div id="hero-card-stat-certs" class="text-xs font-bold text-white font-mono">0</div>
+                        <div class="text-[8px] text-on-surface-variant">CERTS</div>
+                      </div>
+                    </div>
+
+                    <!-- Flip Trigger Banner -->
+                    <div class="w-full py-2 rounded-xl bg-gradient-to-r from-primary-container/80 via-primary/80 to-secondary/80 text-on-primary-container font-headline font-bold text-[10px] uppercase tracking-wider shadow-sm flex items-center justify-center gap-1.5 hover:opacity-90 transition-all">
+                      <span class="material-symbols-outlined text-xs">sync</span> FLIP CARD FOR EVIDENCE MATRIX 🔄
+                    </div>
+                  </div>
+
+                  <!-- BACK SIDE OF HERO IDENTITY CARD ("WHAT CAN I DO?") -->
+                  <div class="card-face card-face-back glass-panel-card rounded-3xl p-5 sm:p-6 space-y-3 relative border border-cyan-500/40 shadow-[0_0_40px_rgba(6,182,212,0.25)] bg-gradient-to-br from-surface-container-lowest/95 via-black/90 to-cyan-950/20 overflow-hidden absolute inset-0 custom-scrollbar overflow-y-auto">
+                    <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                      <div class="font-headline font-bold text-white text-xs uppercase tracking-wider flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-cyan-400 text-sm">checklist</span> PROOF-OF-WORK EVIDENCE
+                      </div>
+                      <div class="text-[8px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-mono font-bold">VERIFIED</div>
+                    </div>
+
+                    <!-- Top Verified Skills -->
+                    <div class="space-y-1 text-xs">
+                      <div class="text-[9px] font-bold text-cyan-300 uppercase tracking-wider font-mono">VERIFIED SKILLS</div>
+                      <div id="hero-card-skills-list" class="flex flex-wrap gap-1">
+                        <div class="text-on-surface-variant text-[10px]">Loading skills...</div>
+                      </div>
+                    </div>
+
+                    <!-- Key Technical Projects -->
+                    <div class="space-y-1 text-xs">
+                      <div class="text-[9px] font-bold text-cyan-300 uppercase tracking-wider font-mono">KEY PROJECTS</div>
+                      <div id="hero-card-projects-list" class="space-y-1">
+                        <div class="text-on-surface-variant text-[10px]">Loading projects...</div>
+                      </div>
+                    </div>
+
+                    <!-- Experience & Credentials -->
+                    <div class="space-y-1 text-xs">
+                      <div class="text-[9px] font-bold text-cyan-300 uppercase tracking-wider font-mono">WORK & CREDENTIALS</div>
+                      <div id="hero-card-exp-list" class="space-y-0.5 text-[10px] text-white/90">
+                        <div class="text-on-surface-variant">Loading experience...</div>
+                      </div>
+                    </div>
+
+                    <!-- Flip Back Button -->
+                    <div class="w-full py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-headline font-bold text-[10px] uppercase tracking-wider border border-white/20 flex items-center justify-center gap-1.5 transition-all mt-auto">
+                      <span class="material-symbols-outlined text-xs">undo</span> FLIP TO FRONT PROFILE ↺
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Hero Card Action Toolbar -->
+              <div class="grid grid-cols-2 gap-2 pt-1">
+                <button onclick="openMyKrics()" class="py-2.5 px-3 rounded-xl font-headline text-[11px] font-bold text-white bg-gradient-to-r from-primary-container to-secondary shadow-md hover:scale-[1.02] transition-all flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-sm">hub</span> 3D GRAPH ◈
+                </button>
+                <button onclick="openShareModal()" class="py-2.5 px-3 rounded-xl font-headline text-[11px] font-bold text-cyan-300 bg-cyan-950/60 border border-cyan-500/40 shadow-md hover:bg-cyan-900/60 transition-all flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-sm">share</span> SHARE CARD 🚀
+                </button>
+              </div>
             </div>
           </div>
 
@@ -2569,6 +2697,160 @@
         }
       }
       fetchQuests();
+      if (typeof loadIdentityCard === 'function') loadIdentityCard();
+    }
+
+    // ============================================================
+    // KRICS 3D INTERACTIVE IDENTITY CARD LOGIC
+    // ============================================================
+
+    function initHeroCardTiltPhysics() {
+      const card = document.getElementById('hero-identity-card-wrapper');
+      if (!card || card.dataset.tiltInitialized) return;
+      card.dataset.tiltInitialized = 'true';
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reducedMotion) return;
+
+      const glare = document.getElementById('hero-card-glare');
+
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const percentX = (x - centerX) / centerX;
+        const percentY = (y - centerY) / centerY;
+        
+        const rotateX = percentY * -6;
+        const rotateY = percentX * 7;
+        
+        if (!card.classList.contains('flipped')) {
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        } else {
+          card.style.transform = `rotateY(180deg) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        }
+        
+        if (glare) {
+          glare.style.opacity = '1';
+          glare.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+          glare.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+        }
+      });
+
+      card.addEventListener('mouseleave', () => {
+        if (!card.classList.contains('flipped')) {
+          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        } else {
+          card.style.transform = 'rotateY(180deg)';
+        }
+        if (glare) glare.style.opacity = '0';
+      });
+    }
+
+    function toggleHeroCardFlip(e) {
+      if (e && e.target && (e.target.tagName === 'A' || e.target.closest('a'))) return;
+      const wrapper = document.getElementById('hero-identity-card-wrapper');
+      if (wrapper) {
+        wrapper.classList.toggle('flipped');
+        if (!wrapper.classList.contains('flipped')) {
+          wrapper.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        } else {
+          wrapper.style.transform = 'rotateY(180deg)';
+        }
+      }
+    }
+
+    function handleHeroCardKeyDown(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleHeroCardFlip(e);
+      }
+    }
+
+    async function loadIdentityCard() {
+      const res = await apiFetch('/identity-card');
+      if (res.success && res.data) {
+        const d = res.data;
+        const u = d.user || {};
+        const ident = d.identity || {};
+
+        // 1. Hero Identity Card (Front)
+        const kricsIdEl = document.getElementById('hero-card-krics-id');
+        if (kricsIdEl) kricsIdEl.innerText = `KRICS ID: ${ident.kricsId || u.kricsId || 'KR-26-369B1'}`;
+
+        const fullnameEl = document.getElementById('hero-card-fullname');
+        if (fullnameEl) fullnameEl.innerText = ident.name || u.preferredName || u.fullName || 'KRICS Architect';
+
+        const roleEl = document.getElementById('hero-card-role');
+        if (roleEl) roleEl.innerText = (d.career && d.career.targetRole) || u.careerGoal || 'AI/ML Engineer';
+
+        const lvlEl = document.getElementById('hero-card-level-badge');
+        if (lvlEl) lvlEl.innerText = `LVL ${ident.level || 1} - ${(ident.levelTitle || 'Architect').toUpperCase()}`;
+
+        const xpEl = document.getElementById('hero-card-xp-text');
+        if (xpEl) xpEl.innerText = `${(ident.xp || 0).toLocaleString()} XP`;
+
+        const alignEl = document.getElementById('hero-card-alignment');
+        if (alignEl) alignEl.innerText = `${(d.career && d.career.alignmentScore) || 78.4}%`;
+
+        const archEl = document.getElementById('hero-card-archetype');
+        if (archEl) archEl.innerText = (d.career && d.career.primaryArchetype) || d.archetype || 'Systems Architect';
+
+        const avatarImg = document.getElementById('hero-card-avatar-img');
+        if (avatarImg) {
+          const pPhoto = ident.profilePhoto || u.photoUrl || (state.user && state.user.photoUrl);
+          if (pPhoto) avatarImg.src = pPhoto;
+          else avatarImg.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(ident.name || 'KRICS')}`;
+        }
+
+        const statSkills = document.getElementById('hero-card-stat-skills');
+        if (statSkills) statSkills.innerText = (d.stats && d.stats.skillsCount) || 0;
+
+        const statProjects = document.getElementById('hero-card-stat-projects');
+        if (statProjects) statProjects.innerText = (d.stats && d.stats.projectsCount) || 0;
+
+        const statExp = document.getElementById('hero-card-stat-exp');
+        if (statExp) statExp.innerText = (d.stats && d.stats.experiencesCount) || 0;
+
+        const statCerts = document.getElementById('hero-card-stat-certs');
+        if (statCerts) statCerts.innerText = (d.stats && d.stats.certificationsCount) || 0;
+
+        // 2. Hero Identity Card (Back)
+        const skillsListEl = document.getElementById('hero-card-skills-list');
+        if (skillsListEl && d.skills) {
+          skillsListEl.innerHTML = d.skills.length > 0
+            ? d.skills.map(s => `<span class="px-2 py-0.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[9px] font-mono font-bold">${s.name} (${s.level || 'INTERMEDIATE'})</span>`).join('')
+            : '<span class="text-on-surface-variant text-[10px]">No verified skills logged.</span>';
+        }
+
+        const projectsListEl = document.getElementById('hero-card-projects-list');
+        if (projectsListEl && d.projects) {
+          projectsListEl.innerHTML = d.projects.length > 0
+            ? d.projects.map(p => `
+                <div class="p-1.5 rounded-xl bg-surface-container/60 border border-white/10 flex justify-between items-center text-[10px]">
+                  <div class="truncate">
+                    <div class="font-bold text-white font-headline truncate">${p.name || p.title}</div>
+                    <div class="text-[8px] text-on-surface-variant truncate">${(p.techs || p.technologies || []).join(', ')}</div>
+                  </div>
+                  ${(p.githubUrl || p.githubLink) ? `<a href="${p.githubUrl || p.githubLink}" target="_blank" onclick="event.stopPropagation()" class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[8px] font-mono font-bold hover:bg-cyan-500/30 shrink-0">Code ↗</a>` : ''}
+                </div>
+              `).join('')
+            : '<div class="text-on-surface-variant text-[10px]">No projects added.</div>';
+        }
+
+        const expListEl = document.getElementById('hero-card-exp-list');
+        if (expListEl && d.experiences) {
+          const expText = d.experiences.map(e => `• ${e.title} @ ${e.company}`).join('<br/>');
+          const certText = (d.certifications || []).map(c => `• ${c.name}`).join('<br/>');
+          expListEl.innerHTML = (expText || certText) ? `${expText}${certText ? '<br/>' + certText : ''}` : '<span class="text-on-surface-variant text-[10px]">No work experience logged.</span>';
+        }
+
+        initHeroCardTiltPhysics();
+      }
     }
 
     // ============================================================
