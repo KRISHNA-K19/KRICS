@@ -543,7 +543,6 @@
             <a href="#" onclick="switchRoute('githubintelligence')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="githubintelligence"><span class="material-symbols-outlined text-sm text-cyan-400">code</span> GitHub Intelligence <span class="ml-auto px-1.5 py-0.5 rounded text-[9px] bg-primary/20 text-primary font-bold">LIVE</span></a>
             <a href="#" onclick="switchRoute('careerpaths')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="careerpaths"><span class="material-symbols-outlined text-sm">route</span> Career Paths</a>
             <a href="#" onclick="switchRoute('opportunities')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="opportunities"><span class="material-symbols-outlined text-sm">satellite_alt</span> Opportunities</a>
-            <a href="#" onclick="switchRoute('resume')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="resume"><span class="material-symbols-outlined text-sm">badge</span> Resume</a>
             <a href="#" onclick="switchRoute('analytics')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="analytics"><span class="material-symbols-outlined text-sm">analytics</span> Analytics</a>
             <a href="#" onclick="switchRoute('profile')" class="route-link flex items-center gap-3 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5" data-route="profile"><span class="material-symbols-outlined text-sm">account_circle</span> Manage Profile</a>
           </div>
@@ -985,10 +984,67 @@
           <div id="resume-content" class="glass-panel-card rounded-3xl p-8 space-y-6 text-xs"><div class="text-on-surface-variant">Generating live resume payload...</div></div>
         </div>
 
-        <!-- ROUTE 10: ANALYTICS MODULE -->
-        <div id="route-view-analytics" class="route-view hidden space-y-6">
-          <div><h2 class="font-headline text-2xl font-bold text-white">Analytics & Activity Telemetry</h2><p class="font-body text-xs text-on-surface-variant">Event stream of career network growth.</p></div>
-          <div id="analytics-content" class="space-y-4"><div class="glass-panel-card rounded-2xl p-4 text-xs font-telemetry text-on-surface-variant">Loading analytics stream...</div></div>
+        <!-- ROUTE 10: ANALYTICS & TELEMETRY MODULE -->
+        <div id="route-view-analytics" class="route-view hidden space-y-6 font-telemetry">
+          <div>
+            <h2 class="font-headline text-2xl sm:text-3xl font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-2xl sm:text-3xl">analytics</span> Analytics & Activity Telemetry
+            </h2>
+            <p class="font-body text-xs text-on-surface-variant">Real-time telemetry event stream, skill velocity metrics, and proof-of-work growth analytics.</p>
+          </div>
+
+          <!-- Telemetry Metrics Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="glass-panel-card rounded-2xl p-5 space-y-2 border border-primary/30 relative overflow-hidden">
+              <div class="flex items-center justify-between text-xs text-on-surface-variant uppercase font-bold">
+                <span>SKILL SYNAPSES</span>
+                <span class="material-symbols-outlined text-primary text-base">psychology</span>
+              </div>
+              <div class="text-3xl font-black text-white font-mono" id="analytics-stat-skills">0</div>
+              <div class="text-[10px] text-emerald-400 font-mono">Verified Skills Active</div>
+            </div>
+
+            <div class="glass-panel-card rounded-2xl p-5 space-y-2 border border-secondary/30 relative overflow-hidden">
+              <div class="flex items-center justify-between text-xs text-on-surface-variant uppercase font-bold">
+                <span>PROJECT ARTIFACTS</span>
+                <span class="material-symbols-outlined text-secondary text-base">folder_code</span>
+              </div>
+              <div class="text-3xl font-black text-white font-mono" id="analytics-stat-projects">0</div>
+              <div class="text-[10px] text-cyan-300 font-mono">GitHub & Custom Repos</div>
+            </div>
+
+            <div class="glass-panel-card rounded-2xl p-5 space-y-2 border border-tertiary/30 relative overflow-hidden">
+              <div class="flex items-center justify-between text-xs text-on-surface-variant uppercase font-bold">
+                <span>ACTIVITY VELOCITY</span>
+                <span class="material-symbols-outlined text-tertiary text-base">speed</span>
+              </div>
+              <div class="text-3xl font-black text-white font-mono" id="analytics-stat-velocity">0</div>
+              <div class="text-[10px] text-primary font-mono">Telemetry Log Events</div>
+            </div>
+
+            <div class="glass-panel-card rounded-2xl p-5 space-y-2 border border-emerald-500/30 relative overflow-hidden">
+              <div class="flex items-center justify-between text-xs text-on-surface-variant uppercase font-bold">
+                <span>PROFILE SCORE</span>
+                <span class="material-symbols-outlined text-emerald-400 text-base">verified</span>
+              </div>
+              <div class="text-3xl font-black text-white font-mono" id="analytics-stat-completeness">75%</div>
+              <div class="text-[10px] text-emerald-300 font-mono">Verified Completeness</div>
+            </div>
+          </div>
+
+          <!-- Real-Time Activity Telemetry Stream -->
+          <div class="glass-panel-card rounded-3xl p-6 sm:p-8 space-y-4 border border-white/10">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+              <h3 class="font-headline text-lg font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-xl">stream</span> TELEMETRY EVENT STREAM
+              </h3>
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold border border-emerald-500/30">REAL-TIME TELEMETRY</span>
+            </div>
+
+            <div id="analytics-content" class="space-y-3">
+              <div class="glass-panel-card rounded-2xl p-4 text-xs font-telemetry text-on-surface-variant">Loading telemetry stream...</div>
+            </div>
+          </div>
         </div>
 
         <!-- ROUTE 11: PROFILE & PICTURE MANAGEMENT MODULE -->
@@ -4237,12 +4293,44 @@
     async function fetchAnalytics() {
       const res = await apiFetch('/analytics');
       if (res.success && res.data) {
-        document.getElementById('analytics-content').innerHTML = res.data.map(a => `
-          <div class="glass-panel-card rounded-xl p-3 font-telemetry text-xs flex justify-between">
-            <span class="text-white">${a.eventType}: ${a.eventDescription || ''}</span>
-            <span class="text-on-surface-variant text-[10px]">${new Date(a.createdAt).toLocaleTimeString()}</span>
-          </div>
-        `).join('');
+        const d = res.data;
+        const events = d.recentEvents || [];
+        const metrics = d.metrics || { skillSynapses: 0, projectEvidence: 0, activityVelocity: 0 };
+        
+        if (document.getElementById('analytics-stat-skills')) {
+          document.getElementById('analytics-stat-skills').innerText = metrics.skillSynapses || 0;
+        }
+        if (document.getElementById('analytics-stat-projects')) {
+          document.getElementById('analytics-stat-projects').innerText = metrics.projectEvidence || 0;
+        }
+        if (document.getElementById('analytics-stat-velocity')) {
+          document.getElementById('analytics-stat-velocity').innerText = `${metrics.activityVelocity || events.length || 0}`;
+        }
+
+        const container = document.getElementById('analytics-content');
+        if (container) {
+          if (!events || events.length === 0) {
+            container.innerHTML = `
+              <div class="glass-panel-card rounded-2xl p-6 text-center text-xs font-telemetry text-on-surface-variant space-y-2">
+                <div class="text-white font-bold text-sm">No activity events logged yet</div>
+                <div>Actions like adding skills, syncing engineering projects, completing quests, and updating your profile will appear here in real-time.</div>
+              </div>
+            `;
+          } else {
+            container.innerHTML = events.map(a => `
+              <div class="glass-panel-card rounded-2xl p-4 font-telemetry text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border border-white/10 hover:border-primary/40 transition-all">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="w-2.5 h-2.5 rounded-full bg-primary shrink-0 animate-ping"></span>
+                  <div class="min-w-0">
+                    <div class="font-bold text-white font-headline text-xs uppercase tracking-wider truncate">${a.eventType || 'TELEMETRY_LOG'}</div>
+                    <div class="text-[11px] text-on-surface-variant truncate">${a.eventDescription || a.description || 'Verified profile telemetry action.'}</div>
+                  </div>
+                </div>
+                <span class="text-primary font-mono text-[10px] px-2.5 py-1 rounded-lg bg-primary/10 border border-primary/20 shrink-0">${new Date(a.createdAt || Date.now()).toLocaleTimeString()}</span>
+              </div>
+            `).join('');
+          }
+        }
       }
     }
 
