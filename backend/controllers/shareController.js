@@ -26,11 +26,18 @@ exports.generateShareLink = async (req, res) => {
     const userId = await getOrCreateUserId(req);
     const shareToken = Buffer.from(`${userId}-${Date.now()}`).toString('base64').substring(0, 16);
 
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'http';
+    const host = req.headers['x-forwarded-host'] || req.get('host') || 'localhost:8000';
+    const baseUrl = process.env.APP_URL ? process.env.APP_URL.replace(/\/$/, '') : `${protocol}://${host}`;
+
+    const shareUrl = `${baseUrl}/?share=${shareToken}`;
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(shareUrl)}`;
+
     res.status(200).json({
       success: true,
       shareToken,
-      shareUrl: `http://localhost:8000/?share=${shareToken}`,
-      qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=http://localhost:8000/?share=${shareToken}`
+      shareUrl,
+      qrCodeUrl
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

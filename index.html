@@ -3717,8 +3717,14 @@
     async function fetchShareLink() {
       const res = await apiFetch('/share/generate-link');
       if (res.success) {
-        document.getElementById('share-url-input').value = res.shareUrl;
-        document.getElementById('share-qr-code').src = res.qrCodeUrl;
+        let shareUrl = res.shareUrl;
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && window.location.protocol !== 'file:') {
+          shareUrl = `${window.location.origin}/?share=${res.shareToken}`;
+        }
+        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(shareUrl)}`;
+
+        document.getElementById('share-url-input').value = shareUrl;
+        document.getElementById('share-qr-code').src = qrCodeUrl;
       }
     }
     function copyShareUrl() {
